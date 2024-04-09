@@ -1,0 +1,521 @@
+---
+title: "AUC and ROC"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(JMbayes, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal of the analysis
+
+-   [x] Creating dummy variables for the factor variables
+
+-   [x] Saving the datasets as `swan_amh11` and `swan_amh12`
+
+-   [x] Fit the joint model with `JMbayes2` based on model selection results
+
+-   [x] Dynamic prediction for the joint model with plots
+
+-   [x] Calculate the AUC and ROC for the joint model
+
+## Fit the joint model
+
+Here is the joint model with `JMbayes2`, the name of the model is set up as `package` + \[fit\] + `lme_number` + `surv_number`
+
+$lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$
+
+$surv.fit16 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+The predict.jm() function cannot take the factor variables, so we need to convert them to numeric variables.
+
+So here is the dummy variables for the factor variables `site_ethnic` and `smoke`. It is weird, just like including the interaction terms without the main effects for the `site` and `ethnicity`; **talk with EJC to see whether we change the main factor effects back.**
+
+```{r}
+#| label: "dummy_variables"
+swan_amh12 <- swan_amh11 %>%
+  cbind(model.matrix(~ 0 + site_ethnic + smoke, 
+                                    data = .)) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(order(colnames(.)))
+
+swan_amh02 <- swan_amh00 %>%
+  mutate(smoke = case_when(smoke == 1 ~ "Past Only",
+                           smoke == 2 ~ "Current Smoker",
+                           smoke == 3 ~ "Never Smoked"),
+         smoke = factor(smoke, levels = c("Never Smoked" , "Past Only", "Current Smoker"))) %>%
+  cbind(model.matrix(~ 0 + site_ethnic + smoke, 
+                                    data = .)) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(order(colnames(.)))
+
+names(swan_amh12)
+# names(swan_amh02)
+# "site_ethnic_b_black"    "site_ethnic_b_cauca"
+# "site_ethnic_c_black"    "site_ethnic_c_cauca"    "site_ethnic_m_black"
+# "site_ethnic_m_cauca"    "site_ethnic_nj_cauca"   "site_ethnic_nj_hispa"
+# "site_ethnic_p_black"    "site_ethnic_p_cauca"    "site_ethnic_ucd_cauca"
+# "site_ethnic_ucd_chine"  "site_ethnic_ucla_cauca" "site_ethnic_ucla_japan"
+# "smoke_past_only"        "smoke_current_smoker"
+```
+
+```{r}
+#| label: "fit_joint_model"
+
+
+control = lmeControl(opt = "optim")
+lme.fit1 <- lme(lamh ~ time,
+                data = swan_amh00,
+                control = control,
+                random = ~ time| id)
+
+## testing for health
+## site_ethnic_b_cauca as the reference group 
+surv.fit16 <- coxph(Surv(etime, event) ~ 0 + married + bc_pills + bmi +
+                      site_ethnic_b_black + # site_ethnic_b_cauca + 
+                      site_ethnic_c_black + site_ethnic_c_cauca + 
+                      site_ethnic_m_black + site_ethnic_m_cauca +
+                      site_ethnic_nj_cauca + site_ethnic_nj_hispa +
+                      site_ethnic_p_black + site_ethnic_p_cauca + 
+                      site_ethnic_ucd_cauca + site_ethnic_ucd_chine +
+                      site_ethnic_ucla_cauca + site_ethnic_ucla_japan +
+                      smoke_past_only + smoke_current_smoker,
+                    data = swan_amh12, 
+                    x = TRUE,
+                    model = TRUE)
+
+jmcontrol <- list(n_iter = 5000, 
+                  n_burnin = 1000, 
+                  n_chains = 1,
+                  seed = 55555,
+                  cores = 1)
+
+jmbayes2.fit116 <- JMbayes2::jm(Surv_object = surv.fit16,
+                               Mixed_objects = lme.fit1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+```
+
+```{r}
+#| label: "save_datasets"
+#| include: false
+save(swan_amh02, swan_amh12, 
+     lme.fit1, surv.fit16, 
+     jmbayes2.fit116,
+     file = "data-raw/swan_amh_jmbayes2_fit116.RData")
+```
+
+### Summary for the `jmbayes.fit116`
+
+For the `lme` model:
+
+```{r output.class = "scroll-100"}
+summary(jmbayes2.fit116)$Outcome1 
+
+#             Mean	      StDev	      2.5%	      97.5%.   	  P
+# (Intercept)	7.9174517	  0.1088784	  7.6937029	  8.1155217	  0
+# time	      -0.5961157	0.0129068	  -0.6186083	-0.5691261	0
+# sigma	      1.3059261	  0.0186472	  1.2692610	  1.3428203  	0
+```
+
+For the `surv` model:
+
+```{r output.class = "scroll-100"}
+summary(jmbayes2.fit116)$Survival
+```
+
+### Traceplots
+
+Longer chains and more number of chains are better for convergence in real analysis
+
+```{r}
+#| label: "trace_joint_model"
+#| layout-ncol: 2
+#| eval: false
+
+JMbayes2::traceplot(jmbayes2.fit116)
+
+```
+
+## Dynamic prediction
+
+Individualized predictions of survival probabilities are computed by function `predict()`, this is different from `JMbayes` and `JM`.
+
+### Individual dynamic prediction with plot
+
+Here are some exploratory plots for the dynamic prediction for the joint model.
+
+The left part of the plot is the longitudinal outcome, and the right part is the cumulative risk function. With the decrease of the longitudinal outcome `log(amh)`, the cumulative risk function increases, the probability of event increases too.
+
+The hazard function is the derivative of the cumulative risk function, the steepness (slope) of the cumulative risk function is the hazard function.
+
+```{r}
+#| label: "predict_joint_model"
+#| include: false
+
+t0 <- 6
+ids <- unique(swan_amh02$id)
+## length(ids)
+## Prediction for the survival outcomes
+## This is the dataset with longitudinal outcomes
+nid <- swan_amh02[swan_amh02$id == ids[8], ]
+nid <- nid[nid$time < t0, ]
+nid$event <- 0
+nid$etime <- t0
+
+# predictions for the longitudinal outcomes using newdata
+Lpred1 <- predict(jmbayes2.fit116, 
+                    newdata = nid,
+                    return_newdata = TRUE)
+
+# predictions for the longitudinal outcomes at future time points
+# from year 6 to 10
+Lpred2 <- predict(jmbayes2.fit116, 
+                    newdata = nid,
+                   times = seq(t0, 10, length.out = 51),
+                    return_newdata = TRUE)
+
+Spred <- predict(jmbayes2.fit116, 
+                 newdata = nid,
+                 times = seq(t0, 10, length.out = 11),
+                 process = "event",
+                 return_newdata = TRUE)
+```
+
+```{r}
+#| label: "plot_function"
+
+#' Title Dynamic prediction plot for individual
+#'
+#' @param id_num individual id number in the list
+#' @param tmin the start time
+#' @param tmax the end time
+#' @param jmfit the joint model objects
+#' @param ... 
+#'
+#' @return a list of lme and surv predicts
+
+dpplot <- function(id_num,
+                   tmin = 0,
+                   tmax = 12,
+                   jmfit = jmbayes2.fit116,
+                   ...){
+
+  # browser()
+  nid0 <- swan_amh02[swan_amh02$id == ids[id_num], ]
+  
+  nid <- nid0
+  nid <- nid[nid$time < tmin, ]
+  nid$event <- 0
+  nid$etime <- tmin
+  
+  Lpred <- predict(jmfit, 
+                    newdata = nid,
+                   times = seq(tmin, tmax, length.out = 11),
+                    return_newdata = TRUE)
+  Spred <- predict(jmfit, 
+                 newdata = nid,
+                 times = seq(tmin, tmax, length.out = 11),
+                 process = "event",
+                 return_newdata = TRUE)
+  
+  # tAUC <- try(JMbayes2::tvAUC(jmfit, 
+  #                         nid0, 
+  #                         Tstart = tmin,
+  #                         Dt = 10))
+  # 
+  # tROC <- try(JMbayes2::tvROC(jmfit, 
+  #                         nid0, 
+  #                         Tstart = tmin,
+  #                         Dt = 10))
+  # 
+  # brier <- try(JMbayes2::tvBrier(jmfit, 
+  #                            nid0, 
+  #                            Tstart = tmin,
+  #                            Dt = 10))
+  
+  plot(Lpred, Spred, ylab_long = paste0("ID_", id_num, "  log(amh)"))
+  
+  return(list(Lpred = Lpred,
+              Spred = Spred,
+              nid0 = nid0,
+              nid = nid))
+}
+```
+
+Some of the very steep trajectory for the risk function: `id5`, `id26`, `id56`, `id333`, `id342`;
+
+```{r}
+#| label: "high_risk"
+#| fig-cap: "The dynamic prediction for high risk individuals"
+#| layout-ncol: 2
+#| fig-subcap: 
+#| - "id5_t4"
+#| - "id5_t8"
+#| - "id26_t4"
+#| - "id26_t8"
+#| - "id333_t4"
+#| - "id333_t8"
+
+dpplot_id5 <- map(c(4, 8), 
+               ~dpplot(id_num = 5,
+                       tmin = .x, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116))
+
+dpplot_id26 <- map(c(4, 8), 
+               ~dpplot(id_num = 26,
+                       tmin = .x, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116))
+
+dpplot_id333 <- map(c(4, 8),
+               ~dpplot(id_num = 333,
+                       tmin = .x,
+                       tmax = 12,
+                       jmfit = jmbayes2.fit116))
+
+# plot(Lpred1)
+# 
+# plot(Lpred2)
+# 
+# # prediction for the event outcome
+# plot(Spred)
+
+# combined into one plot, 
+# the first longitudinal outcome and cumulative risk
+# the first two longitudinal outcomes
+
+```
+
+Some of the smooth trajectory for the risk function: `id32`, `id57`, `id89`, `id222`,`id44`, `id371`;
+
+```{r}
+#| label: "low_risk"
+#| fig-cap: "The dynamic prediction for low risk individuals"
+#| layout-ncol: 2
+#| fig-subcap: 
+#| - "id32_t4"
+#| - "id32_t8"
+#| - "id371_t4"
+#| - "id371_t8"
+#| - "id44_t4"
+#| - "id44_t8"
+
+dpplot_id32 <- map(c(4, 8), 
+               ~dpplot(id_num = 57,
+                       tmin = .x, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116))
+
+dpplot_id371 <- map(c(4, 8), 
+               ~dpplot(id_num = 371,
+                       tmin = .x, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116))
+
+dpplot_id44 <- map(c(4, 8),
+               ~dpplot(id_num = 44,
+                       tmin = .x,
+                       tmax = 12,
+                       jmfit = jmbayes2.fit116))
+```
+
+### Predictive accuracy measures
+
+The materials are directly from **Dimitris Rizopoulos & Grigorios Papageorg** (details seen JMwithR notes 6.3)
+
+-   Discrimination: sensitivity, specificity, ROC and AUC
+-   Calibration: comparison between predicted and observed probabilities
+-   Overall: combination of discrimination and calibration
+
+Sidenotes: we do not have right censor (possessively considering the left censor)
+
+To estimate the sensitivity, specificity and the AUC, we need to account for censoring. Two main approaches:
+
+-   model-based weights
+
+    -   Advantage: it allows censoring to depend on the longitudinal history (in any possible manner)
+    -   Disadvantage: it requires that the model is well calibrated
+
+-   inverse probability of censoring weighting (IPCW) (using Kaplan-Meier or other non-parametric estimators)
+
+    -   Advantage: it provides unbiased estimates even when the model is misspecified
+    -   Disadvantage: it requires that the model for the weights is correct
+    -   **in settings where joint models are used, challenging because censoring may depend on the longitudinal outcomes in a complex manner**
+
+### AUC
+
+For `JMbayes2`, the function `tvAUC()` is used to estimate the time-dependent AUC only for all the subjects (there is no function for individual AUC).
+
+```{r}
+#| label: "auc_summary"
+
+AUC2  <- try(JMbayes2::tvAUC(jmbayes2.fit116,
+                          swan_amh02,
+                          Tstart = 2,
+                          Dt = 2))
+
+AUC4  <- try(JMbayes2::tvAUC(jmbayes2.fit116,
+                          swan_amh02,
+                          Tstart = 4,
+                          Dt = 2))
+
+AUC6  <- try(JMbayes2::tvAUC(jmbayes2.fit116,
+                          swan_amh02,
+                          Tstart = 6,
+                          Dt = 2))
+
+AUC8  <- try(JMbayes2::tvAUC(jmbayes2.fit116,
+                          swan_amh02,
+                          Tstart = 8,
+                          Dt = 2))
+```
+
+Here is the table for the AUC result, using the same joint model for the dynamic prediction. Each AUC for a different time point and time window as 2.
+
+The AUC score are calculated for the time points 2, 4, 6, and 8. It seems the best AUC score is at time 4, and the AUC score decreases as the time window increases. Based on the plots for individuals, some of the plot are missing, because there is no longitudinal data before the `Tstart`.
+
+```{r output.class = "scroll-100"}
+#| label: "auc_result"
+
+cbind(Tstart = map(list(AUC2, AUC4, AUC6, AUC8), "Tstart") %>% unlist(),
+      Tend = map(list(AUC2, AUC4, AUC6, AUC8), "Thoriz") %>% unlist() %>% round(0),
+      AUC = map(list(AUC2, AUC4, AUC6, AUC8), "auc") %>% unlist()) %>% 
+  as.data.frame()
+```
+
+### ROC
+
+ROC can be calculated based on both individual or all subjects. Here are the results for the ROC for all subject predictions.
+
+The ROC results is consistent with the AUC results, the best ROC is at time 4, and the ROC score decreases as the `Tstart` increases.
+
+```{r}
+#| label: "roc_summary"
+
+ROC2 <- try(JMbayes2::tvROC(jmbayes2.fit116,
+                          swan_amh02,
+                          Tstart = 2,
+                          Dt = 2))
+
+ROC4 <- try(JMbayes2::tvROC(jmbayes2.fit116,
+                          swan_amh02,
+                          Tstart = 4,
+                          Dt = 2))
+
+ROC6 <- try(JMbayes2::tvROC(jmbayes2.fit116,
+                          swan_amh02,
+                          Tstart = 6,
+                          Dt = 2))
+
+ROC8 <- try(JMbayes2::tvROC(jmbayes2.fit116,
+                          swan_amh02,
+                          Tstart = 8,
+                          Dt = 2))
+
+plot(ROC2, ylab = "Tstart_2 Sensitivity")
+plot(ROC4, ylab = "Tstart_4 Sensitivity")
+plot(ROC6, ylab = "Tstart_6 Sensitivity")
+plot(ROC8, ylab = "Tstart_8 Sensitivity")
+```
+
+## Brier Score
+
+```{r}
+#| label: "bs_summary"
+
+BS2 <- try(JMbayes2::tvBrier(jmbayes2.fit116,
+                          newdata = swan_amh02,
+                          Tstart = 2,
+                          Dt = 2))
+
+BS4 <- try(JMbayes2::tvBrier(jmbayes2.fit116,
+                          newdata = swan_amh02,
+                          Tstart = 4,
+                          Dt = 2))
+
+BS6 <- try(JMbayes2::tvBrier(jmbayes2.fit116,
+                          newdata = swan_amh02,
+                          Tstart = 6,
+                          Dt = 2))
+
+BS8 <- try(JMbayes2::tvBrier(jmbayes2.fit116,
+                          newdata = swan_amh02,
+                          Tstart = 8,
+                          Dt = 2))
+
+
+```
+
+```{r output.class = "scroll-100"}
+#| label: "bs_result"
+
+cbind(Tstart = map(list(BS2, BS4, BS6, BS8),
+                   "Tstart") %>% unlist() %>% round(0),
+      Tend = map(list(BS2, BS4, BS6, BS8), 
+                 "Thoriz") %>% unlist() %>% round(0),
+      BS = map(list(BS2, BS4, BS6, BS8), 
+                "Brier") %>% unlist()) %>% 
+  as.data.frame()
+```
+
+```{r}
+#| label: "pdf"
+#| include: false
+#| eval: false
+
+pdf("swan_amh_dynamic_prediction_tmin4_20240408.pdf")
+par(mfrow = c(2, 2))
+dpplot_t4 <- map(1:600, 
+               ~try(dpplot(id_num = .x,
+                       tmin = 4, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116)))
+dev.off()
+
+
+
+pdf("swan_amh_dynamic_prediction_tmin8_20240408.pdf")
+par(mfrow = c(2, 2))
+dpplot_t8 <- map(1:600, 
+               ~try(dpplot(id_num = .x,
+                       tmin = 8, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116)))
+dev.off()
+```

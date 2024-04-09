@@ -1,0 +1,40 @@
+# Introduction {.unnumbered}
+
+This is a book created from markdown and executable code.
+
+This project contains the works for SWAN AMH datasets. Here are the details for each dataset. Interested variables are labeled in italic and bold.
+
+<!-- # ```{r} -->
+<!-- # devtools::load_all() -->
+<!-- # require(amh) -->
+<!-- # library(gbRd) -->
+<!-- # ``` -->
+
+
+<!-- # ```{r} -->
+<!-- # help_text <- function(...) { -->
+<!-- #   file <- help(...) -->
+<!-- #   path <- dirname(file) -->
+<!-- #   dirpath <- dirname(path) -->
+<!-- #   pkgname <- basename(dirpath) -->
+<!-- #   RdDB <- file.path(path, pkgname) -->
+<!-- #   rd <- tools:::fetchRdDB(RdDB, basename(file)) -->
+<!-- #   capture.output(tools::Rd2txt(rd, out="", options=list(underline_titles=FALSE))) -->
+<!-- # } -->
+<!-- #  -->
+<!-- # # h1 <- help_text(amh) -->
+<!-- #  -->
+<!-- # ``` -->
+
+
+<!-- # ```{r, results='asis'} -->
+<!-- # Rd <- Rd_fun(help("swan_amh0"))  -->
+<!-- # htmlfile <- tempfile(fileext = ".html") -->
+<!-- # tools::Rd2HTML(Rd, htmlfile, package = "", -->
+<!-- #                stages = c("install", "render")) -->
+<!-- # htmllines <- readLines(htmlfile) -->
+<!-- # i <- grep("<body>", htmllines) -->
+<!-- # j <- grep("</body>", htmllines) -->
+<!-- # cat(htmllines[(i+1):(j-1)], sep = "\n") -->
+<!-- # ``` -->
+

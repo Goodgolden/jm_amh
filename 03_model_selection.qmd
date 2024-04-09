@@ -1,0 +1,588 @@
+---
+title: "Model selection"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+library(broom.mixed, quietly = TRUE)
+library(sas7bdat, quietly = TRUE)
+library(JM, quietly = TRUE)
+library(JMbayes, quietly = TRUE)
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+devtools::load_all()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal for this chapter
+
+-   [x] List of all the variables in the clean dataset
+
+-   [x] Model selection for the survival sub-model (backward selection by EJC)
+
+-   [x] Model selection for the survival sub-model with `step`
+
+-   [x] Two methods are consistent with each other
+
+-   [x] Joint model with the selected survival sub-model (by EJC)
+
+-   [x] Joint model factorization v.s. stratification (by EJC)
+
+-   [x] Fit the joint model with `JM` package and get ROC and AUC [failed]{style="color:red"} (by EJC)
+
+-   [x] Dynamic predictions for the joint model [failed]{style="color:red"} ( by EJC)
+
+-   [x] Exploring include the Rate (Time-Dependent Slopes) in the `JM` model
+
+-   [x] Summary of model comparisons
+
+-   [x] `JM` package cannot calculate individual AUC and ROC, and Brier Score.
+
+## Model selelction
+
+-   swan_amh0 is the longitudinal dataset
+
+-   swan_amh1 is the id dataset
+
+```{r}
+#| label: "loading data"
+load("data/swan_amh0.rda")
+load("data/swan_amh1.rda")
+
+```
+
+## Backward selection of vars
+
+The fitted model `surv.fit16` from this `03_model_selection` is the same as the `surv.fit1` from \`02_jm.qmd. Need to keep $site + ethnic + smoke + bmi$.
+
+All the variables:\
+- surv outcomes: "etime" "event". - lme outcomes: "log(amh)"
+
+-   longitudinal vars:
+    -   "id"
+    -   "time"
+-   Not included into models:
+    -   "age"
+    -   "age0"
+    -   "bmi_cat"
+    -   "fmp_age"
+    -   "parity"
+    -   "phys_act"
+    -   "start_time"
+    -   "train"
+    -   "visit"
+-   survival vars:
+    -   *"alcohol"*,
+    -   *"bc_pills"*,
+    -   *"bmi"*,
+    -   *"children"*,
+    -   *"edu"*,
+    -   *"employed"*,
+    -   *"ethnic"*,
+    -   *"health"*,
+    -   *"married"*,
+    -   *"site"*,
+    -   *"smoke"*
+
+```{r}
+#| label: "backward_selection"
+
+### Need to keep site + ethnic + smoke + bmi
+## testing for physical activity (taking out phys.act)
+surv.fit11 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke) +
+                      factor(edu) + factor(alcohol) + factor(employed) + factor(health),
+                    data = swan_amh1, 
+                    x = TRUE, 
+                    model = TRUE)
+
+## testing for employed
+surv.fit12 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke) +
+                      factor(edu) + factor(alcohol) + factor(health),
+                    data = swan_amh1, x = TRUE, model = TRUE)
+
+## testing for children
+surv.fit13 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke) +
+                      factor(edu) + factor(alcohol) + factor(health),
+                    data = swan_amh1, x = TRUE, model = TRUE)
+
+
+## testing for edu (education)
+surv.fit14 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke) +
+                      factor(alcohol) + factor(health),
+                    data = swan_amh1, 
+                    x = TRUE,
+                    model = TRUE)
+
+
+## testing for alcohol
+surv.fit15 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke) +
+                      factor(health),
+                    data = swan_amh1, 
+                    x = TRUE,
+                    model = TRUE)
+
+
+## testing for health
+surv.fit16 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke),
+                    data = swan_amh1, 
+                    x = TRUE,
+                    model = TRUE)
+
+
+## testing for bc_pills
+surv.fit17 <- coxph(Surv(etime, event) ~ married + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke),
+                    data = swan_amh1, 
+                    x = TRUE, 
+                    model = TRUE)
+
+```
+
+```{r}
+#| label: "survival_summary"
+
+options(digits = 4)
+rbind(fit11 = glance(surv.fit11), 
+      fit12 = glance(surv.fit12), 
+      fit13 = glance(surv.fit13),
+      fit14 = glance(surv.fit14),
+      fit15 = glance(surv.fit15),
+      fit16 = glance(surv.fit16),
+      fit17 = glance(surv.fit17)) %>%
+  mutate(name = c("fit11", "fit12", "fit13",
+                  "fit14", "fit15", "fit16",
+                  "fit17"),
+         formula = c(surv.fit11$formula,
+                     surv.fit12$formula,
+                     surv.fit13$formula,
+                     surv.fit14$formula,
+                     surv.fit15$formula,
+                     surv.fit16$formula,
+                     surv.fit17$formula),
+         formula = as.character(formula)) %>%
+  dplyr::select(name, logLik, AIC, 
+                BIC, r.squared, concordance, formula) 
+```
+
+Here is the final survival sub-model.
+
+```{r}
+#| label: "final_model"
+tidy(surv.fit16)
+```
+
+The comparison is not exactly make sense to me, so need to talk with EJC for further works on the model. Backward model selection is not my favorite `r emoji::emoji("disappointed")` at all.
+
+```{r}
+#| label: "backward_comparison"
+#| include: false
+#| eval: false
+
+anova(surv.fit1, surv.fit11) ## phys.act NOT SIGN
+anova(surv.fit11, surv.fit12) ## employed NOT SIGN
+anova(surv.fit12, surv.fit13) ## children NOT SIGN
+anova(surv.fit13, surv.fit14) ## edu NOT SIGN
+anova(surv.fit14, surv.fit15) ## alcohol NOT SIGN
+anova(surv.fit15, surv.fit16) ## health NOT SIGN
+anova(surv.fit16, surv.fit17) ## bc_pills IS SIGNIF
+```
+
+## Using `step` function
+
+The results show there are extra variables we can include, if necessary. Here are the results using step function.
+
+The selection with upper of the full model including all the variables, the lower of the null model with only the intercept.
+
+```{r}
+#| label: "step_function"
+surv.fit1 <- surv.fit16
+surv.step <- step(surv.fit1, 
+                  scope = list(upper = ~age + married + bc_pills + children + bmi +
+                                 factor(site) + factor(ethnic) + factor(smoke) +
+                                 factor(edu) + factor(alcohol) + factor(employed) +
+                                 factor(health),
+                               lower = ~ 1))
+
+```
+
+### `step()` selected "best" model
+
+Here are the final model from `step()` function, which is does not including the `bmi` and `ethnic` variables. ***However the `age` is included in the model***.
+
+Need to talk with EJC, I was not sure why do not include `age` into the survival model.
+
+```{r}
+#| label: "step_summary"
+
+print(surv.step$formula)
+tidy(surv.step)
+```
+
+## Joint model with `JM::survfitJM()`
+
+Here is the joint model with
+
+$lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$
+
+$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+This is the most basic form, no slope, on interaction, on integral functions. Also the original model, included in EJC's notes (***the model with only factor(ethnic) + factor(smoke), STILL does not allow for calc of AUC.***)
+
+```{r}
+#| label: "joint_model"
+
+### the model with only factor(ethnic) + factor(smoke) 
+### STILL does not allow for calc of AUC
+lme.fit1 <- lme(lamh ~ time, 
+                data = swan_amh0, 
+                random = ~ time|id)
+
+## joint model fit
+joint.fit1 <- jointModel(lme.fit1,
+                         surv.fit1,
+                         timeVar = "time", 
+                         method = "piecewise-PH-aGH")
+summary(joint.fit1)
+```
+
+## Trying stratified baseline hazard
+
+-   One is to include the other covariates (or multiple covariates) as regression terms for the hazard function.
+
+-   Alternatively, if the covariates we are adjusting for is categorical with a small number of levels $G$, we may construct a stratified log-rank test.
+
+If we stratify on event with `strata()` we get estimates of the effect of the covariates on events under the assumption that they affect both groups equally.
+
+```{r}
+#| label: "stratified_baseline"
+
+# surv.fit1 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+#                       factor(site) + factor(ethnic) + factor(smoke),
+#                     data = swan_amh1, 
+#                     x = TRUE,
+#                     model = TRUE)
+
+surv.fit2 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                     strata(site) + strata(ethnic) + strata(smoke),
+                   data = swan_amh1,
+                   x = TRUE,
+                   model = TRUE)
+
+# anova(surv.fit1, surv.fit2)
+
+## joint model fit
+joint.fit2 <- jointModel(lme.fit1,
+                         surv.fit2,
+                         timeVar = "time",
+                         method = "piecewise-PH-aGH")
+# summary(joint.fit2)
+
+
+### only smoke as a strata
+surv.fit3 <- coxph(Surv(etime, event) ~ married + bc_pills  + bmi  +
+                     strata(smoke) ,
+                  data = swan_amh1,
+                  x = TRUE,
+                  model = TRUE)
+# summary(surv.fit3)
+
+## joint model fit
+joint.fit3 <- jointModel(lme.fit1, 
+                         surv.fit3,
+                         timeVar = "time",
+                         method = "piecewise-PH-aGH")
+
+```
+
+### Summary for Survival sub-models
+
+```{r}
+#| label: "surv.fit2"
+surv.fit2
+summary(joint.fit2)[[2]]
+```
+
+```{r}
+#| label: "surv.fit3"
+surv.fit3
+summary(joint.fit3)[[2]]
+```
+
+### Checking Stratification
+
+```{r}
+#| label: "survdiff"
+survdiff(Surv(etime, event) ~ bc_pills, data = swan_amh1)
+survdiff(Surv(etime, event) ~ bc_pills + strata(site) + strata(ethnic) + strata(smoke),
+         data = swan_amh1)
+
+survdiff(Surv(etime, event) ~ married, data = swan_amh1)
+survdiff(Surv(etime, event) ~ married + strata(site) + strata(ethnic) + strata(smoke),
+         data = swan_amh1)
+```
+
+```{r}
+#| label: "tidy_surv"
+tidy(surv.fit1) 
+tidy(surv.fit2) 
+tidy(surv.fit3) 
+```
+
+## Obtaining dynamic predictions
+
+This function accepts as main arguments a fitted joint model and a data frame that contains the longitudinal and covariate information for the subjects for which we wish to calculate the predicted survival probabilities.
+
+```{r}
+#| label: "dynamic_predictions"
+#| warning: false
+#| error: true
+ids <- unique(swan_amh0$id)
+## length(ids)
+## Prediction for the survival outcomes
+ND1 <- swan_amh0[swan_amh0$id == ids[8], ] ## 4, 5, 7 (not so good)
+sfit <- JM::survfitJM(joint.fit3,
+                      newdata = ND1, 
+                      idVar = "id") 
+
+```
+
+```{r class.output="scroll-100"}
+#| label: "id110"
+ND1
+
+# subset(ND1, 
+#        select = c('id', 'age0', 'time', 
+#                   'start_time', 
+#                   'etime', 'amh'))
+#                   
+
+sfit$summaries$`1100390` %>% as.data.frame()
+
+id1100390 <- filter(swan_amh0, id == ids[5]) %>%
+  dplyr::select(etime, lamh)
+
+
+```
+
+```{r}
+#| label: "plot_dm"
+plot(sfit, estimator = "mean", 
+     include.y = TRUE, 
+     conf.int = TRUE, 
+     fill.area = TRUE,
+     col.area = "lightgrey")
+
+```
+
+### AUC and ROC
+
+I can only pullout the AUC for certain models, not all of them. The ROC function gets problems too. There is also on function for Brier Score in `JM` package.
+
+```{r}
+#| label: "auc"
+#| warning: false
+#| error: true
+
+
+## Tstart is the time up which long measurements are used in the predictions
+## Dt = is the window of time that will be considered for predictions;
+## discrimination is calculated based on this window
+auc2.t3 <- try(JM::aucJM(joint.fit2,
+                     newdata = swan_amh0,
+                     idVar = "id",
+                     Tstart = 5,
+                     Dt = 3))
+auc2.t3
+
+auc1 <- JM::aucJM(joint.fit3,
+                  newdata = swan_amh0,
+                  idVar = "id",
+                  Tstart = 5,
+                  Dt = 3) ##
+
+auc2 <- try(JM::aucJM(joint.fit3, 
+                  newdata = swan_amh0,
+                  idVar = "id",
+                  Tstart = 5,
+                  Dt = 3)) 
+auc2
+```
+
+## Time-Dependent Slopes Parameterization
+
+However, since for each patient the marker follows a trajectory in time, it is also reasonable to consider parameterizations that allow the risk for an event to also depend on other features of this trajectory. A parameterization of this type has been considered by `Ye et al. (2008b)` who postulated a joint model in which the risk depends on both the current true value of the trajectory and the slope of the true trajectory at time `t`.
+
+$$
+\begin{split}
+  h_i(t) & = h_0(t) \exp\{\gamma^{\top}w_i + \alpha_1 m_i(t) + \alpha_2 m'_i(t)\}\\
+  m'_i(t) & = \frac {d} {dt} m_i(t) = \frac {d} {dt} \{ x^{\top}_i (t) \beta + z_i^{\top} (t) b_i \}\\
+  m'_i(t) & = [x_i^{slope}(t)]^{\top} \beta^{slope} + [z_i^{slope}(t)]^{\top} b_i^{slope}
+\end{split}
+$$
+
+-   Including the interaction term in the cox-model for $m_i$
+
+-   The `time` variable needs to be nonlinear for the longitudinal data
+
+    -   so I included the `I(time^2)` term in the `lme` model
+
+```{r class.output="scroll-100"}
+#| label: "lme_extended"
+
+control <- lmeControl(opt = "optim")
+
+lme.fit2 <- lme(lamh ~ time + I(time^2), 
+                data = swan_amh0, 
+                control = control,
+                random = ~ time| id)
+
+lme.fit3 <- lme(lamh ~ time + I(time^2), 
+                data = swan_amh0, 
+                control = control,
+                random = ~ time + I(time^2) | id)
+
+rbind(glance(lme.fit1), 
+      glance(lme.fit2), 
+      glance(lme.fit3))
+```
+
+```{r}
+#| label: "joint_model_slope"
+jm.fit21 <- jointModel(lme.fit2,
+                       surv.fit1,
+                       timeVar = "time",
+                       method = "piecewise-PH-aGH")
+
+jm.fit31 <- jointModel(lme.fit3,
+                       surv.fit1,
+                       timeVar = "time",
+                       method = "piecewise-PH-aGH")
+
+# jm.fit22 <- jointModel(lme.fit2,
+#                        surv.fit2,
+#                        timeVar = "time",
+#                        # interFact = list(value = ~ age,
+#                        #                  ##  a named list with a component named value
+#                        #                  ##  that provides an R formula specifying the
+#                        #                  ##  form of the W2 design matrix
+#                        #                  data = swan_amh1),
+#                        method = "piecewise-PH-aGH")
+
+# jm.fit32 <- jointModel(lme.fit3,
+#                        surv.fit2,
+#                        timeVar = "time",
+#                        method = "piecewise-PH-aGH")
+```
+
+```{r}
+#| label: "derivative"
+# model.matrix(lamh ~ time + I(time^2), 
+#                 data = swan_amh0)
+dform2 <- list(fixed = ~ I(2 * time),
+              ## the 2nd and 3rd fixed effects of mi(t) used
+              indFixed = 2:3, 
+              random = ~ 1, 
+              ## the second random effect of mi(t)
+              indRandom = 2)
+dform3 <- list(fixed = ~ I(2 * time),
+              ## the 2nd and 3rd fixed effects of mi(t) used
+              indFixed = 2:3, 
+              random = ~ I(2 * time), 
+              ## the second and third random effect of mi(t)
+              indRandom = 2:3)
+
+```
+
+Warning: Stop time must be \> start time, NA created
+
+```{r}
+#| label: "update_model"
+jm.fit21d <- update(jm.fit21,
+                    parameterization = "both",
+                    derivForm = dform2)
+
+jm.fit31d <- update(jm.fit31,
+                    parameterization = "both",
+                    derivForm = dform3)
+```
+
+### Here is the summarization of the models
+
+$lme.fit2 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time| id)$
+
+$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+```{r}
+#| label: "summary_slope_models21"
+summary(jm.fit21d)
+```
+
+$lme.fit3 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time + I(time^2)| id)$
+
+$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+```{r}
+#| label: "summary_slope_models31"
+summary(jm.fit31d)
+```
+
+The model with slope term is better than the model without slope term
+
+### Comparision for jm.fit21 and jm.fit21d
+
+```{r}
+#| label: "anova_21_21d"
+anova(jm.fit21, jm.fit21d, process = "Event")
+```
+
+### Comparision for jm.fit31 and jm.fit31d
+
+```{r}
+#| label: "anova_31_31d"
+anova(jm.fit31, jm.fit31d, process = "Event")
+```
+
+### Comparision for jm.fit21d and jm.fit31d
+
+```{r}
+#| label: "anova_21d_31d"
+anova(jm.fit21d, jm.fit31d)
+```

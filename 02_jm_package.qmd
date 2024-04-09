@@ -1,0 +1,240 @@
+---
+title: "02_joint_model"
+---
+
+## BIOS6646. L14 Joint Models of Longitudinal and Survival Data"
+
+`{ = tex} \newcommand{\bi}{\begin{itemize}} \newcommand{\ei}{\end{itemize}} \newcommand{\itt}{\item}`
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+## clean the R environment
+graphics.off()
+rm(list = ls())
+freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+library(JM)
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, echo = FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+# In the JM package methods are available for the majority of the generic functions
+
+-   summary(), anova(), vcov(), logLik(), AIC()
+-   coef(),fixef(),ranef()
+-   fitted(), residuals()
+-   plot()
+
+## Primary Biliary Cirrhosis (PBC) study
+
+-   Primary biliary cirrhosis (PBC) is a chronic liver disease that leads to cirrhosis and eventually death
+
+-   10-year study conducted by Mayo clinic (Murtagh et al., Hepatology, 1994)
+
+-   158 randomized to treatment, 154 to placebo
+
+-   Longitudinal biomarker measurements of serum bilirubin at times 0, 6m, 1y, 2y, etc.
+
+\medskip
+
+**Outcomes:**
+
+1.  Longitudinal biomarker: serum bilirubin
+
+2.  Time to death
+
+**Question of interest:**
+
+-   What is the association between the time-varying serum bilirubin (that is measured with error) and the risk of death?
+
+```{r, "pbc_data", class.output = "scroll-100"}
+pbc2
+```
+
+## Joint model
+
+```{r "jm", eval = T, echo = T, include = T, out.width = "90%"}
+
+lme.fit <- lme(log(serBilir) ~ year + year:drug, 
+              data = pbc2, 
+              random = ~year|id)
+
+surv.fit <- coxph(Surv(years, status2) ~ drug, 
+              data = pbc2.id, 
+              x = TRUE)
+
+## the knots of the piecewise constant are chosen based 
+## on the percentiles of events 
+## (5-6 internal knots by default)
+joint.fit <- jointModel(lme.fit, surv.fit, 
+              timeVar = "year", 
+              method = "piecewise-PH-GH")
+ 
+```
+
+## Summary
+
+```{r "jm.sum", eval = T, echo = T, include = T, out.width = "50%"}
+##summary(joint.fit)
+
+plot(joint.fit)
+```
+
+## Confidence intervals
+
+```{r "jm.ci", eval = T, echo = T, include = T, out.width = "90%"}
+confint(joint.fit, parm = 'all')
+```
+
+## AUC
+
+```{r "jm.auc"}
+#| warning: false
+
+auc <- JM::aucJM(joint.fit, 
+             newdata = pbc2, 
+             Tstart = 5,
+             Dt = 2)
+
+roc <- JM::rocJM(joint.fit,
+             data = pbc2,
+             dt = c(2, 4, 8), 
+             idVar = "id")
+
+```
+
+## Comparison of nested models
+
+```{r "jm.lrt"}
+surv.fit2 <- coxph(Surv(years, status2) ~ 1,
+                   data = pbc2.id, 
+                   x = TRUE)
+
+joint.fit2 <- jointModel(lme.fit,
+                         surv.fit2,
+                         timeVar = "year", 
+                         method = "piecewise-PH-GH")
+
+anova(joint.fit2, joint.fit)
+
+```
+
+There is no drug effect in the survival outcome (model fits about the same).
+
+# More practice with joint models
+
+Use the data *aids* from the JM package. Take a look at *?aids* for a description of the dataset.
+
+A randomized clinical trial in which longitudinal and survival data was collected to compare the efficacy and safety of two antiretroviral drugs in treating patients who had failed/were intolerant of AZT therapy
+
+-   Longitudinal marker: CD4 cell counts
+-   Survival outcome: time to death
+-   Research goal: How is CD4 cell counts associated with a person’s risk of death?
+-   Lower CD4 cell counts are associated with increased risk of death
+
+```{r, "aids.data", class.output = "scroll-100"}
+head(aids, 2)
+```
+
+### Fit the joint model based on the fitted linear mixed and Cox models using the function jointModel()
+
+Interpret the association between CD4 counts and the risk of death.
+
+```{r}
+table(pbc2$status)
+pbc2$status2 <- as.numeric(pbc2$status !=  "alive")
+table(pbc2$status2)
+pbc2.id$status2 <- as.numeric(pbc2.id$status !=  "alive")
+table(pbc2.id$status2)
+```
+
+## Fitting joint models
+
+```{r}
+## linear mixed model fit (longitudinal outcome)
+lme.fit <- lme(log(serBilir) ~ ns(year, 2),
+               data = pbc2, 
+               random = ~ns(year, 2)|id)
+summary(lme.fit)
+
+## cox model fit (survival outcome) with left truncation (need to fit model without left truncation)
+surv.fit <- coxph(Surv(years, status2) ~ drug*age,
+                  data = pbc2.id,
+                  x = TRUE)
+##surv.fit <- coxph(Surv(fmp.age, event) ~ menopause, data = dat1i, x = TRUE)
+summary(surv.fit)
+##plot(surv.fit)
+
+## joint model fit
+joint.fit <- jointModel(lme.fit, surv.fit, 
+                        timeVar  = "year", 
+                        method = "piecewise-PH-aGH")
+summary(joint.fit)
+##"weibull-PH-aGH"
+##joint.fit.wei <- jointModel(lme.fit, surv.fit, timeVar  = "year", method = "weibull-PH-aGH")
+##summary(joint.fit.wei)
+```
+
+## Obtaining dynamic predictions
+
+```{r}
+ids <- unique(pbc2$id)
+## Prediction for the survival outcomes
+ND1 <- pbc2[pbc2$id == ids[3], ]
+sfit <- survfitJM(joint.fit,
+                  newdata = ND1, 
+                  idVar = "id") 
+## do the covariates for survival model need to be in the long data?
+
+quartz()
+par(mfrow = c(1,1))
+plot(sfit, estimator = "mean",
+     include.y = TRUE,
+     conf.int = TRUE, 
+     fill.area = TRUE, 
+     col.area = "lightgrey")
+
+
+auc1 <- aucJM(joint.fit, 
+              newdata = pbc2,
+              idVar = "id", 
+              Tstart = 5,
+              Dt = 2) ## 
+auc1
+warnings()
+
+
+auc2 <- aucJM(joint.fit,
+              newdata = pbc2, 
+              idVar = "id", 
+              Tstart = 5, 
+              Thoriz = 7) ## 
+auc2
+```

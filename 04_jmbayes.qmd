@@ -1,0 +1,320 @@
+---
+title: "JMBayes"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(JMbayes, quietly = TRUE)
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal for this chapter
+
+-   [x] Fitting the models with `JMbayes` package
+
+-   [x] `JMbayes` does not support nested random effects design
+
+-   [x] Model comparison for the linear mixed models, and survival model with rate
+
+-   [x] Dynamic predictions for the survival outcomes (does not work with the individual data)
+
+-   [x] `JMbayes` cannot calculate the Brier Score
+
+## Setting up for linear mixed model
+
+Because we are gonna use the `JMbayes` package and include the slope terms for the joint model, we need to fit the linear mixed model with the non-linear terms terms: including both the fixed and random terms.
+
+The survival sub-models are directly from early work in `R/03_model_selection.qmd`. The survival sub-models used either factorized or stratified variables.
+
+```{r}
+#| label: "loading data"
+load("data/swan_amh0.rda")
+load("data/swan_amh1.rda")
+
+
+
+control = lmeControl(opt = "optim")
+lme.fit1 <- lme(lamh ~ time,
+                data = swan_amh0,
+                control = control,
+                random = ~ time| id)
+
+lme.fit2 <- lme(lamh ~ time + I(time^2),
+                data = swan_amh0,
+                control = control,
+                random = ~ time| id)
+
+lme.fit3 <- lme(lamh ~ time + I(time^2),
+                data = swan_amh0,
+                control = control,
+                random = ~ time + I(time^2) | id)
+
+surv.fit1 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke),
+                    data = swan_amh1,
+                    x = TRUE,
+                    model = TRUE)
+
+surv.fit2 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                     strata(site) + strata(ethnic) + strata(smoke),
+                   data = swan_amh1,
+                   x = TRUE,
+                   model = TRUE)
+
+```
+
+## Using `JMBayes::jointModel()`
+
+JMbayes is more flexible (in some respects):
+
+-   directly implements the MCMC
+-   allows for categorical longitudinal data as well
+-   allows for general transformation functions
+-   penalized B-splines for the baseline hazard function
+
+Both package give options to define the aforementioned association structures
+
+-   in JM via arguments parameterization & derivForm
+-   in JMbayes via arguments param & extraForm
+
+How did we name the models, `package used` + `.fit` + `lmm model number` + `surv model number` + extensions
+
+## JMbayes1 models
+
+The parameters in `JMbayes` and `JMbayes2` are different, The `dform` also need to be chanaged accordingly.
+
+```         
+JMbayes::jointModelBayes(lmeObject, 
+                         survObject, 
+                         timeVar,  
+                         param = c("td-value", "td-extra", 
+                                   "td-both", "shared-betasRE",
+                                   "shared-RE"), 
+                         extraForm = NULL,
+                         baseHaz = c("P-splines", "regression-splines"),
+                         ...)
+
+JMbayes2::jm(Surv_object,
+             Mixed_objects,
+             time_var, 
+             recurrent = FALSE,
+             functional_forms = NULL, 
+             data_Surv = NULL, 
+             id_var = NULL, 
+             control = NULL,
+             ...)
+```
+
+```{r results = "hide"}
+#| label: "fitting models"
+#| results: "hide"
+#| warning: false
+#| error: true
+
+jmbayes.fit11 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit1,
+                                          timeVar = "time",
+                                          # time_var = "time",
+                                          seed = 55555)
+jmbayes.fit12 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit2,
+                                          timeVar = "time",
+                                          seed = 55555)
+jmbayes.fit31 <- JMbayes::jointModelBayes(lme.fit3,
+                                          surv.fit1,
+                                          timeVar = "time",
+                                          seed = 55555)
+
+jm1.dform3 <- list(fixed = ~ 0 + dns(time, 2),
+              ## the 2nd and 3rd fixed effects of mi(t) used
+              indFixed = 2:3,
+              random = ~ 0 + dns(time, 2),
+              ## the second and third random effect of mi(t)
+              indRandom = 2:3)
+
+jmbayes.fit31.d <- update(jmbayes.fit31,
+                         param = "td-both",
+                         extraForm = jm1.dform3,
+                         seed = 55555,
+                         n.iter = 35000)
+
+```
+
+## Summary of the models
+
+### jmbayes.fit11
+
+$lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$
+
+$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+```{r}
+#| label: "summary_fit11"
+summary(jmbayes.fit11)
+```
+
+### jmbayes.fit21
+
+$lme.fit2 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time| id)$
+
+$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+```{r}
+#| label: "summary_fit12"
+summary(jmbayes.fit12)
+```
+
+### jmbayes.fit31
+
+$lme.fit3 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time + I(time^2) | id)$
+
+$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+```{r}
+#| label: "summary_fit31"
+summary(jmbayes.fit31)
+```
+
+### jmbayes.fit31.d
+
+$lme.fit3 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time + I(time^2) | id)$
+
+$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+```{r}
+#| label: "summary_fit31.d"
+summary(jmbayes.fit31.d)
+```
+
+## Predictions Fails
+
+Because there is no individual who is not in the event group, we cannot predict the survival outcomes.
+
+There is also possiblity that all the factorized variables are the problems.
+
+```{r}
+#| label: "predictions"
+#| error: true
+#| 
+ids <- unique(swan_amh0$id)
+## length(ids)
+## Prediction for the survival outcomes
+ND <- swan_amh0[swan_amh0$id == ids[12], ] ## 4, 5, 7 (not so good)
+# pbc2[pbc2$id == 2, ]
+
+sfit <- survfitJM(jmbayes.fit11, newdata = ND)
+
+sapply(lapply(swan_amh0, unique), length)
+
+survPreds <- vector("list", nrow(ND))
+for (i in 1:nrow(ND)) {
+    survPreds[[i]] <- try(survfitJM(jmbayes.fit11, newdata = ND[1:i, ]))
+}
+```
+
+## AUC and ROC
+
+The AUC and ROC does not improve with the complexity of the model. So far the simplest linear mixed model has the best AUC and ROC `lme.fit1`. The joint model for stratified survival model `surv.fit2` do not provide reasonable standard errors and confidence intervals.
+
+The prediction of the survival outcomes from year 5 to year 8.
+
+```{r}
+JMbayes::aucJM(jmbayes.fit11, 
+      swan_amh0, 
+      Tstart = 5,
+      Thoriz = 8)
+roc11 <- rocJM(jmbayes.fit11, 
+           swan_amh0, 
+           Tstart = 5,
+           Thoriz = 8)
+JMbayes::aucJM(jmbayes.fit31, 
+      swan_amh0, 
+      Tstart = 5,
+      Thoriz = 8)
+roc31 <- rocJM(jmbayes.fit31, 
+           swan_amh0, 
+           Tstart = 5,
+           Thoriz = 8) 
+aucJM(jmbayes.fit31.d,
+      swan_amh0,
+      Tstart = 5,
+      Thoriz = 8)
+roc31.d <- rocJM(jmbayes.fit31.d, 
+           swan_amh0, 
+           Tstart = 5,
+           Thoriz = 8)
+```
+
+Seeming like the model with only linear time term has the best AUC and ROC.
+
+```{r}
+#| label: "plotting_roc"
+#| fig-cap: "ROC curves"
+#| fig-subcap: 
+#| - "ROC curve for linear-term model"
+#| - "ROC curve for quardratic-term model"
+#| - "ROC curve for quardratic-term and slope model"
+plot(roc11)
+plot(roc31)
+plot(roc31.d)
+```
+
+## Brier Score
+
+There is no function to calculate the Brier Score in `JMbayes`, has to migrate into `JMbayes2` package. However there are several functions in both packages interfering with each other, the `JMbayes2::tvBrier()` will be tested in next chapter `R/05_jmbayes2.qmd` files.
+
+```{r}
+#| label: "brier_score"
+#| error: true
+ids <- unique(swan_amh0$id)
+## length(ids)
+## Prediction for the survival outcomes
+ND1 <- swan_amh0[swan_amh0$id == ids[5], ] ## 4, 5, 7 (not so good)
+brier.fit11 <- JMbayes2::tvBrier(jmbayes.fit11, 
+                               newdata = ND1, 
+                               Tstart = 3, 
+                               Dt = 6)
+
+JMbayes2::tvAUC(jmbayes.fit11, 
+      swan_amh0, 
+      Tstart = 5,
+      Thoriz = 8)
+```
+
+<!-- ```{r, class.output="scroll-100"} -->
+
+<!-- JMbayes::runDynPred() -->
+
+<!-- ``` -->

@@ -1,0 +1,60 @@
+```{r setup, include=FALSE}
+# knitr::opts_chunk(echo = TRUE)
+
+## clean the R environment
+rm(list = ls())
+freshr::freshr()
+
+## load packages
+library(here)
+library(tidyverse)
+library(testthat)
+library(usethis)
+library(devtools)
+
+load_all()
+library(plmlmm)
+
+
+# ?testthat::test_file
+# ?devtools::test
+# path <- testthat_example("success")
+# test_file(path)
+# test_file(path, reporter = "minimal")
+
+## check the directory for the file
+here::dr_here()
+here::set_here()
+```
+
+## 00_development
+
+```{r}
+packageVersion("devtools")
+## to create a package
+# create_package("amh")
+use_mit_license()
+
+## look for R home directory
+# R.home()
+## look for R code base
+# system.file()
+## look at the files in the same directory
+here::here() %>%
+  list.files()
+# list.dirs()
+# here::here() %>%
+#   list.dirs(full.names = FALSE,
+#             recursive = TRUE)
+```
+
+## 01_table1.qmd
+
+remember to add the data description into the files
+
+`swan_amh0` is the dataset with all numeric values
+
+```{r}
+use_data_raw("swan_amh0")
+use_data_raw("swan_amh1")
+```

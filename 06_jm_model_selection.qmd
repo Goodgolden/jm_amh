@@ -1,0 +1,239 @@
+---
+title: "JM Model Selection"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(JMbayes, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal for this chapter
+
+-   [x] Merging `site` and `ethnicity` variables
+
+-   [x] Saving into new datasets `swan_amh00` and `swan_amh11`
+
+-   [x] Model selection with the joint models with `JMbayes2` package
+
+-   [x] Model comparison similar to the earlier results, suggesting removing `bc_pills`
+
+## Merge site and ethnicity variables
+
+Changing the Site:Ethnicity into a 14-level factor variable.
+
+```{r}
+#| label: "merge_site_ethnicity"
+
+swan_amh00 <- swan_amh0 %>%
+  mutate(site = case_when(site == 11 ~ "M",
+                          site == 12 ~ "B",
+                          site == 13 ~ "C",
+                          site == 14 ~ "UCD",
+                          site == 15 ~ "UCLA",
+                          site == 16 ~ "NJ",
+                          site == 17 ~ "P")) %>%
+  tidyr::unite("site_ethnic", "site",
+               "ethnic", sep = "_",
+               remove = TRUE) %>%
+  mutate(site_ethinic = factor(site_ethnic))
+
+
+swan_amh11 <- swan_amh1 %>%
+  # mutate(site = case_when(site == 11 ~ "M",
+  #                         site == 12 ~ "B",
+  #                         site == 13 ~ "C",
+  #                         site == 14 ~ "UCD",
+  #                         site == 15 ~ "UCLA",
+  #                         site == 16 ~ "NJ",
+  #                         site == 17 ~ "P")) %>%
+  tidyr::unite("site_ethnic", "site", 
+               "ethnic", sep = "_", 
+               remove = TRUE) %>%
+  mutate(site_ethinic = factor(site_ethnic))
+
+table(swan_amh11$site_ethnic)
+
+```
+
+```{r}
+#| label: "save_data"
+#| eval: false
+#| include: false
+use_data(swan_amh00, swan_amh11,
+         swan_amh0, swan_amh1,
+         overwrite = TRUE,
+         internal = TRUE)
+
+```
+
+## Model Selection
+
+```{r}
+control = lmeControl(opt = "optim")
+lme.fit1 <- lme(lamh ~ time,
+                data = swan_amh00,
+                control = control,
+                random = ~ time| id)
+
+lme.fit2 <- lme(lamh ~ time + I(time^2),
+                data = swan_amh00,
+                control = control,
+                random = ~ time| id)
+
+lme.fit3 <- lme(lamh ~ time + I(time^2),
+                data = swan_amh00,
+                control = control,
+                random = ~ time + I(time^2) | id)
+
+### Need to keep site + ethnic + smoke + bmi
+## testing for physical activity (taking out phys.act)
+surv.fit11 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
+                      factor(site_ethnic) + factor(smoke) +
+                      factor(edu) + factor(alcohol) + 
+                      factor(employed) + factor(health),
+                    data = swan_amh11, 
+                    x = TRUE, 
+                    model = TRUE)
+
+## testing for employed
+surv.fit12 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
+                      factor(site_ethnic) + factor(smoke) +
+                      factor(edu) + factor(alcohol) + factor(health),
+                    data = swan_amh11, x = TRUE, model = TRUE)
+
+## testing for children
+surv.fit13 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site_ethnic) + factor(smoke) +
+                      factor(edu) + factor(alcohol) + factor(health),
+                    data = swan_amh11, x = TRUE, model = TRUE)
+
+
+## testing for edu (education)
+surv.fit14 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site_ethnic) + factor(smoke) +
+                      factor(alcohol) + factor(health),
+                    data = swan_amh11, 
+                    x = TRUE,
+                    model = TRUE)
+
+
+## testing for alcohol
+surv.fit15 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site_ethnic) + factor(smoke) +
+                      factor(health),
+                    data = swan_amh11, 
+                    x = TRUE,
+                    model = TRUE)
+
+
+## testing for health
+surv.fit16 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
+                      factor(site_ethnic) + factor(smoke),
+                    data = swan_amh11, 
+                    x = TRUE,
+                    model = TRUE)
+
+
+## testing for bc_pills
+surv.fit17 <- coxph(Surv(etime, event) ~ married + bmi +
+                      factor(site_ethnic) + factor(smoke),
+                    data = swan_amh11, 
+                    x = TRUE, 
+                    model = TRUE)
+
+```
+
+## Using JMbayes to fit the models
+
+Model selection suggested $surv.fit17 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$ OR $surv.fit15 \sim coxph(Surv(etime, event) \sim married + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+```{r}
+#| label: "joint_models"
+#| results: "hide"
+#| warning: false
+
+
+jmcontrol <- list(n.iter = 5000,
+                  n.burnin = 1000, 
+                  seed = 55555)
+jmbayes.fit111 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit11,
+                                          timeVar = "time",
+                                          control = jmcontrol,
+                                          # time_var = "time",
+                                          seed = 55555)
+jmbayes.fit112 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit12,
+                                          timeVar = "time",
+                                          control = jmcontrol,
+                                          seed = 55555)
+jmbayes.fit113 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit13,
+                                          timeVar = "time",
+                                          control = jmcontrol,
+                                          seed = 55555)
+jmbayes.fit114 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit14,
+                                          timeVar = "time",
+                                          control = jmcontrol,
+                                          seed = 55555)
+jmbayes.fit115 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit15,
+                                          timeVar = "time",
+                                          control = jmcontrol,
+                                          seed = 55555)
+jmbayes.fit116 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit16,
+                                          timeVar = "time",
+                                          control = jmcontrol,
+                                          seed = 55555)
+jmbayes.fit117 <- JMbayes::jointModelBayes(lme.fit1,
+                                          surv.fit17,
+                                          timeVar = "time",
+                                          control = jmcontrol,
+                                          seed = 55555)
+```
+
+```{r}
+anova(jmbayes.fit111, 
+      jmbayes.fit112,
+      jmbayes.fit113, 
+      jmbayes.fit114,
+      jmbayes.fit115,
+      jmbayes.fit116,
+      jmbayes.fit117)
+```

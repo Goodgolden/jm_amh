@@ -1,0 +1,159 @@
+---
+title: "Table1"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+## clean the R environment
+graphics.off()
+rm(list = ls())
+freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal for this chapter
+
+-   [x] Loading and Checking the data (has been cleaned by EJC removing all the id with NA)
+
+-   [x] Data Cleaning (further cleaning, save into package internal `sysdata.rda`)
+
+-   [x] Writing the data description, and save it in the `R` folder
+
+-   [x] Entire data cleaning process is saved in the `data-raw` folder
+
+-   [x] Building Table1 (Specifically looking at the `site` variable)
+
+-   [x] Styling Table1 (using `gtsummary` package)
+
+-   [x] Saving Table1 (as a `.tex` file)
+
+## Data Cleaning
+
+The data cleaning process codes are saved in the `data-raw` folder `swan_amh.R` file. The data cleaning process is done in the for both numeric `swan_amh0` and categorical `swan_amh1` data files. The data description is saved in the `R` folder as `00_data` files.
+
+The cleaned data `.rda` is saved in the `data` folder as a part of the package which do not need to extra loading, if installed as a package. The extra copy of `.csv` files are saved in the `data-raw` folder for the reference.
+
+```{r "loading_data"}
+load(here("data", "swan_amh1.rda"))
+```
+
+Here is the final clean dataset `swan_amh1` with 600 individuals and 16 variables.
+
+```{r, class.output="scroll-100"}
+#| label: "swan_amh1"
+swan_amh1
+```
+
+## Building Table1
+
+```{r}
+#| label: "create_table1"
+
+table1 <- swan_amh1 %>%
+  ungroup() %>%
+  mutate(children = as.numeric(children),
+         parity = case_when(parity == 0 ~ "None",
+                            parity == 1 ~ "One",
+                            parity == 2 ~ "Two",
+                            parity == 3 ~ "Three",
+                            parity == 4 ~ "More than three"),
+         parity = factor(parity, levels = c("None", "One",
+                                               "Two", "Three",
+                                               "More than three"))) %>%
+  dplyr::select(age, ethnic, married,
+                alcohol, smoke, bc_pills,
+                bmi, health, phys_act, amh,
+                parity, children, 
+                employed, edu, site)  %>%
+  tbl_summary(by = site,
+              missing = "ifany",
+              label = list(c("age") ~ "Age (years)",
+                           c("ethnic") ~ "Ethnicity / Race",
+                           c("married") ~ "Marital Status",
+                           c("alcohol") ~ "Alcohol Use",
+                           c("smoke") ~ "Smoking History",
+                           c("bc_pills") ~ "Ever use of BC Pills",
+                           c("bmi") ~ "BMI",
+                           c("health") ~ "Overall Health",
+                           c("phys_act") ~ "Physical Activity Score",
+                           c("amh") ~ "AMH",
+                           c("parity") ~ "Parity",
+                           c("children") ~ "Children",
+                           c("employed") ~ "Employment Status",
+                           c("edu") ~ "Educational Attainment"),
+              type = list(all_continuous() ~ "continuous2",
+                          c("children") ~ "continuous2"),
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median}",
+                                                    "[{min}, {max}]"),
+                               all_categorical() ~ "{n} / {N} ({p}%)")) %>%
+  modify_header(label = "**Characteristics**") %>%
+  # update the column header
+  bold_labels() %>%
+  # add_overall() %>%
+  italicize_labels()
+```
+
+Current Table1 is created, grouped by the `site` variable.
+
+Need to be changed and updated with future requirements.
+
+```{r  class.output="scroll-100"}
+#| label: "styled_table1"
+#| tbl-cap: "Descriptive Statistics for SWAN AMH Data"
+set_flextable_defaults(font.size = 8, 
+                       # text.align = "left",
+                       theme_fun = theme_zebra,
+                       padding = 2)
+table1 %>% 
+  as_flex_table() %>%
+  fontsize(i = 1, size = 8, part = "header")
+  
+```
+
+## Saving Table1
+
+```{r "table_latex"}
+#| label: "table_latex"
+#| eval: false
+library(xtable)
+xtable(as.data.frame(table1), type = "latex",
+      file = paste0("figure/swan_amh_01_table1_", Sys.Date(), ".tex"))
+```
+
+## Notes
+
+The only problem is the location Sites with the Ethnicity groups.
+
+Missing values are removed from 631 to 600 through data cleaning process.
+
+See `data-raw/swan_amh.R` for the data cleaning process *`line-375` removed 31 individuals 31/631 = 4.9%*.

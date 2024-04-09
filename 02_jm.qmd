@@ -1,0 +1,310 @@
+---
+title: "JM"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+## clean the R environment
+graphics.off()
+rm(list = ls())
+freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+library(broom.mixed, quietly = TRUE)
+library(sas7bdat, quietly = TRUE)
+library(JM, quietly = TRUE)
+library(JMbayes, quietly = TRUE)
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+devtools::load_all()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal for this chapter
+
+- [x] EDA for Longitudinal sub-model `lme` (Achohol usage and AMH levels by EJC)
+
+- [x] EDA for survival sub-model (Kaplan-Meier plots for different variables by EJC)
+
+- [x] Transformation required for the AMH levels - log transformation `lamh = log(amh)`
+
+- [x] Fit the longitudinal model with `lme()`, with random slope and random intercept (by EJC)
+
+- [x] Fit the survival model with `coxph()` (by EJC)
+
+- [x] Fit the joint model with `JM` package (by EJC)
+
+
+-   swan_amh0 is the longitudinal dataset
+
+-   swan_amh1 is the id dataset
+
+
+```{r}
+#| label: "loading data"
+load("data/swan_amh0.rda")
+load("data/swan_amh1.rda")
+```
+
+## Longitudinal EDA
+
+The spaghetti plots for alcohol usage and the amh levels. Linear trend seems reasonable for the AMH levels over time.
+
+The longitudinal model will only include time.
+
+-   swan_amh0 is the longitudinal dataset
+
+-   swan_amh1 is the id dataset
+
+```{r}
+#| label: "alcohol_amh"
+## exploring AMH over time
+plot1 <- ggplot(swan_amh0, 
+                aes(x = time, 
+                    y = log(amh),
+                    group = as.character(id))) +
+  geom_line(aes(color = alcohol),
+            alpha = 0.5) +
+  geom_smooth(aes(group = 1),
+              method = "loess",
+              color = "black",
+              se = FALSE) +
+  theme_classic() +
+  theme(legend.position = "none") +
+  ylab("AMH")
+
+
+```
+
+```{r}
+#| label: "amh_curves"
+#| fig-cap: "AMH over time and by alcohol use"
+#| subfig-cap: 
+#| - "Overall figure"
+#| - "Alchol groups"
+#| layout-ncol: 2
+
+
+plot1
+plot1 + facet_wrap(~alcohol)
+```
+
+## Survival EDA
+
+```{r}
+#| label: "survival km"
+#| results: "hide"
+#| fig-height: 20
+#| fig-width: 10
+#| fig-cap: "Kaplan-Meier plots for different variables"
+
+km.plot <- function(var, 
+                    vard) {
+  vard <- as.factor(vard)
+  surv1 <- paste("Surv(start_time, etime, event) ~", 
+                 var, sep = " ")
+  sfit <- survfit(formula(surv1),
+                  data = swan_amh1)
+  lev <- levels(vard)
+  str(vard)
+  nlev <- nlevels(vard)
+  plot(sfit, 
+       lty = 1:nlev,
+       lwd = 2, 
+       col = 1:nlev,
+       main = var)
+  legend("topright", lev, 
+         lty = 1:nlev, 
+         col = 1:nlev, 
+         lwd = 2,
+         bty = "n")
+}
+
+# table(swan_amh1$alcohol)
+# names(swan_amh1)
+# table(swan_amh1$bmi_cat)
+
+namelist <- c("ethnic", "edu", "alcohol", 
+              "employed", "health", "smoke",
+              "married", "bc_pills", 
+              "children", "bmi", "phys_act")
+
+op <- par(mfrow = c(6, 2))
+km.plot(var = "site", vard = swan_amh1$site)
+km.plot(var = "ethnic", vard = swan_amh1$ethnic)
+km.plot(var = "alcohol", vard = swan_amh1$alcohol)
+
+km.plot(var = "edu", vard = swan_amh1$edu)
+km.plot(var = "employed", vard = swan_amh1$employed)
+km.plot(var = "health", vard = swan_amh1$health)
+
+km.plot(var = "smoke", vard = swan_amh1$smoke)
+km.plot(var = "married", vard = swan_amh1$married)
+km.plot(var = "bc_pills", vard = swan_amh1$bc_pills)
+
+km.plot(var = "parity", vard = swan_amh1$parity)
+km.plot(var = "bmi_cat", vard = swan_amh1$bmi_cat)
+
+## continous variables: bmi, phys.act, children
+# summary(swan_amh1$bmi)
+# table(swan_amh1$children) ## maybe use 0, 1, 2, 3, 4, 5+
+```
+
+## Longitudinal submodel on log(AMH)
+
+The linear mixed model will only include the time variable, with random slope and random intercept.
+
+```{r}
+#| label: "linear model"
+swan_amh0$lamh <- log(swan_amh0$amh)
+
+## linear mixed model fit (longitudinal outcome)
+lme.fit0 <- lme(lamh ~ time, 
+                data = swan_amh0,
+                random = ~ 1|id)
+lme.fit1 <- lme(lamh ~ time,
+                data = swan_amh0, 
+                random = ~ time|id)
+```
+
+Comparison between the two models. The first model has a random intercept, while the second model has a random slope.
+
+The fixed effects are almost the same.
+
+```{r class.output="scroll-100"}
+#| label: "lmm_summary"
+tidy(lme.fit0)
+tidy(lme.fit1)
+```
+
+```{r class.output="scroll-100"}
+#| label: "lmm_glance"
+rbind(fit0 = glance(lme.fit0),
+      fit1 = glance(lme.fit1))
+```
+
+There is a significant difference between the two models. We will use the second model for the joint model.
+
+```{r}
+#| label: "lmm_anova"
+anova(lme.fit0, lme.fit1)
+```
+
+## Survivial submodel
+
+```{r}
+#| label: "survival_model"
+
+## get predicted random slopes and plot them against 
+## (get the correlation)
+## with time to FMP (before even you fit JM)
+## cox model fit (survival outcome) with left truncation 
+## (need to fit model without left truncation)
+surv.fit0 <- coxph(Surv(start_time, etime, event) ~ ethnic + edu + 
+                    alcohol + employed + health +
+                    smoke + married + bc_pills + 
+                    children + bmi + 
+                    phys_act + cluster(id),
+                  data = swan_amh1, 
+                  x = TRUE, 
+                  model = TRUE)
+
+## assuming individuals are observed from time 0 - 
+## WE WILL USE this model
+## (and do a sensitivity analysis with left trunc)
+surv.fit1 <- coxph(Surv(etime, event) ~ married + bc_pills +
+                    children + bmi + phys_act +
+                    factor(site) + factor(ethnic) +
+                    factor(smoke) + factor(edu) +
+                    factor(alcohol) + factor(employed) +
+                    factor(health),
+                  data = swan_amh1,
+                  x = TRUE, 
+                  model = TRUE)
+
+
+## with only continuous predictors
+surv.fit2 <- coxph(Surv(etime, event) ~ married + bc_pills + 
+                    children + bmi + phys_act, 
+                  data = swan_amh1, 
+                  x = TRUE,
+                  model = TRUE)
+```
+
+Here are the summary statistics for the three models.
+
+```{r class.output="scroll-100"}
+#| label: "survival_summary"
+rbind(fit0 = glance(surv.fit0), 
+      fit1 = glance(surv.fit1), 
+      fit2 = glance(surv.fit2)) %>%
+  mutate(formula = c(surv.fit0$formula, 
+                     surv.fit1$formula, 
+                     surv.fit2$formula),
+         formula = as.character(formula)) %>%
+  dplyr::select(logLik, AIC, BIC, formula,
+                r.squared, concordance) 
+```
+
+This is the final survival model that we will use for the joint model.
+
+```{r}
+#| label: "survival_fit1"
+tidy(surv.fit1)
+```
+
+## Joint model
+
+Here is the simplest joint model with the exploratory analysis.
+
+```{r}
+#| label: "joint_model"
+## joint model fit
+joint.fit1 <- jointModel(lme.fit1,
+                        surv.fit1, 
+                        timeVar = "time", 
+                        method = "piecewise-PH-aGH")
+
+# "weibull-PH-aGH"
+# joint.fit.laplace <- jointModel(lme.fit1,
+#                             surv.fit1, 
+#                             timeVar = "time", 
+#                             method = "ch-Laplace")
+
+```
+
+The summaries of the joint model.
+
+```{r class.output="scroll-100"}
+#| label: "joint_summary"
+summary(joint.fit1)[[1]]
+summary(joint.fit1)[[2]]
+
+# summary(joint.fit.wei)
+```

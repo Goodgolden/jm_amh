@@ -1,0 +1,62 @@
+project:
+  type: book
+  output-dir: _swan_book
+
+book:
+  title: "SWAN AMH project analysis"
+  # output-file: "TSA project analysis"
+  date: "03/20/2024"
+  navbar:
+    downloads: [pdf]
+    search: true
+  repo-url: https://github.com/Goodgolden/tsa
+  repo-actions: [edit]
+  sidebar:
+    search: true
+    tools:
+      - icon: github
+        href: https://github.com/Goodgolden/tsa
+        aria-label: GitHub
+      - icon: share
+        aria-label: Email
+      - icon: hospital
+        aria-label: CU Anschutz
+        href: https://coloradosph.cuanschutz.edu/education/departments/biostatistics-informatics
+  page-navigation: true
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - 01_table1.qmd
+    - 02_jm.qmd
+    - 03_model_selection.qmd
+    - 04_jmbayes.qmd
+    - 05_jmbayes2.qmd
+    - 06_jm_model_selection.qmd
+    - 07_auc_roc.qmd
+    - 08_rate_auc.qmd
+    - 09_table1_publication.qmd
+    - 05_review.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  # pdf:
+  #   toc: true
+  #   number-sections: true
+  html:
+    code-fold: true
+    code-tools: true
+    code-link: true
+    df-print: paged
+    # fig-cap-location: top
+    fig.topcaption: TRUE
+    author-meta: "Randy Jin, Elizabeth Juarez-Colunga"
+    # include-in-header: "plausible.html"
+    callout-appearance: simple
+editor: visual
+
+toc: true
+
+comments:
+  hypothesis: true

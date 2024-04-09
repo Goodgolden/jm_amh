@@ -1,0 +1,442 @@
+---
+title: "JMbayes2"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(JMbayes2, quietly = TRUE)
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal for this chapter
+
+-   [x] Fitting the models with `JMbayes2` package
+
+-   [x] Removing the site from the survival model, might be the issue!!
+
+-   [x] Nested linear model with `id` and `site` failed
+
+-   [x] Dynamic predictions for the survival outcomes worked
+
+-   [x] `JM`, `JMbayes`, and `JMbayes2` packages does not support factorized covariates
+
+-   [x] `JMbayes2` for AUC, ROC, calibration plots, and the Brier Score
+
+## No sites in the survival model
+
+Here we are working with survival model without site. I also include the site into the nested design random effect in the longitudinal model `lme.fit4`.
+
+```{r}
+#| label: "loading data"
+load("data/swan_amh0.rda")
+load("data/swan_amh1.rda")
+
+swan_amh0 <- swan_amh0 %>% 
+  mutate(site = case_when(site == "11" ~ "M",
+                          site == "12" ~ "B",
+                          site == "13" ~ "C",
+                          site == "14" ~ "UCD",
+                          site == "15" ~ "UCLA",
+                          site == "16" ~ "NJ",
+                          site == "17" ~ "P"))
+```
+
+### lme models and surv models
+
+```{r}
+#| label: "fitting models"
+control = lmeControl(opt = "optim")
+lme.fit1 <- lme(lamh ~ time,
+                data = swan_amh0,
+                control = control,
+                random = ~ time| id)
+
+lme.fit2 <- lme(lamh ~ time + I(time^2),
+                data = swan_amh0,
+                control = control,
+                random = ~ time| id)
+
+lme.fit3 <- lme(lamh ~ time + I(time^2),
+                data = swan_amh0,
+                control = control,
+                random = ~ time + I(time^2) | id)
+
+lme.fit4 <- lme(lamh ~ time,
+                data = swan_amh0,
+                control = control,
+                random = ~ time| site / id)
+
+surv.fit1 <- coxph(Surv(etime, event) ~ married + bc_pills + 
+                        factor(site) + 
+                        bmi + factor(ethnic) + factor(smoke),
+                    data = swan_amh1,
+                    x = TRUE,
+                    model = TRUE)
+
+
+surv.fit1.nosite <- coxph(Surv(etime, event) ~ married + bc_pills + 
+                        # factor(site) + 
+                        bmi + factor(ethnic) + factor(smoke),
+                    data = swan_amh1,
+                    x = TRUE,
+                    model = TRUE)
+
+surv.fit2.nosite <- coxph(Surv(etime, event) ~ married + bc_pills +
+                            # strata(site) + 
+                            bmi + strata(ethnic) + strata(smoke),
+                   data = swan_amh1,
+                   x = TRUE,
+                   model = TRUE)
+```
+
+Here is the predictive results of joint model from `JMbayes2` package. We only remove the site from the survival model.
+
+```{r}
+#| label: "jmbayes2.fit11/31.nosite"
+
+jmcontrol <- list(n_iter = 5000, 
+                  n_burnin = 1000, 
+                  n_chains = 3,
+                  seed = 55555,
+                  cores = 3)
+
+jmbayes2.fit11 <- JMbayes2::jm(Surv_object = surv.fit1,
+                               Mixed_objects = lme.fit1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+jmbayes2.fit11.nosite <- JMbayes2::jm(Surv_object = surv.fit1.nosite,
+                                      Mixed_objects = lme.fit1, 
+                                      time_var = "time",
+                                      control = jmcontrol) 
+# functional_forms = NULL,
+
+
+jmbayes2.fit31.nosite <- JMbayes2::jm(Surv_object = surv.fit1.nosite,
+                                      Mixed_objects = lme.fit3, 
+                                      time_var = "time",
+                                      control = jmcontrol) 
+
+```
+
+### Joint models summarization
+
+Here is the summary for the joint models
+
+$lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$
+
+$surv.fit1.nosite \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(ethnic) + factor(smoke))$
+
+```{r}
+summary(jmbayes2.fit11.nosite)
+```
+
+$lme.fit3 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time + I(time^2) | id)$
+
+$surv.fit1.nosite \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(ethnic) + factor(smoke))$
+
+```{r}
+summary(jmbayes2.fit31.nosite)
+```
+
+There is no `anova()` for JMbayes2 package, However, there is the `compare_jm` function in the package.
+
+***need to talk with EJC whether we need to include the slope terms***
+
+```{r}
+#| label: "comparison"
+#| error: true
+
+## there is no anova function in JMbayes2
+anova(jmbayes2.fit11.nosite, jmbayes2.fit31.nosite)
+
+compare_jm(jmbayes2.fit11.nosite,
+           jmbayes2.fit31.nosite)
+```
+
+Traceplots with base R, convergence is not so well.
+
+```{r}
+#| label: "traceplot"
+#| layout-ncol: 3
+#| eval: false
+
+traceplot(jmbayes2.fit11.nosite)
+```
+
+Traceplot for the joint model with ggplot
+
+```{r}
+#| label: "ggtraceplot"
+#| eval: false
+#| layout-ncol: 3
+
+ggtraceplot(jmbayes2.fit31.nosite,
+            ## "betas", "sigmas", 
+            ## "D", "bs_gammas",
+            ## "tau_bs_gammas", "gammas", "alphas"
+            parm = "betas",
+            size = 0.3, 
+            alpha = 0.8,
+            ## c('standard', 'catalog', 'metro',
+            ##   'pastel', 'beach', 'moonlight', 
+            ##   'goo', 'sunset', 'custom')
+            theme = "moonlight",
+            grid = FALSE, 
+            gridcols = 2)
+
+
+ggtraceplot(jmbayes2.fit31.nosite,
+            ## "betas", "sigmas", 
+            ## "D", "bs_gammas",
+            ## "tau_bs_gammas", "gammas", "alphas"
+            parm = "gammas",
+            size = 0.3, 
+            alpha = 0.8,
+            ## c('standard', 'catalog', 'metro',
+            ##   'pastel', 'beach', 'moonlight', 
+            ##   'goo', 'sunset', 'custom')
+            theme = "moonlight",
+            grid = FALSE, 
+            gridcols = 2)
+```
+
+## Nested linear mixed model
+
+The site is not in the longitudinal dataset `swan_amh0`, but it is in the survival dataset `swan_amh1`?
+
+There is some problem for the nested linear mixed model:
+
+["Indeed, nested random-effects structures are not yet supported in JMbayes2."](https://github.com/drizopoulos/JMbayes2/issues/11) by Dimitris Rizopoulos.
+
+$lme.fit4 \sim lme(lamh \sim time, random = \sim time| site / id)$
+
+$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc_pills + bmi + factor(ethnic) + factor(smoke)$
+
+```{r}
+#| label: "jmbayes2.fit41.nosite"
+#| error: true
+#| warning: false
+
+summary(lme.fit4)
+
+jmbayes2.fit41.nosite <- JMbayes2::jm(Surv_object = surv.fit1.nosite,
+                                      Mixed_objects = lme.fit4, 
+                                      time_var = "time") 
+                                      
+```
+
+Also trying different ways of adding nested or crossed random effects. None of these works with the JMbayes2 package. So including the random `site:ethnicity` effects does not work through the linear mixed models.
+
+```{r}
+#| label: "jmbayes2.fit51.nosite"
+#| error: true
+#| warning: false
+
+lme.fit5 <- lme(lamh ~ time,
+                data = swan_amh0,
+                control = control,
+                ## does not work for the jm model
+                # random = list(site = pdSymm(~ time),
+                #               id = pdDiag(~ time)),
+                # random = list(site = ~ time,
+                #                id = ~ time),
+                # random = list(~1 | site,
+                #               ~time | id),
+                random = ~ time| site / id,
+                ## does not work for the jm model
+                )
+
+summary(lme.fit5)
+
+jmbayes2.fit51.nosite <- JMbayes2::jm(Surv_object = surv.fit1.nosite,
+                                      Mixed_objects = lme.fit5, 
+                                      time_var = "time") 
+```
+
+## Prediction Accuracy
+
+```{r}
+#| label: "jmbayes2_prediction"
+#| error: true
+
+t0 <- 3
+ids <- unique(swan_amh0$id)
+## length(ids)
+## Prediction for the survival outcomes
+ND1 <- swan_amh0 %>%
+  filter(id %in% c(ids[5], id[6]),
+         time < t0)
+## 4, 5, 7 (not so good)
+
+ND1$event <- 0
+ND1$etime <- t0
+
+```
+
+### Dynamic prediction
+
+Notes: we select the subject for whom we want to calculate predictions, we use measurements up to follow-up year 3; we also set that the patients were alive up to this time point.
+
+```{r}
+#| label: "dyn_predict"
+#| error: true
+
+predLong <- predict(jmbayes2.fit11.nosite, 
+                    newdata = ND1,
+                    times = seq(3, 8, by = 0.5),
+                    return_newdata = TRUE)
+
+predLong_all <- predict(jmbayes2.fit11.nosite, 
+                        newdata = swan_amh1,
+                        return_newdata = TRUE)
+
+predSurv_all <- predict(jmbayes2.fit11.nosite, 
+                        newdata = ND1,
+                        times = 1:2,
+                        process = "event",
+                        return_newdata = TRUE)
+
+```
+
+### AUC
+
+It seems like the AUC, ROC, and Brier Score only works for the prediction for the whole dataset, not for the single individual. I do not know why this keep happening.
+
+```{r}
+#| label: "pred_auc"
+#| error: true
+JMbayes2::tvAUC(jmbayes2.fit11.nosite, 
+                swan_amh0, 
+                Tstart = 5,
+                Thoriz = 8)
+
+JMbayes2::tvAUC(jmbayes2.fit11.nosite, 
+                ND1, 
+                Tstart = 5,
+                Thoriz = 8)
+```
+
+### Calibration Plot
+
+```{r}
+#| label: "calibration_plot"
+#| error: true
+
+JMbayes2::calibration_plot(jmbayes2.fit11.nosite, 
+                           newdata = ND1, 
+                           Tstart = 5,
+                           Thoriz = 8)
+
+JMbayes2::calibration_plot(jmbayes2.fit11.nosite, 
+                           swan_amh0, 
+                           Tstart = 5,
+                           Thoriz = 8)
+
+# View(swan_amh0) the left truncation
+```
+
+### ROC
+
+```{r}
+#| label: "roc_plot"
+#| error: true
+
+JMbayes2::tvROC(jmbayes2.fit11.nosite, 
+                ND1, 
+                Tstart = 5,
+                Thoriz = 8)
+
+roc.fit11.nosite <- JMbayes2::tvROC(jmbayes2.fit11.nosite, 
+                                    swan_amh0, 
+                                    Tstart = 5,
+                                    Thoriz = 8)
+
+plot(roc.fit11.nosite)
+```
+
+### Brier Score
+
+However there are several functions in both packages interfering with each other, the `JMbayes2::tvBrier()`.
+
+Using the available longitudinal information up to a starting time point, these functions compute estimates of the ROC curve and the AUC, the Brier score and expected predictive cross-entropy at a horizon time point based on joint models.
+
+I can calculate the Brier score for a group of people or the whole dataset, but not for single individual.
+
+```{r}
+#| label: "brier_score"
+#| error: true
+
+## I cannot predict for single person 
+## but I can predict for the whole dataset
+JMbayes2::tvBrier(jmbayes2.fit11.nosite, 
+                  newdata = ND1, 
+                  Tstart = 5, 
+                  Dt = 8)
+
+JMbayes2::tvBrier(jmbayes2.fit11, 
+                  newdata = ND1, 
+                  Tstart = 5, 
+                  Dt = 8)
+
+JMbayes2::tvBrier(jmbayes2.fit11, 
+                  swan_amh0, 
+                  integrated = TRUE,
+                  # integrated logical; 
+                  # if TRUE the integrated Brier score is calculated
+                  Tstart = 5,
+                  Thoriz = 8)
+
+JMbayes2::tvBrier(jmbayes2.fit11, 
+                  swan_amh0, 
+                  integrated = FALSE,
+                  # integrated logical; 
+                  # if TRUE the integrated Brier score is calculated
+                  Tstart = 5,
+                  Thoriz = 8)
+
+JMbayes2::tvBrier(jmbayes2.fit11.nosite, 
+                  swan_amh0, 
+                  integrated = TRUE,
+                  Tstart = 5,
+                  Thoriz = 8)
+
+JMbayes2::tvBrier(jmbayes2.fit11.nosite, 
+                  swan_amh0, 
+                  integrated = FALSE,
+                  Tstart = 5,
+                  Thoriz = 8)
+
+```

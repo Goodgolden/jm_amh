@@ -1,0 +1,421 @@
+---
+title: "Rate model"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal of the analysis
+
+-   [x] Fit the joint model including rate with `JMbayes2` based on model selection results
+
+-   [x] Dynamic prediction for the joint model with plots
+
+-   [x] Calculate the AUC and ROC for the joint model
+
+## Fit the joint model
+
+Here is the joint model with `JMbayes2`, the name of the model is set up as `package` + \[fit\] + `lme_number` + `surv_number` + `functional`
+
+```{r}
+#| label: "loading"
+
+load("data-raw/swan_amh_jmbayes2_fit116.RData")
+
+```
+
+```{r}
+#| label: "jmbayes2.fit116.d"
+
+jmcontrol <- list(n_iter = 5000, 
+                  n_burnin = 1000, 
+                  n_chains = 1,
+                  seed = 55555,
+                  cores = 1)
+
+
+jmbayes2.fit116.d <- JMbayes2::jm(Surv_object = surv.fit16,
+                                  Mixed_objects = lme.fit1, 
+                                  functional_forms = list("lamh" = ~ value(lamh) + slope(lamh)),
+                                  time_var = "time",
+                                  control = jmcontrol,
+                                  seed = 55555) 
+                         
+
+jmbayes2.fit116 <- JMbayes2::jm(Surv_object = surv.fit16,
+                                  Mixed_objects = lme.fit1, 
+                                  # functional_forms = list("lamh" = ~ value(lamh) + slope(lamh)),
+                                  time_var = "time",
+                                  control = jmcontrol,
+                                  seed = 55555) 
+```
+
+The model with rate is definitely better than the model without rate.
+
+```{r}
+#| label: "compare_jmbayes2"
+
+compare_jm(jmbayes2.fit116.d, jmbayes2.fit116)
+
+```
+
+## Checking `JM` package' to confirme
+
+The results can be replicated with the `JM` package
+
+```{r}
+#| label: "jm_rate"
+
+library(JM)
+
+dform.116 <- list(fixed = ~ 1,
+              ## the fixed effects of mi(t) used
+              indFixed = 2, 
+              random = ~ 1, 
+              ## the second random effect of mi(t)
+              indRandom = 2)
+
+jm.fit116.d <- JM::jointModel(lme.fit1,
+                       surv.fit16,
+                       timeVar = "time",
+                       parameterization = "both",
+                       derivForm = dform.116,
+                       method = "piecewise-PH-aGH")
+
+jm.fit116 <- JM::jointModel(lme.fit1,
+                       surv.fit16,
+                       timeVar = "time",
+                       # parameterization = "both",
+                       method = "piecewise-PH-aGH")
+```
+
+```{r}
+#| label: "jm_comparison"
+
+anova(jm.fit116, jm.fit116.d)
+```
+
+### Summary for the `jmbayes.fit116.d`
+
+For the `lme` model:
+
+```{r output.class = "scroll-100"}
+#| label: "jmbayes2.fit116d.lme"
+
+summary(jmbayes2.fit116.d)$Outcome1 
+
+```
+
+For the `surv` model:
+
+```{r output.class = "scroll-100"}
+#| label: "jmbayes2.fit116d.surv"
+
+summary(jmbayes2.fit116.d)$Survival
+
+```
+
+## Dynamic prediction
+
+### Individual prediction plots
+
+```{r}
+#| label: "plot_function"
+
+#' Title Dynamic prediction plot for individual
+#'
+#' @param id_num individual id number in the list
+#' @param tmin the start time
+#' @param tmax the end time
+#' @param jmfit the joint model objects
+#' @param ... 
+#'
+#' @return a list of lme and surv predicts
+
+dpplot <- function(id_num,
+                   tmin = 0,
+                   tmax = 12,
+                   jmfit = jmbayes2.fit116.d,
+                   ...){
+
+  # browser()
+  nid0 <- swan_amh02[swan_amh02$id == ids[id_num], ]
+  
+  nid <- nid0
+  nid <- nid[nid$time < tmin, ]
+  nid$event <- 0
+  nid$etime <- tmin
+  
+  Lpred <- predict(jmfit, 
+                    newdata = nid,
+                   times = seq(tmin, tmax, length.out = 11),
+                    return_newdata = TRUE)
+  Spred <- predict(jmfit, 
+                 newdata = nid,
+                 times = seq(tmin, tmax, length.out = 11),
+                 process = "event",
+                 return_newdata = TRUE)
+  
+  plot(Lpred, Spred, ylab_long = paste0("ID_", id_num, "  log(amh)"))
+  
+  return(list(Lpred = Lpred,
+              Spred = Spred,
+              nid0 = nid0,
+              nid = nid))
+}
+```
+
+Some of the very steep trajectory for the risk function: `id5`, `id26`, `id56`, `id333`, `id342`;
+
+```{r}
+#| label: "high_risk"
+#| fig-cap: "The dynamic prediction for high risk individuals"
+#| layout-ncol: 2
+#| fig-subcap: 
+#| - "id5_t4"
+#| - "id5_t8"
+#| - "id26_t4"
+#| - "id26_t8"
+#| - "id333_t4"
+#| - "id333_t8"
+
+ids <- unique(swan_amh02$id)
+
+dpplot_id5 <- map(c(4, 8), 
+               ~dpplot(id_num = 5,
+                       tmin = .x, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116.d))
+
+dpplot_id26 <- map(c(4, 8), 
+               ~dpplot(id_num = 26,
+                       tmin = .x, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116.d))
+
+dpplot_id333 <- map(c(4, 8),
+               ~dpplot(id_num = 333,
+                       tmin = .x,
+                       tmax = 12,
+                       jmfit = jmbayes2.fit116.d))
+
+
+```
+
+Some of the smooth trajectory for the risk function: `id32`, `id57`, `id89`, `id222`,`id44`, `id371`;
+
+```{r}
+#| label: "low_risk"
+#| fig-cap: "The dynamic prediction for low risk individuals"
+#| layout-ncol: 2
+#| fig-subcap: 
+#| - "id32_t4"
+#| - "id32_t8"
+#| - "id371_t4"
+#| - "id371_t8"
+#| - "id44_t4"
+#| - "id44_t8"
+
+dpplot_id32 <- map(c(4, 8), 
+               ~dpplot(id_num = 57,
+                       tmin = .x, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116.d))
+
+dpplot_id371 <- map(c(4, 8), 
+               ~dpplot(id_num = 371,
+                       tmin = .x, 
+                       tmax = 12, 
+                       jmfit = jmbayes2.fit116.d))
+
+dpplot_id44 <- map(c(4, 8),
+               ~dpplot(id_num = 44,
+                       tmin = .x,
+                       tmax = 12,
+                       jmfit = jmbayes2.fit116.d))
+```
+
+### AUC
+
+For `JMbayes2`, the function `tvAUC()` is used to estimate the time-dependent AUC only for all the subjects (there is no function for individual AUC).
+
+```{r}
+#| label: "auc_summary"
+
+AUC2  <- try(JMbayes2::tvAUC(jmbayes2.fit116.d,
+                          swan_amh02,
+                          Tstart = 2,
+                          Dt = 2))
+
+AUC4  <- try(JMbayes2::tvAUC(jmbayes2.fit116.d,
+                          swan_amh02,
+                          Tstart = 4,
+                          Dt = 2))
+
+AUC6  <- try(JMbayes2::tvAUC(jmbayes2.fit116.d,
+                          swan_amh02,
+                          Tstart = 6,
+                          Dt = 2))
+
+AUC8  <- try(JMbayes2::tvAUC(jmbayes2.fit116.d,
+                          swan_amh02,
+                          Tstart = 8,
+                          Dt = 2))
+```
+
+Here is the table for the AUC result, using the same joint model for the dynamic prediction. Each AUC for a different time point and time window as 2.
+
+The AUC score are calculated for the time points 2, 4, 6, and 8. It seems the best AUC score is at time 4, and the AUC score decreases as the time window increases. Based on the plots for individuals, some of the plot are missing, because there is no longitudinal data before the `Tstart`.
+
+```{r output.class = "scroll-100"}
+#| label: "auc_result"
+
+cbind(Tstart = map(list(AUC2, AUC4, AUC6, AUC8),
+                   "Tstart") %>% unlist(),
+      Tend = map(list(AUC2, AUC4, AUC6, AUC8), 
+                 "Thoriz") %>% unlist() %>% round(0),
+      AUC = map(list(AUC2, AUC4, AUC6, AUC8), 
+                "auc") %>% unlist()) %>% 
+  as.data.frame()
+```
+
+### ROC
+
+ROC can be calculated based on both individual or all subjects. Here are the results for the ROC for all subject predictions.
+
+The ROC results is consistent with the AUC results, the best ROC is at time 4, and the ROC score decreases as the `Tstart` increases.
+
+```{r}
+#| label: "roc_summary"
+
+ROC2 <- try(JMbayes2::tvROC(jmbayes2.fit116.d,
+                          swan_amh02,
+                          Tstart = 2,
+                          Dt = 2))
+
+ROC4 <- try(JMbayes2::tvROC(jmbayes2.fit116.d,
+                          swan_amh02,
+                          Tstart = 4,
+                          Dt = 2))
+
+ROC6 <- try(JMbayes2::tvROC(jmbayes2.fit116.d,
+                          swan_amh02,
+                          Tstart = 6,
+                          Dt = 2))
+
+ROC8 <- try(JMbayes2::tvROC(jmbayes2.fit116.d,
+                          swan_amh02,
+                          Tstart = 8,
+                          Dt = 2))
+
+plot(ROC2, ylab = "Tstart_2 Sensitivity")
+plot(ROC4, ylab = "Tstart_4 Sensitivity")
+plot(ROC6, ylab = "Tstart_6 Sensitivity")
+plot(ROC8, ylab = "Tstart_8 Sensitivity", optimal_cutoff = "Youden")
+```
+
+### Brier Score
+
+The Brier score is also working for a whole dataset but not for individual subjects. Here is the Brier score for the time points 2 and 8, with 2 as the prediction window.
+
+```         
+a data.frame that contains the longitudinal and covariate information for
+the subjects for which prediction of survival probabilities is required.
+The names of the variables in this data.frame must be the same as 
+in the data.frames that were used to fit the linear mixed effects and 
+the event process model that were supplied as the two first argument of jm.
+```
+
+*Warning: there are fewer than 5 subjects with an event in the interval \[4.000001, 12).*
+
+The Brier score (BS) is calculated using the following formula:
+
+$BrierScore = (f_t - o_t)^2$
+
+$f_t$ represents the percentage response from the clinician, $o_t$ represents the outcome of the patient (`0 = did not occur`, `1 = did occur`).
+
+The Brier score takes in to account the outcome of the event predicted as well as the estimate.
+
+Brier scores range between $0$ and $1$: - A score of 0 represents perfect accuracy - A score of 1 represents perfect inaccuracy.
+
+If a participant predicted a 70% probability of dying within 72 hours, and the patient did in fact die within that timescale, then they would have a Brier score of $(0.70-1)^2 = 0.09$. In this example, the outcome event occurred (coded as 1), and is deducted from the percentage probability; the result is then squared. The low Brier score indicates that this prediction was relatively accurate.
+
+If, in contrast, the participant predicted an 80% probability of dying within 72 hours, and the patient did not in fact die within that timeframe, then they would have scored $(0.80-0)^2 = 0.64$. In this case the outcome event did not occur (coded as 0), and is deducted from the percentage probability; the result is squared. The high Brier score indicates that this prediction was relatively inaccurate.
+
+Finally, if the participant had predicted a 50% probability of dying within 72 hours then regardless of whether or not the patient died, the Brier score would be $(0.50-0)^2 = 0.25$ or $(0.50-1)^2 = 0.25$. In each case a Brier score of 0.25 indicates a random guess.
+
+The **integrated Brier score** for a time interval is the average of the score values for the interval, which is the area under a curve that plots the score against the follow-up time divided by the length of the time interval.
+
+```{r}
+#| label: "bs_summary"
+
+BS2 <- try(JMbayes2::tvBrier(jmbayes2.fit116.d,
+                          newdata = swan_amh02,
+                          Tstart = 2,
+                          Dt = 2))
+
+BS4 <- try(JMbayes2::tvBrier(jmbayes2.fit116.d,
+                          newdata = swan_amh02,
+                          Tstart = 4,
+                          Dt = 2))
+
+BS6 <- try(JMbayes2::tvBrier(jmbayes2.fit116.d,
+                          newdata = swan_amh02,
+                          Tstart = 6,
+                          Dt = 2))
+
+BS8 <- try(JMbayes2::tvBrier(jmbayes2.fit116.d,
+                          newdata = swan_amh02,
+                          Tstart = 8,
+                          Dt = 2))
+
+
+```
+
+```{r output.class = "scroll-100"}
+#| label: "bs_result"
+
+cbind(Tstart = map(list(BS2, BS4, BS6, BS8),
+                   "Tstart") %>% unlist() %>% round(0),
+      Tend = map(list(BS2, BS4, BS6, BS8), 
+                 "Thoriz") %>% unlist() %>% round(0),
+      BS = map(list(BS2, BS4, BS6, BS8), 
+                "Brier") %>% unlist()) %>% 
+  as.data.frame()
+```
