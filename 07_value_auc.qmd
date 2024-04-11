@@ -1,5 +1,5 @@
 ---
-title: "AUC and ROC"
+title: "Value model"
 ---
 
 ```{r setup, include=FALSE}
@@ -61,7 +61,7 @@ $lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$
 
 $surv.fit16 \sim coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
 
-The predict.jm() function cannot take the factor variables, so we need to convert them to numeric variables.
+The `predict.jm()` function cannot take the factor variables, so we need to convert them to numeric variables.
 
 So here is the dummy variables for the factor variables `site_ethnic` and `smoke`. It is weird, just like including the interaction terms without the main effects for the `site` and `ethnicity`; **talk with EJC to see whether we change the main factor effects back.**
 
@@ -387,23 +387,23 @@ For `JMbayes2`, the function `tvAUC()` is used to estimate the time-dependent AU
 
 AUC2  <- try(JMbayes2::tvAUC(jmbayes2.fit116,
                           swan_amh02,
-                          Tstart = 2,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 1))
 
 AUC4  <- try(JMbayes2::tvAUC(jmbayes2.fit116,
                           swan_amh02,
-                          Tstart = 4,
+                          Tstart = 3,
                           Dt = 2))
 
 AUC6  <- try(JMbayes2::tvAUC(jmbayes2.fit116,
                           swan_amh02,
-                          Tstart = 6,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 3))
 
 AUC8  <- try(JMbayes2::tvAUC(jmbayes2.fit116,
                           swan_amh02,
-                          Tstart = 8,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 4))
 ```
 
 Here is the table for the AUC result, using the same joint model for the dynamic prediction. Each AUC for a different time point and time window as 2.
@@ -430,23 +430,23 @@ The ROC results is consistent with the AUC results, the best ROC is at time 4, a
 
 ROC2 <- try(JMbayes2::tvROC(jmbayes2.fit116,
                           swan_amh02,
-                          Tstart = 2,
+                          Tstart = 3,
                           Dt = 2))
 
 ROC4 <- try(JMbayes2::tvROC(jmbayes2.fit116,
                           swan_amh02,
-                          Tstart = 4,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 3))
 
 ROC6 <- try(JMbayes2::tvROC(jmbayes2.fit116,
                           swan_amh02,
-                          Tstart = 6,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 4))
 
 ROC8 <- try(JMbayes2::tvROC(jmbayes2.fit116,
                           swan_amh02,
-                          Tstart = 8,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 5))
 
 plot(ROC2, ylab = "Tstart_2 Sensitivity")
 plot(ROC4, ylab = "Tstart_4 Sensitivity")
@@ -461,23 +461,23 @@ plot(ROC8, ylab = "Tstart_8 Sensitivity")
 
 BS2 <- try(JMbayes2::tvBrier(jmbayes2.fit116,
                           newdata = swan_amh02,
-                          Tstart = 2,
+                          Tstart = 3,
                           Dt = 2))
 
 BS4 <- try(JMbayes2::tvBrier(jmbayes2.fit116,
                           newdata = swan_amh02,
-                          Tstart = 4,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 3))
 
 BS6 <- try(JMbayes2::tvBrier(jmbayes2.fit116,
                           newdata = swan_amh02,
-                          Tstart = 6,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 4))
 
 BS8 <- try(JMbayes2::tvBrier(jmbayes2.fit116,
                           newdata = swan_amh02,
-                          Tstart = 8,
-                          Dt = 2))
+                          Tstart = 3,
+                          Dt = 5))
 
 
 ```

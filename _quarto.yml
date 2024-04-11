@@ -7,15 +7,15 @@ book:
   # output-file: "TSA project analysis"
   date: "03/20/2024"
   navbar:
-    downloads: [pdf]
+    # downloads: [pdf]
     search: true
-  repo-url: https://github.com/Goodgolden/tsa
+  repo-url: https://github.com/Goodgolden/jm_amh
   repo-actions: [edit]
   sidebar:
     search: true
     tools:
       - icon: github
-        href: https://github.com/Goodgolden/tsa
+        href: https://github.com/Goodgolden/jm_amh
         aria-label: GitHub
       - icon: share
         aria-label: Email
@@ -32,9 +32,10 @@ book:
     - 04_jmbayes.qmd
     - 05_jmbayes2.qmd
     - 06_jm_model_selection.qmd
-    - 07_auc_roc.qmd
+    - 07_value_auc.qmd
     - 08_rate_auc.qmd
     - 09_table1_publication.qmd
+    - 10_final_model.qmd
     - 05_review.qmd
     - references.qmd
 

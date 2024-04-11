@@ -1,0 +1,650 @@
+---
+title: "Final Model (for publication)"
+author: "randy"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      eval = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+library(broom.mixed)
+library(nlme)
+library(JMbayes2)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+\newpage
+
+## Goal of the analysis
+
+-   [x] To separate the `site` and `ethnicity` as dummy variables
+
+-   [x] Fit the final joint model (without rate) with `JMbayes2` based on model selection results
+
+-   [x] Dynamic prediction for the joint model with plots
+
+-   [x] Calculate the AUC and ROC for the joint model for $Dt = 1, 2, 3, 4, 5$ (year)
+
+<!-- ## Dummy variables for `site` and `ethnicity` -->
+
+```{r}
+#| label: "dummy_variables"
+swan_amh13 <- swan_amh1 %>%
+  cbind(model.matrix(~ 1 + site + ethnic + smoke, 
+                                    data = .)) %>%
+  mutate(ethnic = factor(ethnic, levels = c("CAUCA", "BLACK", 
+                                            "CHINE", "HISPA", 
+                                            "JAPAN"))) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(-intercept) %>%
+  dplyr::select(order(colnames(.)))
+
+swan_amh03 <- swan_amh0 %>%
+  mutate(smoke = case_when(smoke == 1 ~ "Past Only",
+                           smoke == 2 ~ "Current Smoker",
+                           smoke == 3 ~ "Never Smoked"),
+         site = case_when(site == "11" ~ "M",
+                          site == "12" ~ "B",
+                          site =="13" ~ "C",
+                          site =="14" ~ "UCD",
+                          site =="15" ~ "UCLA",
+                          site =="16" ~ "NJ",
+                          site =="17" ~ "P"),
+         ethnic = factor(ethnic, levels = c("CAUCA", "BLACK", 
+                                            "CHINE", "HISPA", 
+                                            "JAPAN")),
+         site = factor(site, levels = c("B", "C", "M", 
+                                        "NJ", "P", 
+                                        "UCD", "UCLA")),
+         smoke = factor(smoke, levels = c("Never Smoked" , 
+                                          "Past Only", 
+                                          "Current Smoker"))) %>%
+  cbind(model.matrix(~ 1 + site + ethnic + smoke, 
+                     data = .)) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(-intercept) %>%
+  dplyr::select(order(colnames(.)))
+
+# names(swan_amh13)
+# names(swan_amh03)
+# View(swan_amh03)
+# View(swan_amh13)
+
+# levels(swan_amh13$ethnic)
+## CAUCAsion is the reference group
+## **"CAUCA"** "BLACK" "CHINE" "HISPA" "JAPAN"
+
+# table(swan_amh13$site)
+## B is the reference group
+##   **"B"**  "C"  "M"  "NJ"  "P"  "UCD"  "UCLA" 
+
+# levels(swan_amh13$smoke) 
+## NeverSmoked is the reference group
+## "Never Smoked" "Past Only" "Current Smoker"
+
+# ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+# site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+# smoke_current_smoker + smoke_past_only
+
+```
+
+\newpage
+
+## Fit the joint model
+
+### Longitudinal model
+
+$lme1: \ \ \  (fixed = lamh \sim time, \ random = \sim time| id)$
+
+Summary for the longitudinal model:
+
+```{r}
+#| label: " longitudinal"
+control = lmeControl(opt = "optim")
+lme1 <- lme(lamh ~ time,
+                data = swan_amh00,
+                control = control,
+                random = ~ time| id)
+
+broom.mixed::tidy(lme1) %>% knitr::kable()
+
+# xtable::xtable(broom.mixed::tidy(lme1), caption = "Longitudinal model")
+```
+
+Here is the latex code for the longitudinal model:
+
+```         
+% latex table generated in R 4.2.2 by xtable 1.8-4 package
+% Wed Apr 10 20:46:26 2024
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlllrrrrr}
+  \hline
+ & effect & group & term & estimate & std.error & df & statistic & p.value \\ 
+  \hline
+1 & fixed &  & (Intercept) & 7.52 & 0.10 & 2725.00 & 72.11 & 0.00 \\ 
+  2 & fixed &  & time & -0.53 & 0.01 & 2725.00 & -45.64 & 0.00 \\ 
+  3 & ran\_pars & id & sd\_(Intercept) & 1.68 &  &  &  &  \\ 
+  4 & ran\_pars & id & cor\_time.(Intercept) & -0.36 &  &  &  &  \\ 
+  5 & ran\_pars & id & sd\_time & 0.10 &  &  &  &  \\ 
+  6 & ran\_pars & Residual & sd\_Observation & 1.30 &  &  &  &  \\ 
+   \hline
+\end{tabular}
+\caption{Longitudinal model} 
+\end{table}
+```
+
+### Survival model
+
+$surv16: \ \ \  coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+Summary for the survival model:
+
+```{r}
+#| label: "survival"
+## testing for health
+## site_ethnic_b_cauca as the reference group 
+surv16 <- coxph(Surv(etime, event) ~ 0 + married + bc_pills + bmi +
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13, 
+                x = TRUE,
+                model = TRUE)
+
+broom.mixed::tidy(surv16) %>% knitr::kable()
+
+# xtable::xtable(broom.mixed::tidy(surv16), caption = "Survival model")
+
+```
+
+Here is the latex code for the survival model:
+
+```         
+% latex table generated in R 4.2.2 by xtable 1.8-4 package
+% Wed Apr 10 20:49:12 2024
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrrr}
+  \hline
+ & term & estimate & std.error & statistic & p.value \\ 
+  \hline
+1 & marriedMarried/Partnered & 0.22 & 0.09 & 2.30 & 0.02 \\ 
+  2 & bc\_pillsEver use BC pills & -0.23 & 0.10 & -2.29 & 0.02 \\ 
+  3 & bmi & -0.00 & 0.01 & -0.46 & 0.65 \\ 
+  4 & ethnic\_black & -0.18 & 0.12 & -1.51 & 0.13 \\ 
+  5 & ethnic\_chine & -0.05 & 0.21 & -0.22 & 0.82 \\ 
+  6 & ethnic\_hispa & -0.20 & 0.41 & -0.49 & 0.62 \\ 
+  7 & ethnic\_japan & -0.18 & 0.20 & -0.88 & 0.38 \\ 
+  8 & site\_c & 0.11 & 0.16 & 0.69 & 0.49 \\ 
+  9 & site\_m & 0.27 & 0.15 & 1.77 & 0.08 \\ 
+  10 & site\_nj & 0.20 & 0.35 & 0.56 & 0.58 \\ 
+  11 & site\_p & 0.57 & 0.16 & 3.53 & 0.00 \\ 
+  12 & site\_ucd & 0.23 & 0.20 & 1.17 & 0.24 \\ 
+  13 & site\_ucla & 0.26 & 0.21 & 1.28 & 0.20 \\ 
+  14 & smoke\_current\_smoker & 0.59 & 0.14 & 4.36 & 0.00 \\ 
+  15 & smoke\_past\_only & 0.07 & 0.10 & 0.65 & 0.51 \\ 
+   \hline
+\end{tabular}
+\caption{Survival model} 
+\end{table}
+```
+
+### Joint model
+
+$$
+\begin{split}
+  jmbayes2.116: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
+  surv16: \ \ \ & Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + \\
+  & factor(ethnic) + factor(smoke) + \pmb m(time)
+\end{split}
+$$
+
+```{r}
+#| label: "joint_model"
+jmcontrol <- list(n_iter = 5000, 
+                  n_burnin = 1000, 
+                  n_chains = 3,
+                  seed = 55555,
+                  cores = 3)
+
+jmbayes2.116 <- JMbayes2::jm(Surv_object = surv16,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+# save(jmbayes2.116, file = here::here("results", "jmbayes2.116.RData"))
+```
+
+For the `lme` sub-model:
+
+```{r}
+#| label: "lme_summary"
+summary(jmbayes2.116)$Outcome1 %>% knitr::kable()
+# xtable::xtable(summary(jmbayes2.116)$Outcome1, caption = "Longitudinal model")
+```
+
+```         
+
+% latex table generated in R 4.2.2 by xtable 1.8-4 package
+% Wed Apr 10 21:31:42 2024
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrrrr}
+  \hline
+ & Mean & StDev & 2.5\% & 97.5\% & P & Rhat \\ 
+  \hline
+(Intercept) & 7.91 & 0.11 & 7.71 & 8.13 & 0.00 & 1.01 \\ 
+  time & -0.60 & 0.01 & -0.62 & -0.57 & 0.00 & 1.02 \\ 
+  sigma & 1.31 & 0.02 & 1.27 & 1.34 & 0.00 & 1.00 \\ 
+   \hline
+\end{tabular}
+\caption{Longitudinal model} 
+\end{table}
+```
+
+For the `surv` sub-model:
+
+```{r}
+#| label: "survival_summary"
+summary(jmbayes2.116)$Survival %>% knitr::kable()
+# xtable::xtable(summary(jmbayes2.116)$Survival, caption = "Survival model")
+```
+
+```         
+% latex table generated in R 4.2.2 by xtable 1.8-4 package
+% Wed Apr 10 21:30:38 2024
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrrrr}
+  \hline
+ & Mean & StDev & 2.5\% & 97.5\% & P & Rhat \\ 
+  \hline
+marriedMarried/Partnered & 0.13 & 0.15 & -0.16 & 0.41 & 0.39 & 1.01 \\ 
+  bc\_pillsEver use BC pills & -0.03 & 0.13 & -0.29 & 0.24 & 0.82 & 1.00 \\ 
+  bmi & -0.05 & 0.01 & -0.07 & -0.03 & 0.00 & 1.02 \\ 
+  ethnic\_black & -0.37 & 0.15 & -0.66 & -0.07 & 0.01 & 1.00 \\ 
+  ethnic\_chine & -0.23 & 0.28 & -0.75 & 0.33 & 0.41 & 1.01 \\ 
+  ethnic\_hispa & -0.61 & 0.61 & -1.76 & 0.62 & 0.33 & 1.05 \\ 
+  ethnic\_japan & -0.04 & 0.27 & -0.56 & 0.47 & 0.89 & 1.01 \\ 
+  site\_c & 0.24 & 0.20 & -0.16 & 0.62 & 0.25 & 1.01 \\ 
+  site\_m & 0.33 & 0.19 & -0.04 & 0.71 & 0.08 & 1.02 \\ 
+  site\_nj & 0.64 & 0.49 & -0.35 & 1.57 & 0.21 & 1.02 \\ 
+  site\_p & 0.51 & 0.20 & 0.13 & 0.92 & 0.01 & 1.02 \\ 
+  site\_ucd & 0.14 & 0.26 & -0.38 & 0.64 & 0.57 & 1.02 \\ 
+  site\_ucla & 0.42 & 0.26 & -0.09 & 0.95 & 0.10 & 1.02 \\ 
+  smoke\_current\_smoker & 0.17 & 0.18 & -0.19 & 0.53 & 0.30 & 1.01 \\ 
+  smoke\_past\_only & -0.07 & 0.13 & -0.33 & 0.20 & 0.60 & 1.00 \\ 
+  value(lamh) & -1.01 & 0.07 & -1.15 & -0.88 & 0.00 & 1.06 \\ 
+   \hline
+\end{tabular}
+\caption{Survival model} 
+\end{table}
+```
+
+***Notice: ask EJC for which computer to use for long chain running***
+
+```{r}
+#| label: "traceplots"
+# par(mfrow = c(18, 2))
+# traceplot(jmbayes2.116)
+```
+
+\newpage
+
+## Dynamic prediction
+
+### Individual prediction plots
+
+```{r}
+#| label: "ddplot_function"
+ids <- unique(swan_amh03$id)
+dpplot <- function(id_num,
+                   tmin = 0,
+                   tmax = 12,
+                   jmfit = jmbayes2.116,
+                   ...){
+
+  # browser()
+  # ids <- unique(swan_amh03$id)
+  nid0 <- swan_amh03[swan_amh03$id == ids[id_num], ]
+  
+  nid <- nid0
+  nid <- nid[nid$time < tmin, ]
+  nid$event <- 0
+  nid$etime <- tmin
+  
+  Lpred <- predict(jmfit, 
+                    newdata = nid,
+                   times = seq(tmin, tmax, length.out = 11),
+                    return_newdata = TRUE)
+  Spred <- predict(jmfit, 
+                 newdata = nid,
+                 times = seq(tmin, tmax, length.out = 11),
+                 process = "event",
+                 return_newdata = TRUE)
+  
+  plot(Lpred, Spred, 
+       ylab_long = paste0("ID_", id_num, "  log(amh)"))
+  
+  return(list(Lpred = Lpred,
+              Spred = Spred,
+              nid0 = nid0,
+              nid = nid))
+}
+
+```
+
+```{r}
+#| label: "dyn_plots_high"
+#| layout-nrow: 3
+
+dpplot_id5 <- map(c(4, 6, 8), 
+               ~dpplot(id_num = 5,
+                       tmin = .x, 
+                       tmax = 12))
+
+dpplot_id26 <- map(c(4, 6, 8), 
+               ~dpplot(id_num = 26,
+                       tmin = .x, 
+                       tmax = 12))
+
+dpplot_id333 <- map(c(4, 6, 8),
+               ~dpplot(id_num = 342,
+                       tmin = .x,
+                       tmax = 12))
+```
+
+```{r}
+#| label: "dyn_plots_low"
+
+dpplot_id32 <- map(c(4, 6, 8), 
+               ~try(dpplot(id_num = 57,
+                       tmin = .x, 
+                       tmax = 12)))
+
+dpplot_id371 <- map(c(4, 6, 8), 
+               ~try(dpplot(id_num = 371,
+                       tmin = .x, 
+                       tmax = 12)))
+
+dpplot_id44 <- map(c(4, 6, 8),
+               ~try(dpplot(id_num = 44,
+                       tmin = .x,
+                       tmax = 12)))
+```
+
+\newpage
+
+## AUC and ROC
+
+For `JMbayes2`, the function `tvAUC()` is used to estimate the time-dependent AUC only for all the subjects (there is no function for individual AUC). Here is an error message for the AUC $Tstart = 2$ $Dt = 1$
+
+```         
+Error in tvROC.jm(object, newdata, Tstart, Thoriz, Dt, ...) : 
+  it seems that there are no events in the interval [Tstart, Thoriz).
+```
+
+```{r}
+#| label: "auc_summary"
+
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+```
+
+```{r}
+#| label: "auc_table"
+#| warning: false
+Tstart2 = map(AUC2, "auc") %>% as.character()
+Tstart3 = map(AUC3, "auc") %>% as.character()
+Tstart4 = map(AUC4, "auc") %>% as.character()
+Tstart5 = map(AUC5, "auc") %>% as.character()
+Tstart6 = map(AUC6, "auc") %>% as.character()
+Tstart8 = map(AUC8, "auc") %>% as.character()
+
+tbl_auc <- rbind(Tstart2, 
+                 Tstart3,
+                 Tstart4,
+                 Tstart5,
+                 Tstart6, 
+                 Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+tbl_auc %>% knitr::kable()
+```
+
+```{r}
+xtable::xtable(tbl_auc, caption = "AUC Table")
+```
+
+The ROC curves for the joint model for $Tstart = 2, 3, 4, 5, 6, 8$ by rows,
+
+and $Dt = 2, 3, 4, 5$ by columns are shown below:
+
+\newpage
+
+### Start Time 2
+
+```{r}
+# par(mfrow = c(4, 4))
+ROC2  <- map(c(2, 3, 4, 5), 
+                 ~try(JMbayes2::tvROC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x) %>% plot()) )
+```
+
+\newpage
+
+### Start Time 3
+
+```{r}
+# par(mfrow = c(4, 4))
+ROC2  <- map(c(2, 3, 4, 5), 
+                 ~try(JMbayes2::tvROC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x) %>% plot()) )
+```
+
+\newpage
+
+### Start Time 4
+
+```{r}
+ROC4  <- map(c(2, 3, 4, 5), 
+                 ~try(JMbayes2::tvROC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x) %>% plot()))
+
+```
+
+\newpage
+
+### Start Time 5
+
+```{r}
+# par(mfrow = c(4, 4))
+ROC2  <- map(c(2, 3, 4, 5), 
+                 ~try(JMbayes2::tvROC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x) %>% plot()) )
+```
+
+\newpage
+
+### Start Time 6
+
+```{r}
+ROC6  <- map(c(2, 3, 4, 5), 
+                 ~try(JMbayes2::tvROC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x) %>% plot()))
+```
+
+\newpage
+
+### Start Time 8
+
+```{r}
+ROC8  <- map(c(2, 3, 4, 5), 
+                 ~try(JMbayes2::tvROC(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x) %>% plot()))
+```
+
+\newpage
+
+## Brier Score
+
+The warning massage for the Brier score is shown below:
+
+```         
+Error in br(Thoriz) : 
+  it seems that there are no events in the interval [2.000001, 3).
+
+Warning: there are fewer than 5 subjects with an event in the interval [2.000001, 4).
+```
+
+```{r}
+#| label: "bs_summary"
+
+Brier2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+
+Brier3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+
+Brier4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+
+Brier5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+
+Brier6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+
+Brier8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmbayes2.116,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+```
+
+```{r}
+#| label: "bs_table"
+#| warning: false
+Tstart2 = map(Brier2, "Brier") %>% as.character()
+Tstart3 = map(Brier3, "Brier") %>% as.character()
+Tstart4 = map(Brier4, "Brier") %>% as.character()
+Tstart5 = map(Brier5, "Brier") %>% as.character()
+Tstart6 = map(Brier6, "Brier") %>% as.character()
+Tstart8 = map(Brier8, "Brier") %>% as.character()
+
+tbl_bs <- rbind(Tstart2,
+                Tstart3,
+                Tstart4,
+                Tstart5,
+                Tstart6,
+                Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+tbl_bs %>% knitr::kable()
+```
+
+```{r}
+xtable::xtable(tbl_bs, caption = "BS Table")
+```

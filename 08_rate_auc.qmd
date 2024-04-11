@@ -419,3 +419,195 @@ cbind(Tstart = map(list(BS2, BS4, BS6, BS8),
                 "Brier") %>% unlist()) %>% 
   as.data.frame()
 ```
+
+
+## Comparison
+
+### Longitudinal model
+
+$lme.fit1: \ \ \  (fixed = lamh \sim time, \ random = \sim time| id)$
+
+Here is the summary for longitudinal sub-model, based on model selection
+
+```{r}
+#| label: "dummy_variables"
+swan_amh12 <- swan_amh11 %>%
+  cbind(model.matrix(~ 0 + site_ethnic + smoke, 
+                                    data = .)) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(order(colnames(.)))
+
+swan_amh02 <- swan_amh00 %>%
+  mutate(smoke = case_when(smoke == 1 ~ "Past Only",
+                           smoke == 2 ~ "Current Smoker",
+                           smoke == 3 ~ "Never Smoked"),
+         smoke = factor(smoke, levels = c("Never Smoked" , "Past Only", "Current Smoker"))) %>%
+  cbind(model.matrix(~ 0 + site_ethnic + smoke, 
+                                    data = .)) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(order(colnames(.)))
+
+
+control = lmeControl(opt = "optim")
+lme.fit1 <- lme(lamh ~ time,
+                data = swan_amh00,
+                control = control,
+                random = ~ time| id)
+```
+
+Here is the table for the longitudinal model:
+
+```{r}
+broom.mixed::tidy(lme.fit1) %>% knitr::kable()
+```
+
+The full summary for the longitudinal model is as follows:
+
+```{r}
+summary(lme.fit1)
+```
+
+\newpage
+
+### Survival model
+
+**Notes: is it necessary to include a model with observed AMH as covariate in survival model?**
+
+$surv.fit16: \ \ \  coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+Here is the table for survival model, based on model selection:
+
+```{r}
+#| label: "survival_model"
+surv.fit16 <- coxph(Surv(etime, event) ~ 0 + married + bc_pills + bmi +
+                      site_ethnic_b_black + # site_ethnic_b_cauca + 
+                      site_ethnic_c_black + site_ethnic_c_cauca + 
+                      site_ethnic_m_black + site_ethnic_m_cauca +
+                      site_ethnic_nj_cauca + site_ethnic_nj_hispa +
+                      site_ethnic_p_black + site_ethnic_p_cauca + 
+                      site_ethnic_ucd_cauca + site_ethnic_ucd_chine +
+                      site_ethnic_ucla_cauca + site_ethnic_ucla_japan +
+                      smoke_past_only + smoke_current_smoker,
+                    data = swan_amh12, 
+                    x = TRUE,
+                    model = TRUE)
+```
+
+```{r}
+broom::tidy(surv.fit16) %>% knitr::kable()
+
+```
+
+Here is the summary for the survival model
+
+```{r}
+summary(surv.fit16)
+
+```
+
+\newpage
+
+### Joint model without Rate (only value term of longitudinal submodel)
+
+$$
+\begin{split}
+  jmbayes2.fit116: & \\ 
+  lme.fit1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
+  surv.fit16: \ \ \ & Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + \\
+  & factor(ethnic) + factor(smoke) + \pmb m(time)
+\end{split}
+$$
+
+#### Longitudinal submodel
+
+```{r}
+#| label: "joint_model_no_rate"
+jmcontrol <- list(n_iter = 5000, 
+                  n_burnin = 1000, 
+                  n_chains = 1,
+                  seed = 55555,
+                  cores = 1)
+
+jmbayes2.fit116 <- JMbayes2::jm(Surv_object = surv.fit16,
+                               Mixed_objects = lme.fit1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+```
+
+Here is the summary for longitudinal submodel:
+
+```{r}
+summary(jmbayes2.fit116)$Outcome1 %>% knitr::kable()
+```
+
+#### Survival submodel
+
+Here is the summary for survival submodel:
+
+```{r}
+summary(jmbayes2.fit116)$Survival %>% knitr::kable()
+```
+
+#### Joint model
+
+Here are the full summary for the joint model without rate:
+
+```{r}
+summary(jmbayes2.fit116)
+
+```
+
+\newpage
+
+### Joint model with rate (value and rate terms of longitudinal submodel)
+
+$$
+\begin{split}
+  jmbayes2.fit116.d: & \\
+  lme.fit1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
+  surv.fit16: \ \ \ & Surv(etime, event) \sim married + bc\_pills + bmi + \\
+  & factor(site) + factor(ethnic) + factor(smoke) + \pmb m(time) + \pmb m'(time)
+\end{split}
+$$
+
+```{r}
+jmbayes2.fit116.d <- JMbayes2::jm(Surv_object = surv.fit16,
+                                  Mixed_objects = lme.fit1, 
+                                  functional_forms = list("lamh" = ~ value(lamh) + slope(lamh)),
+                                  time_var = "time",
+                                  control = jmcontrol,
+                                  seed = 55555) 
+                         
+```
+
+#### Longitudinal submodel
+
+Here is the summary for longitudinal submodel:
+
+```{r}
+summary(jmbayes2.fit116.d)$Outcome1 %>% knitr::kable()
+```
+
+#### Survival submodel
+
+Here is the summary for survival submodel:
+
+```{r}
+summary(jmbayes2.fit116.d)$Survival %>% knitr::kable()
+```
+
+#### Joint model
+
+Here are the full summary for the joint model with rate:
+
+```{r}
+summary(jmbayes2.fit116.d)
+```
+
+\newpage
+
+### Comparison for model with and without rate
+
+```{r}
+compare_jm(jmbayes2.fit116.d, jmbayes2.fit116)
+```

@@ -1,6 +1,5 @@
 # Working log {.unnumbered}
 
-
 ## 20240401
 
 -   [x] Merge the site and ethnicity into 14 level factor
@@ -27,6 +26,22 @@
 
 ## 20240408
 
--   [v] Test different time slope (rate) model in the survival model
+-   [x] Test different time slope (rate) model in the survival model
 
--   [v] Test linear and quadratic terms model in the survival model
+-   [x] Test linear and quadratic terms model in the survival model
+
+## 20240410
+
+-   [x] ask about the interaction terms $m(t)$ and $m'(t)$ with other variables
+
+-   [x] whether we need to separate the `site` and `ethnicity`
+
+-   [o] add age mfp median and range and IQR **event time** for
+
+-   [o] change the time for the plots into real age.
+
+-   [x] dummy variables into the site and ethnicity
+
+-   [o] rerun the model without the rate model
+
+-   [o] run the final model in a longer chain (ask EJC about the computer)

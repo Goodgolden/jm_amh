@@ -43,3 +43,6 @@ rsconnect/
 .DS_Store
 .Rbuildignore
 .gitignore
+# all the saved html books
+_swan_book/
+/_book20240408/
