@@ -1,0 +1,186 @@
+---
+title: "Convergence"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal of the analysis
+
+-   [x] convergence and traceplot
+
+## Dummy variables for `site` and `ethnicity`
+
+```{r}
+#| label: "dummy_variables"
+swan_amh13 <- swan_amh1 %>%
+  cbind(model.matrix(~ 1 + site + ethnic + smoke, 
+                                    data = .)) %>%
+  mutate(ethnic = factor(ethnic, levels = c("CAUCA", "BLACK", 
+                                            "CHINE", "HISPA", 
+                                            "JAPAN"))) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(-intercept) %>%
+  dplyr::select(order(colnames(.)))
+
+swan_amh03 <- swan_amh0 %>%
+  mutate(smoke = case_when(smoke == 1 ~ "Past Only",
+                           smoke == 2 ~ "Current Smoker",
+                           smoke == 3 ~ "Never Smoked"),
+         site = case_when(site == "11" ~ "M",
+                          site == "12" ~ "B",
+                          site =="13" ~ "C",
+                          site =="14" ~ "UCD",
+                          site =="15" ~ "UCLA",
+                          site =="16" ~ "NJ",
+                          site =="17" ~ "P"),
+         ethnic = factor(ethnic, levels = c("CAUCA", "BLACK", 
+                                            "CHINE", "HISPA", 
+                                            "JAPAN")),
+         site = factor(site, levels = c("B", "C", "M", 
+                                        "NJ", "P", 
+                                        "UCD", "UCLA")),
+         smoke = factor(smoke, levels = c("Never Smoked" , 
+                                          "Past Only", 
+                                          "Current Smoker"))) %>%
+  cbind(model.matrix(~ 1 + site + ethnic + smoke, 
+                     data = .)) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(-intercept) %>%
+  dplyr::select(order(colnames(.)))
+
+
+```
+
+## Fit the joint model
+
+### Longitudinal model
+
+$lme1: \ \ \  (fixed = lamh \sim time, \ random = \sim time| id)$
+
+```{r}
+#| label: " longitudinal"
+control = lmeControl(opt = "optim")
+lme1 <- lme(lamh ~ time,
+                data = swan_amh00,
+                control = control,
+                random = ~ time| id)
+
+broom.mixed::tidy(lme1) %>% knitr::kable()
+
+```
+
+
+### Survival model
+
+$surv16: \ \ \  coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
+
+```{r}
+#| label: "survival"
+## testing for health
+## site_b and ethnic_cauca as the reference group 
+surv16 <- coxph(Surv(etime, event) ~ 0 + married + bc_pills + bmi +
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13, 
+                x = TRUE,
+                model = TRUE)
+
+```
+
+
+### Joint model
+
+$$
+\begin{split}
+  jmbayes2.116: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
+  surv16: \ \ \ & Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + \\
+  & factor(ethnic) + factor(smoke) + \pmb m(time)
+\end{split}
+$$
+
+```{r}
+#| label: "joint_model"
+#| eval: false
+
+jmcontrol <- list(n_iter = 100000, 
+                  n_burnin = 10000, 
+                  n_chains = 5,
+                  seed = 55555,
+                  cores = 5)
+
+jmbayes2.116.100k <- JMbayes2::jm(Surv_object = surv16,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+# save(jmbayes2.116.50k, file = here::here("results", "jmbayes2_116_50k.RData"))
+```
+
+
+
+
+```{r}
+#| label: "traceplots_50k"
+#| layout-nrow: 6
+
+load("results/jmbayes2_116_50k.RData")
+
+traceplot(jmbayes2.116.50k)
+```
+
+
+```{r}
+#| label: "traceplots_100k"
+#| layout-nrow: 6
+
+load("results/jmbayes2_116_100k.RData")
+
+traceplot(jmbayes2.116.100k)
+```
+
+
+```{r}
+#| label: "surv_summary"
+summary(jmbayes2.116.50k)$Survival %>% knitr::kable()
+
+summary(jmbayes2.116.100k)$Survival %>% knitr::kable()
+```

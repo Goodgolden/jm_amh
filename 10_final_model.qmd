@@ -276,7 +276,6 @@ summary(jmbayes2.116)$Survival %>% knitr::kable()
 # xtable::xtable(summary(jmbayes2.116)$Survival, caption = "Survival model")
 ```
 
-
 ```{tex}
 % latex table generated in R 4.2.2 by xtable 1.8-4 package
 % Wed Apr 10 21:30:38 2024
@@ -379,7 +378,6 @@ dpplot_id333 <- map(c(4, 6, 8),
                        tmax = 12))
 ```
 
-
 ```{r}
 #| label: "dyn_plots_low"
 #| layout-nrow: 3
@@ -403,11 +401,8 @@ dpplot_id44 <- map(c(4, 6, 8),
 
 For `JMbayes2`, the function `tvAUC()` is used to estimate the time-dependent AUC only for all the subjects (there is no function for individual AUC). Here is an error message for the AUC $Tstart = 2$ $Dt = 1$
 
-```
-Error in tvROC.jm(object, newdata, Tstart, Thoriz, Dt, ...) : 
-  it seems that there are no events in the interval [Tstart, Thoriz).
-```
-
+    Error in tvROC.jm(object, newdata, Tstart, Thoriz, Dt, ...) : 
+      it seems that there are no events in the interval [Tstart, Thoriz).
 
 ```{r}
 #| label: "auc_summary"
@@ -437,7 +432,6 @@ AUC8  <- map(c(1, 2, 3, 4, 5),
                                       Dt = .x)))
 ```
 
-
 ```{r}
 #| label: "auc_table"
 #| warning: false
@@ -457,12 +451,9 @@ names(tbl_auc) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 tbl_auc
 ```
 
-
 The ROC curves for the joint model for $Tstart = 2, 4, 6, 8$ by rows,
 
 and $Dt = 2, 3, 4, 5$ by columns are shown below:
-
-
 
 ```{r}
 #| label: "roc_plots"
@@ -493,17 +484,14 @@ ROC8  <- map(c(2, 3, 4, 5),
                                       Dt = .x) %>% plot()))
 ```
 
-
 ## Brier Score
 
 The warning massage for the Brier score is shown below:
 
-```
-Error in br(Thoriz) : 
-  it seems that there are no events in the interval [2.000001, 3).
+    Error in br(Thoriz) : 
+      it seems that there are no events in the interval [2.000001, 3).
 
-Warning: there are fewer than 5 subjects with an event in the interval [2.000001, 4).
-```
+    Warning: there are fewer than 5 subjects with an event in the interval [2.000001, 4).
 
 ```{r}
 #| label: "bs_summary"
@@ -533,7 +521,6 @@ Brier8  <- map(c(1, 2, 3, 4, 5),
                                       Dt = .x)))
 ```
 
-
 ```{r}
 #| label: "bs_table"
 #| warning: false
@@ -552,17 +539,3 @@ names(tbl_auc) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 
 tbl_auc
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
