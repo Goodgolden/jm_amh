@@ -46,3 +46,11 @@ rsconnect/
 # all the saved html books
 /_swan_book/
 /_book20240408/
+
+.html
+.css
+.woff
+.json
+
+_book20240408/
+.js
