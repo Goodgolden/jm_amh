@@ -36,6 +36,10 @@ book:
     - 08_rate_auc.qmd
     - 09_table1_publication.qmd
     - 10_final_model.qmd
+    - 11_convergence.qmd
+    - 12_model_selection.qmd
+    - 13_model_selection_2.qmd
+    - 14_rate_value_baseline.qmd
     - 05_review.qmd
     - references.qmd
 

@@ -106,7 +106,6 @@ broom.mixed::tidy(lme1) %>% knitr::kable()
 
 ```
 
-
 ### Survival model
 
 $surv16: \ \ \  coxph(Surv(etime, event) \sim married + bc\_pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$
@@ -124,7 +123,6 @@ surv16 <- coxph(Surv(etime, event) ~ 0 + married + bc_pills + bmi +
                 model = TRUE)
 
 ```
-
 
 ### Joint model
 
@@ -155,9 +153,6 @@ jmbayes2.116.100k <- JMbayes2::jm(Surv_object = surv16,
 # save(jmbayes2.116.50k, file = here::here("results", "jmbayes2_116_50k.RData"))
 ```
 
-
-
-
 ```{r}
 #| label: "traceplots_50k"
 #| layout-nrow: 6
@@ -165,22 +160,13 @@ jmbayes2.116.100k <- JMbayes2::jm(Surv_object = surv16,
 load("results/jmbayes2_116_50k.RData")
 
 traceplot(jmbayes2.116.50k)
+
+remove(jmbayes2.116.50k)
 ```
 
 
-```{r}
-#| label: "traceplots_100k"
-#| layout-nrow: 6
-
-load("results/jmbayes2_116_100k.RData")
-
-traceplot(jmbayes2.116.100k)
-```
 
 
-```{r}
-#| label: "surv_summary"
-summary(jmbayes2.116.50k)$Survival %>% knitr::kable()
 
-summary(jmbayes2.116.100k)$Survival %>% knitr::kable()
-```
+
+

@@ -420,7 +420,6 @@ cbind(Tstart = map(list(BS2, BS4, BS6, BS8),
   as.data.frame()
 ```
 
-
 ## Comparison
 
 ### Longitudinal model

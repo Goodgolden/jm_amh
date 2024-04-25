@@ -1,0 +1,536 @@
+---
+title: "Model Selection I - Dummy"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(plyr)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal of the analysis
+
+-   [x] Backward model selection joint model (without rate) with `JMbayes2` 
+
+-   [x] Rate model, Baseline Rate model, Value model comparison
+
+-   [x] Tables for the models
+
+## Dummy variables for `site` and `ethnicity`
+
+```{r}
+#| label: "dummy_variables"
+
+load("data/swan_amh03.rda")
+load("data/swan_amh13.rda")
+
+
+control = lmeControl(opt = "optim")
+jmcontrol <- list(n_iter = 5000, 
+                  n_burnin = 1000, 
+                  n_chains = 3,
+                  seed = 55555,
+                  cores = 3)
+```
+
+## Fit the joint model
+
+Need to keep $site + ethnic + smoke + bmi$
+
+### Full model
+
+```{r}
+lme1 <- lme(lamh ~ time,
+                data = swan_amh03,
+                control = control,
+                random = ~ time| id)
+
+## surv11 is the full model with all the variables
+surv11 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + bc_pills + 
+                  children + edu + employed +
+                  health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.111 <- JMbayes2::jm(Surv_object = surv11,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.111)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+### Dropping `alcohol < 1/wk`  variable
+
+```{r}
+levels(swan_amh13$alcohol)
+swan_amh13.12 <- swan_amh13 %>%
+  transform(alcohol = revalue(alcohol,
+                              c("<1/wk" = "None")))
+levels(swan_amh13.12$alcohol)
+remove(swan_amh13)
+
+surv12 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + bc_pills + 
+                  children + edu + employed +
+                  health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.12, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.112 <- JMbayes2::jm(Surv_object = surv12,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.112)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+
+### Dropping The `edu College degree or higher`  variable
+
+```{r}
+levels(swan_amh13.12$edu)
+swan_amh13.13 <- swan_amh13.12 %>%
+  transform(edu = revalue(edu,
+                          c("College degree or higher" = "Some College")))
+levels(swan_amh13.13$edu)
+remove(swan_amh13.12)
+
+surv13 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + bc_pills + 
+                  children + edu + employed +
+                  health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.13, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.113 <- JMbayes2::jm(Surv_object = surv13,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.113)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+### Dropping `health Good`  variable
+
+```{r}
+levels(swan_amh13.13$health)
+swan_amh13.14 <- swan_amh13.13 %>%
+  transform(health = revalue(health,
+                             c("Good" = "Excellent")))
+levels(swan_amh13.14$health)
+remove(swan_amh13.13)
+
+surv14 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + bc_pills + 
+                  children + edu + employed +
+                  health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.14, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.114 <- JMbayes2::jm(Surv_object = surv14,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.114)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+### Dropping `health Fair/Poor` variable
+
+
+```{r}
+levels(swan_amh13.14$health)
+swan_amh13.15 <- swan_amh13.14 %>%
+  transform(health = revalue(health,
+                             c("Fair/Poor" = "Excellent")))
+levels(swan_amh13.15$health)
+remove(swan_amh13.14)
+
+surv15 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + bc_pills + 
+                  children + edu + employed +
+                  health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.15, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.115 <- JMbayes2::jm(Surv_object = surv15,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.115)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+### Dropping `alcohol >7/wk` variable
+
+
+```{r}
+levels(swan_amh13.15$alcohol)
+swan_amh13.16 <- swan_amh13.15 %>%
+  transform(alcohol = revalue(alcohol,
+                              c(">7/wk" = "None")))
+levels(swan_amh13.16$alcohol)
+remove(swan_amh13.15)
+
+surv16 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + bc_pills + 
+                  children + edu + employed +
+                  health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.16, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.116 <- JMbayes2::jm(Surv_object = surv16,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.116)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+### Dropping `bc_pills Ever use BC pills` variable
+
+```{r}
+levels(swan_amh13.16$bc_pills)
+swan_amh13.17 <- swan_amh13.16
+
+# swan_amh13.6 <- swan_amh13.5 %>%
+#   transform(alcohol = revalue(alcohol,
+#                               c(">7/wk" = "None")))
+remove(swan_amh13.16)
+
+surv17 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + 
+                  # bc_pills + 
+                  children + 
+                  edu + 
+                  employed +
+                  health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.17, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.117 <- JMbayes2::jm(Surv_object = surv17,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.117)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+### Dropping `health Very Good` variable
+
+
+```{r}
+levels(swan_amh13.17$health)
+swan_amh13.18 <- swan_amh13.17
+remove(swan_amh13.17)
+
+surv18 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi +  
+                  # bc_pills + 
+                  children + 
+                  edu + employed +
+                  # health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.18, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.118 <- JMbayes2::jm(Surv_object = surv18,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.118)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+
+
+### Dropping `employed Employed` variable
+
+```{r}
+levels(swan_amh13.18$employed)
+swan_amh13.19 <- swan_amh13.18
+remove(swan_amh13.18)
+
+surv19 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + 
+                  # bc_pills + 
+                  children + 
+                  edu + 
+                  # employed +
+                  # health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.19, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.119 <- JMbayes2::jm(Surv_object = surv19,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.119)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+### Dropping `children` variable
+
+```{r}
+table(swan_amh13.19$children)
+swan_amh13.20 <- swan_amh13.19
+remove(swan_amh13.19)
+
+surv20 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + # bc_pills + 
+                  # children +
+                  edu + 
+                  # employed +
+                  # health +
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.20, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.120 <- JMbayes2::jm(Surv_object = surv20,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary(jmb2.120)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+
+### Dropping `married Married/Partnered` variable
+
+```{r}
+table(swan_amh13.20$married)
+swan_amh13.21 <- swan_amh13.20
+remove(swan_amh13.20)
+
+surv21 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + # bc_pills + 
+                  #children +
+                  edu + 
+                  # employed +
+                  # health +
+                  # married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.21, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.121 <- JMbayes2::jm(Surv_object = surv21,
+                         Mixed_objects = lme1, 
+                         time_var = "time",
+                         control = jmcontrol) 
+
+summary(jmb2.121)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+### Dropping `alcohol 1-7/wk` variable
+
+```{r}
+table(swan_amh13.21$alcohol)
+swan_amh13.22 <- swan_amh13.21
+remove(swan_amh13.21)
+
+surv22 <- coxph(Surv(etime, event) ~ 
+                  0 + # alcohol +
+                  bmi + # bc_pills + 
+                  #children +
+                  edu + 
+                  # employed +
+                  # health +
+                  # married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.22, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.122 <- JMbayes2::jm(Surv_object = surv22,
+                         Mixed_objects = lme1, 
+                         time_var = "time",
+                         control = jmcontrol) 
+
+summary(jmb2.122)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+
+### Dropping `edu Some College` variable
+
+```{r}
+table(swan_amh13.22$edu)
+swan_amh13.23 <- swan_amh13.22
+remove(swan_amh13.22)
+
+surv23 <- coxph(Surv(etime, event) ~ 
+                  0 + # alcohol +
+                  bmi + # bc_pills + 
+                  #children +
+                  # edu + 
+                  # employed +
+                  # health +
+                  # married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.23, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.123 <- JMbayes2::jm(Surv_object = surv23,
+                         Mixed_objects = lme1, 
+                         time_var = "time",
+                         control = jmcontrol) 
+
+summary(jmb2.123)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
+```
+
+## Comparison 
+
+```{r}
+#| label: "compare_models"
+compare_jm(jmb2.111, 
+           jmb2.112,
+           jmb2.113, 
+           jmb2.114,
+           jmb2.115,
+           jmb2.116,
+           jmb2.117,
+           jmb2.118,
+           jmb2.119,
+           jmb2.120,
+           jmb2.121,
+           jmb2.122,
+           jmb2.123)
+```
+
+Need to discuss with EJC:
+
+how to merge `alcohol` and `edu` levels.
+
+`children` variable also need to be changed.
+
+
+## Final model
+
+```
+surv20 <- coxph(Surv(etime, event) ~ 
+                  0 + alcohol +
+                  bmi + 
+                  edu + 
+                  married + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13.20, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.120 <- JMbayes2::jm(Surv_object = surv20,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+```
+

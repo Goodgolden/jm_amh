@@ -44,5 +44,5 @@ rsconnect/
 .Rbuildignore
 .gitignore
 # all the saved html books
-_swan_book/
+/_swan_book/
 /_book20240408/

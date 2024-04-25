@@ -2,23 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.0.37">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Randy Jin, Elizabeth Juarez-Colunga">
 <title>SWAN AMH project analysis - 8&nbsp; Rate model</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
-}
-/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -45,13 +39,43 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
+    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -87,176 +111,171 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script><script async="" src="https://hypothes.is/embed.js"></script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 </head>
 <body class="nav-sidebar floating nav-fixed">
 
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+      <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">SWAN AMH project analysis</span>
-    </a>
-  </div>
-        <div class="quarto-navbar-tools ms-auto">
-    <a href="https://github.com/Goodgolden/jm_amh" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-</div>
+  </a>
           <div id="quarto-search" class="" title="Search"></div>
       </div> <!-- /container-fluid -->
-    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08_rate_auc.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Rate model</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
+    </nav><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">
+<span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Rate model</span>
+</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
       </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-        </div>
         <div class="sidebar-tools-collapse tools-wide">
-    <a href="https://github.com/Goodgolden/jm_amh" rel="" title="" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
-    <a href="" rel="" title="" class="quarto-navigation-tool px-1" aria-label="Email"><i class="bi bi-share"></i></a>
-    <a href="https://coloradosph.cuanschutz.edu/education/departments/biostatistics-informatics" rel="" title="" class="quarto-navigation-tool px-1" aria-label="CU Anschutz"><i class="bi bi-hospital"></i></a>
+    <a href="https://github.com/Goodgolden/jm_amh" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+    <a href="" title="" class="sidebar-tool px-1"><i class="bi bi-share"></i></a>
+    <a href="https://coloradosph.cuanschutz.edu/education/departments/biostatistics-informatics" title="" class="sidebar-tool px-1"><i class="bi bi-hospital"></i></a>
 </div>
+      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Working log</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Working log</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction</span></a>
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">Introduction</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01_table1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Table1</span></span></a>
+  <a href="./01_table1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Table1</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_jm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">JM</span></span></a>
+  <a href="./02_jm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">JM</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_model_selection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model selection</span></span></a>
+  <a href="./03_model_selection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model selection</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_jmbayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">JMBayes</span></span></a>
+  <a href="./04_jmbayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">JMBayes</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_jmbayes2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">JMbayes2</span></span></a>
+  <a href="./05_jmbayes2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">JMbayes2</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_jm_model_selection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JM Model Selection</span></span></a>
+  <a href="./06_jm_model_selection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JM Model Selection</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_value_auc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Value model</span></span></a>
+  <a href="./07_value_auc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Value model</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_rate_auc.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Rate model</span></span></a>
+  <a href="./08_rate_auc.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Rate model</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09_table1_publication.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Table1 (for publication)</span></span></a>
+  <a href="./09_table1_publication.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Table1 (for publication)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_final_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Final model (for publication)</span></span></a>
+  <a href="./10_final_model.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Final model (for publication)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_review.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Paper Review</span></span></a>
+  <a href="./11_convergence.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Convergence</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="./12_model_selection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Model Selection I - Dummy</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_model_selection_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Model Selection II - Factor</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_rate_value_baseline.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rate Value Baseline</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_review.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Paper Review</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
   </div>
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#goal-of-the-analysis" id="toc-goal-of-the-analysis" class="nav-link active" data-scroll-target="#goal-of-the-analysis"><span class="header-section-number">8.1</span> Goal of the analysis</a></li>
-  <li><a href="#fit-the-joint-model" id="toc-fit-the-joint-model" class="nav-link" data-scroll-target="#fit-the-joint-model"><span class="header-section-number">8.2</span> Fit the joint model</a></li>
+<li><a href="#goal-of-the-analysis" id="toc-goal-of-the-analysis" class="nav-link active" data-scroll-target="#goal-of-the-analysis"> <span class="header-section-number">8.1</span> Goal of the analysis</a></li>
+  <li><a href="#fit-the-joint-model" id="toc-fit-the-joint-model" class="nav-link" data-scroll-target="#fit-the-joint-model"> <span class="header-section-number">8.2</span> Fit the joint model</a></li>
   <li>
-<a href="#checking-jm-package-to-confirme" id="toc-checking-jm-package-to-confirme" class="nav-link" data-scroll-target="#checking-jm-package-to-confirme"><span class="header-section-number">8.3</span> Checking <code>JM</code> package’ to confirme</a>
+<a href="#checking-jm-package-to-confirme" id="toc-checking-jm-package-to-confirme" class="nav-link" data-scroll-target="#checking-jm-package-to-confirme"> <span class="header-section-number">8.3</span> Checking <code>JM</code> package’ to confirme</a>
   <ul class="collapse">
-<li><a href="#summary-for-the-jmbayes.fit116.d" id="toc-summary-for-the-jmbayes.fit116.d" class="nav-link" data-scroll-target="#summary-for-the-jmbayes.fit116.d"><span class="header-section-number">8.3.1</span> Summary for the <code>jmbayes.fit116.d</code></a></li>
+<li><a href="#summary-for-the-jmbayes.fit116.d" id="toc-summary-for-the-jmbayes.fit116.d" class="nav-link" data-scroll-target="#summary-for-the-jmbayes.fit116.d"> <span class="header-section-number">8.3.1</span> Summary for the <code>jmbayes.fit116.d</code></a></li>
   </ul>
 </li>
   <li>
-<a href="#dynamic-prediction" id="toc-dynamic-prediction" class="nav-link" data-scroll-target="#dynamic-prediction"><span class="header-section-number">8.4</span> Dynamic prediction</a>
+<a href="#dynamic-prediction" id="toc-dynamic-prediction" class="nav-link" data-scroll-target="#dynamic-prediction"> <span class="header-section-number">8.4</span> Dynamic prediction</a>
   <ul class="collapse">
-<li><a href="#individual-prediction-plots" id="toc-individual-prediction-plots" class="nav-link" data-scroll-target="#individual-prediction-plots"><span class="header-section-number">8.4.1</span> Individual prediction plots</a></li>
-  <li><a href="#auc" id="toc-auc" class="nav-link" data-scroll-target="#auc"><span class="header-section-number">8.4.2</span> AUC</a></li>
-  <li><a href="#roc" id="toc-roc" class="nav-link" data-scroll-target="#roc"><span class="header-section-number">8.4.3</span> ROC</a></li>
-  <li><a href="#brier-score" id="toc-brier-score" class="nav-link" data-scroll-target="#brier-score"><span class="header-section-number">8.4.4</span> Brier Score</a></li>
+<li><a href="#individual-prediction-plots" id="toc-individual-prediction-plots" class="nav-link" data-scroll-target="#individual-prediction-plots"> <span class="header-section-number">8.4.1</span> Individual prediction plots</a></li>
+  <li><a href="#auc" id="toc-auc" class="nav-link" data-scroll-target="#auc"> <span class="header-section-number">8.4.2</span> AUC</a></li>
+  <li><a href="#roc" id="toc-roc" class="nav-link" data-scroll-target="#roc"> <span class="header-section-number">8.4.3</span> ROC</a></li>
+  <li><a href="#brier-score" id="toc-brier-score" class="nav-link" data-scroll-target="#brier-score"> <span class="header-section-number">8.4.4</span> Brier Score</a></li>
   </ul>
 </li>
   <li>
-<a href="#comparison" id="toc-comparison" class="nav-link" data-scroll-target="#comparison"><span class="header-section-number">8.5</span> Comparison</a>
+<a href="#comparison" id="toc-comparison" class="nav-link" data-scroll-target="#comparison"> <span class="header-section-number">8.5</span> Comparison</a>
   <ul class="collapse">
-<li><a href="#longitudinal-model" id="toc-longitudinal-model" class="nav-link" data-scroll-target="#longitudinal-model"><span class="header-section-number">8.5.1</span> Longitudinal model</a></li>
-  <li><a href="#survival-model" id="toc-survival-model" class="nav-link" data-scroll-target="#survival-model"><span class="header-section-number">8.5.2</span> Survival model</a></li>
-  <li><a href="#joint-model-without-rate-only-value-term-of-longitudinal-submodel" id="toc-joint-model-without-rate-only-value-term-of-longitudinal-submodel" class="nav-link" data-scroll-target="#joint-model-without-rate-only-value-term-of-longitudinal-submodel"><span class="header-section-number">8.5.3</span> Joint model without Rate (only value term of longitudinal submodel)</a></li>
-  <li><a href="#joint-model-with-rate-value-and-rate-terms-of-longitudinal-submodel" id="toc-joint-model-with-rate-value-and-rate-terms-of-longitudinal-submodel" class="nav-link" data-scroll-target="#joint-model-with-rate-value-and-rate-terms-of-longitudinal-submodel"><span class="header-section-number">8.5.4</span> Joint model with rate (value and rate terms of longitudinal submodel)</a></li>
-  <li><a href="#comparison-for-model-with-and-without-rate" id="toc-comparison-for-model-with-and-without-rate" class="nav-link" data-scroll-target="#comparison-for-model-with-and-without-rate"><span class="header-section-number">8.5.5</span> Comparison for model with and without rate</a></li>
+<li><a href="#longitudinal-model" id="toc-longitudinal-model" class="nav-link" data-scroll-target="#longitudinal-model"> <span class="header-section-number">8.5.1</span> Longitudinal model</a></li>
+  <li><a href="#survival-model" id="toc-survival-model" class="nav-link" data-scroll-target="#survival-model"> <span class="header-section-number">8.5.2</span> Survival model</a></li>
+  <li><a href="#joint-model-without-rate-only-value-term-of-longitudinal-submodel" id="toc-joint-model-without-rate-only-value-term-of-longitudinal-submodel" class="nav-link" data-scroll-target="#joint-model-without-rate-only-value-term-of-longitudinal-submodel"> <span class="header-section-number">8.5.3</span> Joint model without Rate (only value term of longitudinal submodel)</a></li>
+  <li><a href="#joint-model-with-rate-value-and-rate-terms-of-longitudinal-submodel" id="toc-joint-model-with-rate-value-and-rate-terms-of-longitudinal-submodel" class="nav-link" data-scroll-target="#joint-model-with-rate-value-and-rate-terms-of-longitudinal-submodel"> <span class="header-section-number">8.5.4</span> Joint model with rate (value and rate terms of longitudinal submodel)</a></li>
+  <li><a href="#comparison-for-model-with-and-without-rate" id="toc-comparison-for-model-with-and-without-rate" class="nav-link" data-scroll-target="#comparison-for-model-with-and-without-rate"> <span class="header-section-number">8.5.5</span> Comparison for model with and without rate</a></li>
   </ul>
 </li>
   </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/Goodgolden/jm_amh/edit/main/08_rate_auc.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">
 <span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Rate model</span>
 </h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
@@ -266,7 +285,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-title-meta">
 
     
-  
     
   </div>
   
@@ -284,9 +302,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="goal-of-the-analysis" class="level2" data-number="8.1"><h2 data-number="8.1" class="anchored" data-anchor-id="goal-of-the-analysis">
 <span class="header-section-number">8.1</span> Goal of the analysis</h2>
 <ul class="task-list">
-<li><p><input type="checkbox" checked="">Fit the joint model including rate with <code>JMbayes2</code> based on model selection results</p></li>
-<li><p><input type="checkbox" checked="">Dynamic prediction for the joint model with plots</p></li>
-<li><p><input type="checkbox" checked="">Calculate the AUC and ROC for the joint model</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+Fit the joint model including rate with <code>JMbayes2</code> based on model selection results</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+Dynamic prediction for the joint model with plots</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+Calculate the AUC and ROC for the joint model</p></li>
 </ul></section><section id="fit-the-joint-model" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="fit-the-joint-model">
 <span class="header-section-number">8.2</span> Fit the joint model</h2>
 <p>Here is the joint model with <code>JMbayes2</code>, the name of the model is set up as <code>package</code> + [fit] + <code>lme_number</code> + <code>surv_number</code> + <code>functional</code></p>
@@ -471,13 +492,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/high_risk-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id5_t4</figcaption></figure>
+<p></p><figcaption class="figure-caption">id5_t4</figcaption><p></p>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/high_risk-2.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id5_t8</figcaption></figure>
+<p></p><figcaption class="figure-caption">id5_t8</figcaption><p></p>
+</figure>
 </div>
 </div>
 </div>
@@ -485,13 +508,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/high_risk-3.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id26_t4</figcaption></figure>
+<p></p><figcaption class="figure-caption">id26_t4</figcaption><p></p>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/high_risk-4.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id26_t8</figcaption></figure>
+<p></p><figcaption class="figure-caption">id26_t8</figcaption><p></p>
+</figure>
 </div>
 </div>
 </div>
@@ -499,13 +524,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/high_risk-5.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id333_t4</figcaption></figure>
+<p></p><figcaption class="figure-caption">id333_t4</figcaption><p></p>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/high_risk-6.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id333_t8</figcaption></figure>
+<p></p><figcaption class="figure-caption">id333_t8</figcaption><p></p>
+</figure>
 </div>
 </div>
 </div>
@@ -540,13 +567,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/low_risk-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id32_t4</figcaption></figure>
+<p></p><figcaption class="figure-caption">id32_t4</figcaption><p></p>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/low_risk-2.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id32_t8</figcaption></figure>
+<p></p><figcaption class="figure-caption">id32_t8</figcaption><p></p>
+</figure>
 </div>
 </div>
 </div>
@@ -554,13 +583,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/low_risk-3.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id371_t4</figcaption></figure>
+<p></p><figcaption class="figure-caption">id371_t4</figcaption><p></p>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/low_risk-4.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id371_t8</figcaption></figure>
+<p></p><figcaption class="figure-caption">id371_t8</figcaption><p></p>
+</figure>
 </div>
 </div>
 </div>
@@ -568,13 +599,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/low_risk-5.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id44_t4</figcaption></figure>
+<p></p><figcaption class="figure-caption">id44_t4</figcaption><p></p>
+</figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="08_rate_auc_files/figure-html/low_risk-6.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">id44_t8</figcaption></figure>
+<p></p><figcaption class="figure-caption">id44_t8</figcaption><p></p>
+</figure>
 </div>
 </div>
 </div>
@@ -765,7 +798,7 @@ the event process model that were supplied as the two first argument of jm.</cod
 <div class="cell" data-hash="08_rate_auc_cache/html/unnamed-chunk-17_ba4dcf3247e8c408c3ac16e6faf70db7">
 <details><summary>Code</summary><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">broom.mixed</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="va">lme.fit1</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="table table-sm table-striped">
 <colgroup>
 <col style="width: 10%">
 <col style="width: 10%">
@@ -908,7 +941,7 @@ the event process model that were supplied as the two first argument of jm.</cod
 <div class="cell" data-hash="08_rate_auc_cache/html/unnamed-chunk-20_aa1baea3ad9f43148547c43583797157">
 <details><summary>Code</summary><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="va">surv.fit16</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="table table-sm table-striped">
 <colgroup>
 <col style="width: 38%">
 <col style="width: 16%">
@@ -1147,7 +1180,7 @@ the event process model that were supplied as the two first argument of jm.</cod
 <div class="cell" data-hash="08_rate_auc_cache/html/unnamed-chunk-23_fc199fb39def4e501ed60f0b57987d9a">
 <details><summary>Code</summary><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">jmbayes2.fit116</span><span class="op">)</span><span class="op">$</span><span class="va">Outcome1</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="table table-sm table-striped">
 <thead><tr class="header">
 <th style="text-align: left;"></th>
 <th style="text-align: right;">Mean</th>
@@ -1191,7 +1224,7 @@ the event process model that were supplied as the two first argument of jm.</cod
 <div class="cell" data-hash="08_rate_auc_cache/html/unnamed-chunk-24_17b039d99f7a66e14906c42b5398e11e">
 <details><summary>Code</summary><div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">jmbayes2.fit116</span><span class="op">)</span><span class="op">$</span><span class="va">Survival</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="table table-sm table-striped">
 <colgroup>
 <col style="width: 34%">
 <col style="width: 14%">
@@ -1453,7 +1486,7 @@ the event process model that were supplied as the two first argument of jm.</cod
 <div class="cell" data-hash="08_rate_auc_cache/html/unnamed-chunk-27_d1cb5c3293db000db00f694b0cc8ef3d">
 <details><summary>Code</summary><div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">jmbayes2.fit116.d</span><span class="op">)</span><span class="op">$</span><span class="va">Outcome1</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="table table-sm table-striped">
 <thead><tr class="header">
 <th style="text-align: left;"></th>
 <th style="text-align: right;">Mean</th>
@@ -1497,7 +1530,7 @@ the event process model that were supplied as the two first argument of jm.</cod
 <div class="cell" data-hash="08_rate_auc_cache/html/unnamed-chunk-28_2c52a9325ac40c851fa8b9939e2edeb5">
 <details><summary>Code</summary><div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">jmbayes2.fit116.d</span><span class="op">)</span><span class="op">$</span><span class="va">Survival</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped small">
+<table class="table table-sm table-striped">
 <colgroup>
 <col style="width: 32%">
 <col style="width: 15%">
@@ -1788,23 +1821,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
+    target: function(trigger) {
+      return trigger.previousElementSibling;
     }
   });
   clipboard.on('success', function(e) {
@@ -1816,24 +1835,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
     setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -1912,136 +1914,31 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      let href = ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
     });
   }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
       });
-    }
+      return popup.innerHTML;
+    });
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
@@ -2477,197 +2374,196 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb45-442"><a href="#cb45-442" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
 <span id="cb45-443"><a href="#cb45-443" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb45-444"><a href="#cb45-444" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-445"><a href="#cb45-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-446"><a href="#cb45-446" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparison</span></span>
-<span id="cb45-447"><a href="#cb45-447" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-448"><a href="#cb45-448" aria-hidden="true" tabindex="-1"></a><span class="fu">### Longitudinal model</span></span>
-<span id="cb45-449"><a href="#cb45-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-450"><a href="#cb45-450" aria-hidden="true" tabindex="-1"></a>$lme.fit1: \ \ \  (fixed = lamh \sim time, \ random = \sim time| id)$</span>
-<span id="cb45-451"><a href="#cb45-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-452"><a href="#cb45-452" aria-hidden="true" tabindex="-1"></a>Here is the summary for longitudinal sub-model, based on model selection</span>
-<span id="cb45-453"><a href="#cb45-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-456"><a href="#cb45-456" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-457"><a href="#cb45-457" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dummy_variables"</span></span>
-<span id="cb45-458"><a href="#cb45-458" aria-hidden="true" tabindex="-1"></a>swan_amh12 <span class="ot">&lt;-</span> swan_amh11 <span class="sc">%&gt;%</span></span>
-<span id="cb45-459"><a href="#cb45-459" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> site_ethnic <span class="sc">+</span> smoke, </span>
-<span id="cb45-460"><a href="#cb45-460" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
-<span id="cb45-461"><a href="#cb45-461" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb45-462"><a href="#cb45-462" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">order</span>(<span class="fu">colnames</span>(.)))</span>
-<span id="cb45-463"><a href="#cb45-463" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-464"><a href="#cb45-464" aria-hidden="true" tabindex="-1"></a>swan_amh02 <span class="ot">&lt;-</span> swan_amh00 <span class="sc">%&gt;%</span></span>
-<span id="cb45-465"><a href="#cb45-465" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">smoke =</span> <span class="fu">case_when</span>(smoke <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Past Only"</span>,</span>
-<span id="cb45-466"><a href="#cb45-466" aria-hidden="true" tabindex="-1"></a>                           smoke <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Current Smoker"</span>,</span>
-<span id="cb45-467"><a href="#cb45-467" aria-hidden="true" tabindex="-1"></a>                           smoke <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Never Smoked"</span>),</span>
-<span id="cb45-468"><a href="#cb45-468" aria-hidden="true" tabindex="-1"></a>         <span class="at">smoke =</span> <span class="fu">factor</span>(smoke, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Never Smoked"</span> , <span class="st">"Past Only"</span>, <span class="st">"Current Smoker"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb45-469"><a href="#cb45-469" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> site_ethnic <span class="sc">+</span> smoke, </span>
-<span id="cb45-470"><a href="#cb45-470" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
-<span id="cb45-471"><a href="#cb45-471" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb45-472"><a href="#cb45-472" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">order</span>(<span class="fu">colnames</span>(.)))</span>
+<span id="cb45-445"><a href="#cb45-445" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparison</span></span>
+<span id="cb45-446"><a href="#cb45-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-447"><a href="#cb45-447" aria-hidden="true" tabindex="-1"></a><span class="fu">### Longitudinal model</span></span>
+<span id="cb45-448"><a href="#cb45-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-449"><a href="#cb45-449" aria-hidden="true" tabindex="-1"></a>$lme.fit1: \ \ \  (fixed = lamh \sim time, \ random = \sim time| id)$</span>
+<span id="cb45-450"><a href="#cb45-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-451"><a href="#cb45-451" aria-hidden="true" tabindex="-1"></a>Here is the summary for longitudinal sub-model, based on model selection</span>
+<span id="cb45-452"><a href="#cb45-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-455"><a href="#cb45-455" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-456"><a href="#cb45-456" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dummy_variables"</span></span>
+<span id="cb45-457"><a href="#cb45-457" aria-hidden="true" tabindex="-1"></a>swan_amh12 <span class="ot">&lt;-</span> swan_amh11 <span class="sc">%&gt;%</span></span>
+<span id="cb45-458"><a href="#cb45-458" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> site_ethnic <span class="sc">+</span> smoke, </span>
+<span id="cb45-459"><a href="#cb45-459" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-460"><a href="#cb45-460" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb45-461"><a href="#cb45-461" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">order</span>(<span class="fu">colnames</span>(.)))</span>
+<span id="cb45-462"><a href="#cb45-462" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-463"><a href="#cb45-463" aria-hidden="true" tabindex="-1"></a>swan_amh02 <span class="ot">&lt;-</span> swan_amh00 <span class="sc">%&gt;%</span></span>
+<span id="cb45-464"><a href="#cb45-464" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">smoke =</span> <span class="fu">case_when</span>(smoke <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Past Only"</span>,</span>
+<span id="cb45-465"><a href="#cb45-465" aria-hidden="true" tabindex="-1"></a>                           smoke <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Current Smoker"</span>,</span>
+<span id="cb45-466"><a href="#cb45-466" aria-hidden="true" tabindex="-1"></a>                           smoke <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Never Smoked"</span>),</span>
+<span id="cb45-467"><a href="#cb45-467" aria-hidden="true" tabindex="-1"></a>         <span class="at">smoke =</span> <span class="fu">factor</span>(smoke, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Never Smoked"</span> , <span class="st">"Past Only"</span>, <span class="st">"Current Smoker"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb45-468"><a href="#cb45-468" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> site_ethnic <span class="sc">+</span> smoke, </span>
+<span id="cb45-469"><a href="#cb45-469" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-470"><a href="#cb45-470" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb45-471"><a href="#cb45-471" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">order</span>(<span class="fu">colnames</span>(.)))</span>
+<span id="cb45-472"><a href="#cb45-472" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-473"><a href="#cb45-473" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-474"><a href="#cb45-474" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-475"><a href="#cb45-475" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
-<span id="cb45-476"><a href="#cb45-476" aria-hidden="true" tabindex="-1"></a>lme.fit1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
-<span id="cb45-477"><a href="#cb45-477" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh00,</span>
-<span id="cb45-478"><a href="#cb45-478" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
-<span id="cb45-479"><a href="#cb45-479" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
-<span id="cb45-480"><a href="#cb45-480" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-481"><a href="#cb45-481" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-482"><a href="#cb45-482" aria-hidden="true" tabindex="-1"></a>Here is the table for the longitudinal model:</span>
-<span id="cb45-483"><a href="#cb45-483" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-486"><a href="#cb45-486" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-487"><a href="#cb45-487" aria-hidden="true" tabindex="-1"></a>broom.mixed<span class="sc">::</span><span class="fu">tidy</span>(lme.fit1) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb45-488"><a href="#cb45-488" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-489"><a href="#cb45-489" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-490"><a href="#cb45-490" aria-hidden="true" tabindex="-1"></a>The full summary for the longitudinal model is as follows:</span>
-<span id="cb45-491"><a href="#cb45-491" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-494"><a href="#cb45-494" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-495"><a href="#cb45-495" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lme.fit1)</span>
-<span id="cb45-496"><a href="#cb45-496" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-497"><a href="#cb45-497" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-498"><a href="#cb45-498" aria-hidden="true" tabindex="-1"></a>\newpage</span>
-<span id="cb45-499"><a href="#cb45-499" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-500"><a href="#cb45-500" aria-hidden="true" tabindex="-1"></a><span class="fu">### Survival model</span></span>
-<span id="cb45-501"><a href="#cb45-501" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-502"><a href="#cb45-502" aria-hidden="true" tabindex="-1"></a>**Notes: is it necessary to include a model with observed AMH as covariate in survival model?**</span>
-<span id="cb45-503"><a href="#cb45-503" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-504"><a href="#cb45-504" aria-hidden="true" tabindex="-1"></a>$surv.fit16: \ \ \  coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
-<span id="cb45-505"><a href="#cb45-505" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-506"><a href="#cb45-506" aria-hidden="true" tabindex="-1"></a>Here is the table for survival model, based on model selection:</span>
-<span id="cb45-507"><a href="#cb45-507" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-510"><a href="#cb45-510" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-511"><a href="#cb45-511" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "survival_model"</span></span>
-<span id="cb45-512"><a href="#cb45-512" aria-hidden="true" tabindex="-1"></a>surv.fit16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb45-513"><a href="#cb45-513" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_b_black <span class="sc">+</span> <span class="co"># site_ethnic_b_cauca + </span></span>
-<span id="cb45-514"><a href="#cb45-514" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_c_black <span class="sc">+</span> site_ethnic_c_cauca <span class="sc">+</span> </span>
-<span id="cb45-515"><a href="#cb45-515" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_m_black <span class="sc">+</span> site_ethnic_m_cauca <span class="sc">+</span></span>
-<span id="cb45-516"><a href="#cb45-516" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_nj_cauca <span class="sc">+</span> site_ethnic_nj_hispa <span class="sc">+</span></span>
-<span id="cb45-517"><a href="#cb45-517" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_p_black <span class="sc">+</span> site_ethnic_p_cauca <span class="sc">+</span> </span>
-<span id="cb45-518"><a href="#cb45-518" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_ucd_cauca <span class="sc">+</span> site_ethnic_ucd_chine <span class="sc">+</span></span>
-<span id="cb45-519"><a href="#cb45-519" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_ucla_cauca <span class="sc">+</span> site_ethnic_ucla_japan <span class="sc">+</span></span>
-<span id="cb45-520"><a href="#cb45-520" aria-hidden="true" tabindex="-1"></a>                      smoke_past_only <span class="sc">+</span> smoke_current_smoker,</span>
-<span id="cb45-521"><a href="#cb45-521" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh12, </span>
-<span id="cb45-522"><a href="#cb45-522" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb45-523"><a href="#cb45-523" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb45-524"><a href="#cb45-524" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-525"><a href="#cb45-525" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-528"><a href="#cb45-528" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-529"><a href="#cb45-529" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(surv.fit16) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb45-530"><a href="#cb45-530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-531"><a href="#cb45-531" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-532"><a href="#cb45-532" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-533"><a href="#cb45-533" aria-hidden="true" tabindex="-1"></a>Here is the summary for the survival model</span>
-<span id="cb45-534"><a href="#cb45-534" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-537"><a href="#cb45-537" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-538"><a href="#cb45-538" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(surv.fit16)</span>
-<span id="cb45-539"><a href="#cb45-539" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-540"><a href="#cb45-540" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-541"><a href="#cb45-541" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-542"><a href="#cb45-542" aria-hidden="true" tabindex="-1"></a>\newpage</span>
-<span id="cb45-543"><a href="#cb45-543" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-544"><a href="#cb45-544" aria-hidden="true" tabindex="-1"></a><span class="fu">### Joint model without Rate (only value term of longitudinal submodel)</span></span>
-<span id="cb45-545"><a href="#cb45-545" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-546"><a href="#cb45-546" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb45-547"><a href="#cb45-547" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
-<span id="cb45-548"><a href="#cb45-548" aria-hidden="true" tabindex="-1"></a>  jmbayes2.fit116: &amp; <span class="sc">\\</span> </span>
-<span id="cb45-549"><a href="#cb45-549" aria-hidden="true" tabindex="-1"></a>  lme.fit1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
-<span id="cb45-550"><a href="#cb45-550" aria-hidden="true" tabindex="-1"></a>  surv.fit16: \ \ \ &amp; Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + <span class="sc">\\</span></span>
-<span id="cb45-551"><a href="#cb45-551" aria-hidden="true" tabindex="-1"></a>  &amp; factor(ethnic) + factor(smoke) + \pmb m(time)</span>
-<span id="cb45-552"><a href="#cb45-552" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
-<span id="cb45-553"><a href="#cb45-553" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb45-554"><a href="#cb45-554" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-555"><a href="#cb45-555" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Longitudinal submodel</span></span>
-<span id="cb45-556"><a href="#cb45-556" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-559"><a href="#cb45-559" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-560"><a href="#cb45-560" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "joint_model_no_rate"</span></span>
-<span id="cb45-561"><a href="#cb45-561" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
-<span id="cb45-562"><a href="#cb45-562" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
-<span id="cb45-563"><a href="#cb45-563" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">1</span>,</span>
-<span id="cb45-564"><a href="#cb45-564" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
-<span id="cb45-565"><a href="#cb45-565" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">1</span>)</span>
-<span id="cb45-566"><a href="#cb45-566" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-567"><a href="#cb45-567" aria-hidden="true" tabindex="-1"></a>jmbayes2.fit116 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv.fit16,</span>
-<span id="cb45-568"><a href="#cb45-568" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme.fit1, </span>
-<span id="cb45-569"><a href="#cb45-569" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb45-570"><a href="#cb45-570" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb45-571"><a href="#cb45-571" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-572"><a href="#cb45-572" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-573"><a href="#cb45-573" aria-hidden="true" tabindex="-1"></a>Here is the summary for longitudinal submodel:</span>
-<span id="cb45-574"><a href="#cb45-574" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-577"><a href="#cb45-577" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-578"><a href="#cb45-578" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)<span class="sc">$</span>Outcome1 <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb45-579"><a href="#cb45-579" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-580"><a href="#cb45-580" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-581"><a href="#cb45-581" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Survival submodel</span></span>
-<span id="cb45-582"><a href="#cb45-582" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-583"><a href="#cb45-583" aria-hidden="true" tabindex="-1"></a>Here is the summary for survival submodel:</span>
-<span id="cb45-584"><a href="#cb45-584" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-587"><a href="#cb45-587" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-588"><a href="#cb45-588" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb45-589"><a href="#cb45-589" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-590"><a href="#cb45-590" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-591"><a href="#cb45-591" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Joint model</span></span>
-<span id="cb45-592"><a href="#cb45-592" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-593"><a href="#cb45-593" aria-hidden="true" tabindex="-1"></a>Here are the full summary for the joint model without rate:</span>
-<span id="cb45-594"><a href="#cb45-594" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-597"><a href="#cb45-597" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-598"><a href="#cb45-598" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)</span>
-<span id="cb45-599"><a href="#cb45-599" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-600"><a href="#cb45-600" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-601"><a href="#cb45-601" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-602"><a href="#cb45-602" aria-hidden="true" tabindex="-1"></a>\newpage</span>
-<span id="cb45-603"><a href="#cb45-603" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-604"><a href="#cb45-604" aria-hidden="true" tabindex="-1"></a><span class="fu">### Joint model with rate (value and rate terms of longitudinal submodel)</span></span>
-<span id="cb45-605"><a href="#cb45-605" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-606"><a href="#cb45-606" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb45-607"><a href="#cb45-607" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
-<span id="cb45-608"><a href="#cb45-608" aria-hidden="true" tabindex="-1"></a>  jmbayes2.fit116.d: &amp; <span class="sc">\\</span></span>
-<span id="cb45-609"><a href="#cb45-609" aria-hidden="true" tabindex="-1"></a>  lme.fit1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
-<span id="cb45-610"><a href="#cb45-610" aria-hidden="true" tabindex="-1"></a>  surv.fit16: \ \ \ &amp; Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + <span class="sc">\\</span></span>
-<span id="cb45-611"><a href="#cb45-611" aria-hidden="true" tabindex="-1"></a>  &amp; factor(site) + factor(ethnic) + factor(smoke) + \pmb m(time) + \pmb m'(time)</span>
-<span id="cb45-612"><a href="#cb45-612" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
-<span id="cb45-613"><a href="#cb45-613" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb45-614"><a href="#cb45-614" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-617"><a href="#cb45-617" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-618"><a href="#cb45-618" aria-hidden="true" tabindex="-1"></a>jmbayes2.fit116.d <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv.fit16,</span>
-<span id="cb45-619"><a href="#cb45-619" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Mixed_objects =</span> lme.fit1, </span>
-<span id="cb45-620"><a href="#cb45-620" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">functional_forms =</span> <span class="fu">list</span>(<span class="st">"lamh"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">value</span>(lamh) <span class="sc">+</span> <span class="fu">slope</span>(lamh)),</span>
-<span id="cb45-621"><a href="#cb45-621" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb45-622"><a href="#cb45-622" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">control =</span> jmcontrol,</span>
-<span id="cb45-623"><a href="#cb45-623" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">seed =</span> <span class="dv">55555</span>) </span>
-<span id="cb45-624"><a href="#cb45-624" aria-hidden="true" tabindex="-1"></a>                         </span>
-<span id="cb45-625"><a href="#cb45-625" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-626"><a href="#cb45-626" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-627"><a href="#cb45-627" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Longitudinal submodel</span></span>
-<span id="cb45-628"><a href="#cb45-628" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-629"><a href="#cb45-629" aria-hidden="true" tabindex="-1"></a>Here is the summary for longitudinal submodel:</span>
-<span id="cb45-630"><a href="#cb45-630" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-633"><a href="#cb45-633" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-634"><a href="#cb45-634" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116.d)<span class="sc">$</span>Outcome1 <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb45-635"><a href="#cb45-635" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-636"><a href="#cb45-636" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-637"><a href="#cb45-637" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Survival submodel</span></span>
-<span id="cb45-638"><a href="#cb45-638" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-639"><a href="#cb45-639" aria-hidden="true" tabindex="-1"></a>Here is the summary for survival submodel:</span>
-<span id="cb45-640"><a href="#cb45-640" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-643"><a href="#cb45-643" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-644"><a href="#cb45-644" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116.d)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb45-645"><a href="#cb45-645" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-646"><a href="#cb45-646" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-647"><a href="#cb45-647" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Joint model</span></span>
-<span id="cb45-648"><a href="#cb45-648" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-649"><a href="#cb45-649" aria-hidden="true" tabindex="-1"></a>Here are the full summary for the joint model with rate:</span>
-<span id="cb45-650"><a href="#cb45-650" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-653"><a href="#cb45-653" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-654"><a href="#cb45-654" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116.d)</span>
-<span id="cb45-655"><a href="#cb45-655" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb45-656"><a href="#cb45-656" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-657"><a href="#cb45-657" aria-hidden="true" tabindex="-1"></a>\newpage</span>
-<span id="cb45-658"><a href="#cb45-658" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-659"><a href="#cb45-659" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparison for model with and without rate</span></span>
-<span id="cb45-660"><a href="#cb45-660" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-663"><a href="#cb45-663" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb45-664"><a href="#cb45-664" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmbayes2.fit116.d, jmbayes2.fit116)</span>
-<span id="cb45-665"><a href="#cb45-665" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-474"><a href="#cb45-474" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
+<span id="cb45-475"><a href="#cb45-475" aria-hidden="true" tabindex="-1"></a>lme.fit1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
+<span id="cb45-476"><a href="#cb45-476" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh00,</span>
+<span id="cb45-477"><a href="#cb45-477" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
+<span id="cb45-478"><a href="#cb45-478" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
+<span id="cb45-479"><a href="#cb45-479" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-480"><a href="#cb45-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-481"><a href="#cb45-481" aria-hidden="true" tabindex="-1"></a>Here is the table for the longitudinal model:</span>
+<span id="cb45-482"><a href="#cb45-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-485"><a href="#cb45-485" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-486"><a href="#cb45-486" aria-hidden="true" tabindex="-1"></a>broom.mixed<span class="sc">::</span><span class="fu">tidy</span>(lme.fit1) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb45-487"><a href="#cb45-487" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-488"><a href="#cb45-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-489"><a href="#cb45-489" aria-hidden="true" tabindex="-1"></a>The full summary for the longitudinal model is as follows:</span>
+<span id="cb45-490"><a href="#cb45-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-493"><a href="#cb45-493" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-494"><a href="#cb45-494" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lme.fit1)</span>
+<span id="cb45-495"><a href="#cb45-495" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-496"><a href="#cb45-496" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-497"><a href="#cb45-497" aria-hidden="true" tabindex="-1"></a>\newpage</span>
+<span id="cb45-498"><a href="#cb45-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-499"><a href="#cb45-499" aria-hidden="true" tabindex="-1"></a><span class="fu">### Survival model</span></span>
+<span id="cb45-500"><a href="#cb45-500" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-501"><a href="#cb45-501" aria-hidden="true" tabindex="-1"></a>**Notes: is it necessary to include a model with observed AMH as covariate in survival model?**</span>
+<span id="cb45-502"><a href="#cb45-502" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-503"><a href="#cb45-503" aria-hidden="true" tabindex="-1"></a>$surv.fit16: \ \ \  coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
+<span id="cb45-504"><a href="#cb45-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-505"><a href="#cb45-505" aria-hidden="true" tabindex="-1"></a>Here is the table for survival model, based on model selection:</span>
+<span id="cb45-506"><a href="#cb45-506" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-509"><a href="#cb45-509" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-510"><a href="#cb45-510" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "survival_model"</span></span>
+<span id="cb45-511"><a href="#cb45-511" aria-hidden="true" tabindex="-1"></a>surv.fit16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb45-512"><a href="#cb45-512" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_b_black <span class="sc">+</span> <span class="co"># site_ethnic_b_cauca + </span></span>
+<span id="cb45-513"><a href="#cb45-513" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_c_black <span class="sc">+</span> site_ethnic_c_cauca <span class="sc">+</span> </span>
+<span id="cb45-514"><a href="#cb45-514" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_m_black <span class="sc">+</span> site_ethnic_m_cauca <span class="sc">+</span></span>
+<span id="cb45-515"><a href="#cb45-515" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_nj_cauca <span class="sc">+</span> site_ethnic_nj_hispa <span class="sc">+</span></span>
+<span id="cb45-516"><a href="#cb45-516" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_p_black <span class="sc">+</span> site_ethnic_p_cauca <span class="sc">+</span> </span>
+<span id="cb45-517"><a href="#cb45-517" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_ucd_cauca <span class="sc">+</span> site_ethnic_ucd_chine <span class="sc">+</span></span>
+<span id="cb45-518"><a href="#cb45-518" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_ucla_cauca <span class="sc">+</span> site_ethnic_ucla_japan <span class="sc">+</span></span>
+<span id="cb45-519"><a href="#cb45-519" aria-hidden="true" tabindex="-1"></a>                      smoke_past_only <span class="sc">+</span> smoke_current_smoker,</span>
+<span id="cb45-520"><a href="#cb45-520" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh12, </span>
+<span id="cb45-521"><a href="#cb45-521" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb45-522"><a href="#cb45-522" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-523"><a href="#cb45-523" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-524"><a href="#cb45-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-527"><a href="#cb45-527" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-528"><a href="#cb45-528" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(surv.fit16) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb45-529"><a href="#cb45-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-530"><a href="#cb45-530" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-531"><a href="#cb45-531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-532"><a href="#cb45-532" aria-hidden="true" tabindex="-1"></a>Here is the summary for the survival model</span>
+<span id="cb45-533"><a href="#cb45-533" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-536"><a href="#cb45-536" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-537"><a href="#cb45-537" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(surv.fit16)</span>
+<span id="cb45-538"><a href="#cb45-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-539"><a href="#cb45-539" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-540"><a href="#cb45-540" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-541"><a href="#cb45-541" aria-hidden="true" tabindex="-1"></a>\newpage</span>
+<span id="cb45-542"><a href="#cb45-542" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-543"><a href="#cb45-543" aria-hidden="true" tabindex="-1"></a><span class="fu">### Joint model without Rate (only value term of longitudinal submodel)</span></span>
+<span id="cb45-544"><a href="#cb45-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-545"><a href="#cb45-545" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb45-546"><a href="#cb45-546" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb45-547"><a href="#cb45-547" aria-hidden="true" tabindex="-1"></a>  jmbayes2.fit116: &amp; <span class="sc">\\</span> </span>
+<span id="cb45-548"><a href="#cb45-548" aria-hidden="true" tabindex="-1"></a>  lme.fit1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
+<span id="cb45-549"><a href="#cb45-549" aria-hidden="true" tabindex="-1"></a>  surv.fit16: \ \ \ &amp; Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + <span class="sc">\\</span></span>
+<span id="cb45-550"><a href="#cb45-550" aria-hidden="true" tabindex="-1"></a>  &amp; factor(ethnic) + factor(smoke) + \pmb m(time)</span>
+<span id="cb45-551"><a href="#cb45-551" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb45-552"><a href="#cb45-552" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb45-553"><a href="#cb45-553" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-554"><a href="#cb45-554" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Longitudinal submodel</span></span>
+<span id="cb45-555"><a href="#cb45-555" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-558"><a href="#cb45-558" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-559"><a href="#cb45-559" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "joint_model_no_rate"</span></span>
+<span id="cb45-560"><a href="#cb45-560" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
+<span id="cb45-561"><a href="#cb45-561" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
+<span id="cb45-562"><a href="#cb45-562" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">1</span>,</span>
+<span id="cb45-563"><a href="#cb45-563" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
+<span id="cb45-564"><a href="#cb45-564" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">1</span>)</span>
+<span id="cb45-565"><a href="#cb45-565" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-566"><a href="#cb45-566" aria-hidden="true" tabindex="-1"></a>jmbayes2.fit116 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv.fit16,</span>
+<span id="cb45-567"><a href="#cb45-567" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme.fit1, </span>
+<span id="cb45-568"><a href="#cb45-568" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb45-569"><a href="#cb45-569" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb45-570"><a href="#cb45-570" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-571"><a href="#cb45-571" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-572"><a href="#cb45-572" aria-hidden="true" tabindex="-1"></a>Here is the summary for longitudinal submodel:</span>
+<span id="cb45-573"><a href="#cb45-573" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-576"><a href="#cb45-576" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-577"><a href="#cb45-577" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)<span class="sc">$</span>Outcome1 <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb45-578"><a href="#cb45-578" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-579"><a href="#cb45-579" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-580"><a href="#cb45-580" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Survival submodel</span></span>
+<span id="cb45-581"><a href="#cb45-581" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-582"><a href="#cb45-582" aria-hidden="true" tabindex="-1"></a>Here is the summary for survival submodel:</span>
+<span id="cb45-583"><a href="#cb45-583" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-586"><a href="#cb45-586" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-587"><a href="#cb45-587" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb45-588"><a href="#cb45-588" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-589"><a href="#cb45-589" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-590"><a href="#cb45-590" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Joint model</span></span>
+<span id="cb45-591"><a href="#cb45-591" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-592"><a href="#cb45-592" aria-hidden="true" tabindex="-1"></a>Here are the full summary for the joint model without rate:</span>
+<span id="cb45-593"><a href="#cb45-593" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-596"><a href="#cb45-596" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-597"><a href="#cb45-597" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)</span>
+<span id="cb45-598"><a href="#cb45-598" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-599"><a href="#cb45-599" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-600"><a href="#cb45-600" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-601"><a href="#cb45-601" aria-hidden="true" tabindex="-1"></a>\newpage</span>
+<span id="cb45-602"><a href="#cb45-602" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-603"><a href="#cb45-603" aria-hidden="true" tabindex="-1"></a><span class="fu">### Joint model with rate (value and rate terms of longitudinal submodel)</span></span>
+<span id="cb45-604"><a href="#cb45-604" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-605"><a href="#cb45-605" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb45-606"><a href="#cb45-606" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb45-607"><a href="#cb45-607" aria-hidden="true" tabindex="-1"></a>  jmbayes2.fit116.d: &amp; <span class="sc">\\</span></span>
+<span id="cb45-608"><a href="#cb45-608" aria-hidden="true" tabindex="-1"></a>  lme.fit1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
+<span id="cb45-609"><a href="#cb45-609" aria-hidden="true" tabindex="-1"></a>  surv.fit16: \ \ \ &amp; Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + <span class="sc">\\</span></span>
+<span id="cb45-610"><a href="#cb45-610" aria-hidden="true" tabindex="-1"></a>  &amp; factor(site) + factor(ethnic) + factor(smoke) + \pmb m(time) + \pmb m'(time)</span>
+<span id="cb45-611"><a href="#cb45-611" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb45-612"><a href="#cb45-612" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb45-613"><a href="#cb45-613" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-616"><a href="#cb45-616" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-617"><a href="#cb45-617" aria-hidden="true" tabindex="-1"></a>jmbayes2.fit116.d <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv.fit16,</span>
+<span id="cb45-618"><a href="#cb45-618" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Mixed_objects =</span> lme.fit1, </span>
+<span id="cb45-619"><a href="#cb45-619" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">functional_forms =</span> <span class="fu">list</span>(<span class="st">"lamh"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">value</span>(lamh) <span class="sc">+</span> <span class="fu">slope</span>(lamh)),</span>
+<span id="cb45-620"><a href="#cb45-620" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb45-621"><a href="#cb45-621" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">control =</span> jmcontrol,</span>
+<span id="cb45-622"><a href="#cb45-622" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">seed =</span> <span class="dv">55555</span>) </span>
+<span id="cb45-623"><a href="#cb45-623" aria-hidden="true" tabindex="-1"></a>                         </span>
+<span id="cb45-624"><a href="#cb45-624" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-625"><a href="#cb45-625" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-626"><a href="#cb45-626" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Longitudinal submodel</span></span>
+<span id="cb45-627"><a href="#cb45-627" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-628"><a href="#cb45-628" aria-hidden="true" tabindex="-1"></a>Here is the summary for longitudinal submodel:</span>
+<span id="cb45-629"><a href="#cb45-629" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-632"><a href="#cb45-632" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-633"><a href="#cb45-633" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116.d)<span class="sc">$</span>Outcome1 <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb45-634"><a href="#cb45-634" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-635"><a href="#cb45-635" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-636"><a href="#cb45-636" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Survival submodel</span></span>
+<span id="cb45-637"><a href="#cb45-637" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-638"><a href="#cb45-638" aria-hidden="true" tabindex="-1"></a>Here is the summary for survival submodel:</span>
+<span id="cb45-639"><a href="#cb45-639" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-642"><a href="#cb45-642" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-643"><a href="#cb45-643" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116.d)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb45-644"><a href="#cb45-644" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-645"><a href="#cb45-645" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-646"><a href="#cb45-646" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Joint model</span></span>
+<span id="cb45-647"><a href="#cb45-647" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-648"><a href="#cb45-648" aria-hidden="true" tabindex="-1"></a>Here are the full summary for the joint model with rate:</span>
+<span id="cb45-649"><a href="#cb45-649" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-652"><a href="#cb45-652" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-653"><a href="#cb45-653" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116.d)</span>
+<span id="cb45-654"><a href="#cb45-654" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb45-655"><a href="#cb45-655" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-656"><a href="#cb45-656" aria-hidden="true" tabindex="-1"></a>\newpage</span>
+<span id="cb45-657"><a href="#cb45-657" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-658"><a href="#cb45-658" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparison for model with and without rate</span></span>
+<span id="cb45-659"><a href="#cb45-659" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-662"><a href="#cb45-662" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb45-663"><a href="#cb45-663" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmbayes2.fit116.d, jmbayes2.fit116)</span>
+<span id="cb45-664"><a href="#cb45-664" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

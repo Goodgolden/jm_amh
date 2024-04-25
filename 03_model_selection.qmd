@@ -119,6 +119,13 @@ All the variables:\
 ```{r}
 #| label: "backward_selection"
 
+surv.fit10 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
+                      factor(site) + factor(ethnic) + factor(smoke) + phys_act +
+                      factor(edu) + factor(alcohol) + factor(employed) + factor(health),
+                    data = swan_amh1, 
+                    x = TRUE, 
+                    model = TRUE)
+
 ### Need to keep site + ethnic + smoke + bmi
 ## testing for physical activity (taking out phys.act)
 surv.fit11 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
@@ -127,6 +134,8 @@ surv.fit11 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
                     data = swan_amh1, 
                     x = TRUE, 
                     model = TRUE)
+anova(surv.fit10, surv.fit11)
+AIC(surv.fit10); AIC(surv.fit11)
 
 ## testing for employed
 surv.fit12 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
@@ -134,12 +143,15 @@ surv.fit12 <- coxph(Surv(etime, event) ~ married + bc_pills + children + bmi +
                       factor(edu) + factor(alcohol) + factor(health),
                     data = swan_amh1, x = TRUE, model = TRUE)
 
+anova(surv.fit11, surv.fit12)
+AIC(surv.fit11); AIC(surv.fit12)
 ## testing for children
 surv.fit13 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
                       factor(site) + factor(ethnic) + factor(smoke) +
                       factor(edu) + factor(alcohol) + factor(health),
                     data = swan_amh1, x = TRUE, model = TRUE)
-
+anova(surv.fit12, surv.fit13)
+AIC(surv.fit12); AIC(surv.fit13)
 
 ## testing for edu (education)
 surv.fit14 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
@@ -148,7 +160,7 @@ surv.fit14 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
                     data = swan_amh1, 
                     x = TRUE,
                     model = TRUE)
-
+AIC(surv.fit13); AIC(surv.fit14)
 
 ## testing for alcohol
 surv.fit15 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
@@ -157,7 +169,7 @@ surv.fit15 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
                     data = swan_amh1, 
                     x = TRUE,
                     model = TRUE)
-
+AIC(surv.fit14); AIC(surv.fit15)
 
 ## testing for health
 surv.fit16 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
@@ -165,7 +177,7 @@ surv.fit16 <- coxph(Surv(etime, event) ~ married + bc_pills + bmi +
                     data = swan_amh1, 
                     x = TRUE,
                     model = TRUE)
-
+AIC(surv.fit15); AIC(surv.fit16)
 
 ## testing for bc_pills
 surv.fit17 <- coxph(Surv(etime, event) ~ married + bmi +
@@ -173,7 +185,7 @@ surv.fit17 <- coxph(Surv(etime, event) ~ married + bmi +
                     data = swan_amh1, 
                     x = TRUE, 
                     model = TRUE)
-
+AIC(surv.fit16); AIC(surv.fit17)
 ```
 
 ```{r}

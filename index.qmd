@@ -36,12 +36,40 @@
 
 -   [x] whether we need to separate the `site` and `ethnicity`
 
--   [o] add age mfp median and range and IQR **event time** for
+-   [x] add age mfp median and range and IQR **event time** for
 
 -   [o] change the time for the plots into real age.
 
 -   [x] dummy variables into the site and ethnicity
 
--   [o] rerun the model without the rate model
+-   [x] rerun the model without the rate model
 
--   [o] run the final model in a longer chain (ask EJC about the computer)
+-  [x] provide the AUC and ROC for 2, 3, 4, 5, 6, and 8 years
+
+## 20240412
+
+- [x] provide the AUC and ROC for `Tstart` 2, 3, 4, 5, 6, and 8 years
+
+- [x] provide the `Dt` for 2, 3, 4, and 5 years
+
+- [x] file `10_final_model.Rmd` is the final model
+
+- [x] run the final model in a longer chain (ask EJC about the computer)
+
+## 20240417
+
+- [x] check email and file the disclosure for the abstract
+
+- [x] model selection for jm model backward 
+
+- [x] add the joint model with rate and baseline
+
+- [x] compare joint model with rate and value.
+
+
+
+
+
+
+
+

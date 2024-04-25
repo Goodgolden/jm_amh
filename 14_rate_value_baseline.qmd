@@ -1,0 +1,630 @@
+---
+title: "Rate Value Baseline"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(plyr)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## To-do list
+
+-   [x] Merge the levels of the variables `edu`, `alcohol`, and `lamh_baseline`
+
+-   [x] Fit the joint model based on model selection
+
+-   [x] Value model
+
+-   [x] Value Rate model
+
+-   [x] Rate Baseline model
+
+- [x] AUCs and Brier Scores
+
+## Loading data and merge variables
+
+```{r}
+load("data/swan_amh03.rda")
+load("data/swan_amh13.rda")
+
+swan_amh04 <- swan_amh03 %>%
+  group_by(id) %>%
+  arrange(time) %>%
+  slice(1L) %>%
+  dplyr::select(id, lamh0 = lamh) %>%
+  mutate(id = as.character(id))
+
+swan_amh03 <- swan_amh03 %>%
+  mutate(id = as.character(id)) %>%
+  full_join(swan_amh04, by = "id")
+
+swan_amh13 <- swan_amh13 %>%
+  full_join(swan_amh04, by = "id")
+#   transform(alcohol = revalue(alcohol,
+#                               c("<1/wk" = "None",
+#                                 "1-7/wk" = "> 1/wk",
+#                                 ">7/wk" = "> 1/wk")),
+#             edu = revalue(edu,
+#                           c("Some College" = "College Degree or Higher",
+#                             "College degree or higher" = "College Degree or Higher")))
+# 
+# levels(swan_amh13$alcohol)
+# levels(swan_amh13$edu)
+
+```
+
+```{r}
+control = lmeControl(opt = "optim")
+jmcontrol <- list(n_iter = 5000, 
+                  n_burnin = 1000, 
+                  n_chains = 2,
+                  seed = 55555,
+                  cores = 2)
+
+```
+
+## Value only model
+
+$$
+\begin{split}
+  jmb2.117: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
+  surv17: \ \ \ & Surv(etime, event) \sim phys.act + bmi + site + \\
+  & ethnic + smoke + \pmb m(time)
+\end{split}
+$$
+
+```{r}
+lme1 <- lme(lamh ~ time,
+                data = swan_amh03,
+                control = control,
+                random = ~ time| id)
+
+surv17 <- coxph(Surv(etime, event) ~ 
+                  0 + # alcohol +
+                  bmi + # bc_pills + 
+                  # children +
+                  # edu + 
+                  # employed +
+                  # health +
+                  # married + 
+                  phys_act + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.117.value <- JMbayes2::jm(Surv_object = surv17,
+                               Mixed_objects = lme1, 
+                               time_var = "time",
+                               control = jmcontrol) 
+
+summary117.value <- summary(jmb2.117.value)$Survival 
+
+summary117.value %>% knitr::kable(digits = 4)
+```
+
+## Value + Rate model
+
+$$
+\begin{split}
+  jmb2.117.value.rate: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
+  surv17: \ \ \ & Surv(etime, event) \sim phys.act + bmi + site + \\
+  & ethnic + smoke + \pmb m(time) + \pmb m'(time) 
+\end{split}
+$$
+
+```{r}
+
+jmb2.117.value.rate <- JMbayes2::jm(Surv_object = surv17,
+                                  Mixed_objects = lme1, 
+                                  functional_forms = list("lamh" = ~ value(lamh) + slope(lamh)),
+                                  time_var = "time",
+                                  control = jmcontrol) 
+
+summary117.value.rate <- summary(jmb2.117.value.rate)$Survival 
+
+summary117.value.rate %>% knitr::kable(digits = 4)
+
+```
+
+## Rate + Baseline model
+
+$$
+\begin{split}
+  jmb2.117.base.rate: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
+  surv17.base: \ \ \ & Surv(etime, event) \sim phys.act + bmi + site + \\
+  & ethnic + smoke + \pmb {lamh_{baseline}} + \pmb m'(time) 
+\end{split}
+$$
+
+```{r}
+surv17.base <- coxph(Surv(etime, event) ~ 
+                  0 + # alcohol +
+                  bmi + # bc_pills + 
+                  # children +
+                  # edu + 
+                  lamh0 +
+                  # employed +
+                  # health +
+                  # married + 
+                  phys_act +
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.117.base.rate <- JMbayes2::jm(Surv_object = surv17.base,
+                                  Mixed_objects = lme1, 
+                                  functional_forms = list("lamh" = ~ 0 + slope(lamh)),
+                                  time_var = "time",
+                                  control = jmcontrol) 
+
+summary117.base.rate <- summary(jmb2.117.base.rate)$Survival 
+
+summary117.base.rate %>% knitr::kable(digits = 4)
+```
+
+## Comparison of the models
+
+```{r}
+mod_sum <- merge(as.data.frame(summary117.value[, 1:2]),
+      as.data.frame(summary117.value.rate[, 1:2]), 
+      by = "row.names", all = TRUE) %>%
+  column_to_rownames("Row.names") %>%
+  merge(as.data.frame(summary117.base.rate[, 1:2]), 
+        by = "row.names", all = TRUE) %>%
+  column_to_rownames("Row.names")
+row.names(mod_sum)
+
+row.names(mod_sum) <- c("bmi", 
+                        'ethnic_black', 'ethnic_chine', 'ethnic_hispa', 'ethnic_japan', 
+                        'lamh_baseline', 
+                        # 'married Married/Partnered', 
+                        "phys_act",
+                        'site_c', 'site_m', 'site_nj', 'site_p', 'site_ucd', 'site_ucla', 
+                        'lamh_slope', 
+                        'smoke_current_smoker', 'smoke_past_only', 
+                        'lamh_value')
+
+colnames(mod_sum) <- c('Value', "sd(Value)",
+                       'Value + Rate', "sd(Value + Rate)",  
+                       'Value + Baseline', "sd(Value + Baseline)")
+
+
+mod_sum[order(row.names(mod_sum)), ] %>%
+  knitr::kable(digits = 4)
+```
+
+## Model Comparison
+
+### DIC and WAIC
+
+```{r}
+#| label: "compare_jm"
+compare_jm(jmb2.117.value, jmb2.117.value.rate, jmb2.117.base.rate)
+
+```
+
+### AUC 
+
+
+#### AUC for Value model
+
+```{r}
+#| label: "auc_value"
+#| warning: false
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(AUC2, "auc") %>% as.character()
+Tstart3 = map(AUC3, "auc") %>% as.character()
+Tstart4 = map(AUC4, "auc") %>% as.character()
+Tstart5 = map(AUC5, "auc") %>% as.character()
+Tstart6 = map(AUC6, "auc") %>% as.character()
+Tstart8 = map(AUC8, "auc") %>% as.character()
+
+tbl_auc_value <- rbind(Tstart2, 
+                       Tstart3,
+                       Tstart4,
+                       Tstart5,
+                       Tstart6, 
+                       Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_value) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+```
+
+```{r}
+#| label: "tbl_auc_table_value"
+tbl_auc_value %>% knitr::kable()
+```
+
+
+#### AUC for Value Rate model
+
+
+```{r}
+#| label: "auc_value_rate"
+#| warning: false
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(AUC2, "auc") %>% as.character()
+Tstart3 = map(AUC3, "auc") %>% as.character()
+Tstart4 = map(AUC4, "auc") %>% as.character()
+Tstart5 = map(AUC5, "auc") %>% as.character()
+Tstart6 = map(AUC6, "auc") %>% as.character()
+Tstart8 = map(AUC8, "auc") %>% as.character()
+
+tbl_auc_value_rate <- rbind(Tstart2, 
+                            Tstart3,
+                            Tstart4,
+                            Tstart5,
+                            Tstart6, 
+                            Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+```
+
+```{r}
+#| label: "auc_table_value_rate"
+
+tbl_auc_value_rate %>% knitr::kable()
+
+```
+
+
+
+#### AUC for Baseline Rate model
+
+
+```{r}
+#| label: "auc_base_rate"
+#| warning: false
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(AUC2, "auc") %>% as.character()
+Tstart3 = map(AUC3, "auc") %>% as.character()
+Tstart4 = map(AUC4, "auc") %>% as.character()
+Tstart5 = map(AUC5, "auc") %>% as.character()
+Tstart6 = map(AUC6, "auc") %>% as.character()
+Tstart8 = map(AUC8, "auc") %>% as.character()
+
+tbl_auc_base_rate <- rbind(Tstart2, 
+                            Tstart3,
+                            Tstart4,
+                            Tstart5,
+                            Tstart6, 
+                            Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_base_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+```
+
+```{r}
+#| label: "auc_table_base_rate"
+
+tbl_auc_base_rate %>% knitr::kable()
+```
+
+
+### Brier Scores
+
+#### Brier Scores: Value model
+
+```{r}
+#| label: "bs_table_value"
+#| warning: false
+
+Brier2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(Brier2, "Brier") %>% as.character()
+Tstart3 = map(Brier3, "Brier") %>% as.character()
+Tstart4 = map(Brier4, "Brier") %>% as.character()
+Tstart5 = map(Brier5, "Brier") %>% as.character()
+Tstart6 = map(Brier6, "Brier") %>% as.character()
+Tstart8 = map(Brier8, "Brier") %>% as.character()
+
+tbl_bs_value <- rbind(Tstart2,
+                Tstart3,
+                Tstart4,
+                Tstart5,
+                Tstart6,
+                Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_value) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+```
+
+
+```{r}
+#| label: "bs_value"
+tbl_bs_value %>% knitr::kable()
+```
+
+#### Brier Scores: Value Rate model
+
+```{r}
+#| label: "bs_table_value_rate"
+#| warning: false
+
+Brier2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(Brier2, "Brier") %>% as.character()
+Tstart3 = map(Brier3, "Brier") %>% as.character()
+Tstart4 = map(Brier4, "Brier") %>% as.character()
+Tstart5 = map(Brier5, "Brier") %>% as.character()
+Tstart6 = map(Brier6, "Brier") %>% as.character()
+Tstart8 = map(Brier8, "Brier") %>% as.character()
+
+tbl_bs_value_rate <- rbind(Tstart2,
+                Tstart3,
+                Tstart4,
+                Tstart5,
+                Tstart6,
+                Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+```
+
+```{r}
+#| label: "bs_value_rate"
+tbl_bs_value_rate %>% knitr::kable()
+```
+
+#### Brier Scores: Baseline Rate model
+
+```{r}
+#| label: "bs_table_base_rate"
+#| warning: false
+
+Brier2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.117.base.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(Brier2, "Brier") %>% as.character()
+Tstart3 = map(Brier3, "Brier") %>% as.character()
+Tstart4 = map(Brier4, "Brier") %>% as.character()
+Tstart5 = map(Brier5, "Brier") %>% as.character()
+Tstart6 = map(Brier6, "Brier") %>% as.character()
+Tstart8 = map(Brier8, "Brier") %>% as.character()
+
+tbl_bs_base_rate <- rbind(Tstart2,
+                Tstart3,
+                Tstart4,
+                Tstart5,
+                Tstart6,
+                Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_base_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+```
+
+```{r}
+#| label: "bs_base_rate"
+tbl_bs_base_rate %>% knitr::kable()
+```
+
