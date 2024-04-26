@@ -43,7 +43,11 @@ here::set_here()
 
 ## Goal of the analysis
 
--   [x] convergence and traceplot
+-   [x] Fit the joint model to the SWAN dataset
+
+-   [x] Convergence and traceplots
+
+-   [x] `r praise::praise()`
 
 ## Dummy variables for `site` and `ethnicity`
 
@@ -164,9 +168,4 @@ traceplot(jmbayes2.116.50k)
 remove(jmbayes2.116.50k)
 ```
 
-
-
-
-
-
-
+-   [x] `r praise::praise()`

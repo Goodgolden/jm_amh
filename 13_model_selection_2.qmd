@@ -2,7 +2,6 @@
 title: "Model Selection II - Factor"
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       warnings = FALSE,
@@ -47,6 +46,8 @@ here::set_here()
 -   [x] Rate model, Baseline Rate model, Value model comparison
 
 -   [x] Tables for the models
+
+-   [x] `r praise::praise()`
 
 ## Dummy variables for `site` and `ethnicity`
 
@@ -329,7 +330,6 @@ summary(jmb117)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable(digits = 4
 compare_jm(jmb116, jmb117)
 ```
 
-
 ### Dropping `phys_act` variable
 
 ```{r}
@@ -363,15 +363,13 @@ summary(jmb118)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable(digits = 4
 compare_jm(jmb118, jmb117)
 ```
 
-
-## Comparison for models 
+## Comparison for models
 
 ```{r}
 compare_jm(jmb111, jmb112, jmb113, jmb114, jmb115, jmb116, jmb117, jmb118)
 ```
 
-
-## The final model 
+## The final model
 
 For Chapter10, we have the model with `bc_pills` dropped from the new model.
 
@@ -384,7 +382,7 @@ $$
 \end{split}
 $$
 
-```
+```         
 s17 <- coxph(Surv(etime, event) ~ 
                   0 + # alcohol +
                   bmi + 
@@ -408,4 +406,4 @@ jmb117 <- JMbayes2::jm(Surv_object = s17,
                                control = jmcontrol) 
 ```
 
-
+-   [x] `r praise::praise()`

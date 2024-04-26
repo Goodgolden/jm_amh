@@ -56,6 +56,8 @@ here::set_here()
 
 -   [x] Saving Table1 (as a `.tex` file)
 
+-   [x] `r praise::praise()`
+
 ## Data Cleaning
 
 The data cleaning process codes are saved in the `data-raw` folder `swan_amh.R` file. The data cleaning process is done in the for both numeric `swan_amh0` and categorical `swan_amh1` data files. The data description is saved in the `R` folder as `00_data` files.
@@ -157,3 +159,5 @@ The only problem is the location Sites with the Ethnicity groups.
 Missing values are removed from 631 to 600 through data cleaning process.
 
 See `data-raw/swan_amh.R` for the data cleaning process *`line-375` removed 31 individuals 31/631 = 4.9%*.
+
+-   [x] `r praise::praise()`

@@ -49,3 +49,4 @@ rsconnect/
 .woff
 .json
 .js
+/site_libs/

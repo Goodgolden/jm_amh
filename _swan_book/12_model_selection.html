@@ -308,6 +308,8 @@ Backward model selection joint model (without rate) with <code>JMbayes2</code></
 Rate model, Baseline Rate model, Value model comparison</p></li>
 <li><p><input type="checkbox" disabled="" checked="">
 Tables for the models</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+You are breathtaking!</p></li>
 </ul></section><section id="dummy-variables-for-site-and-ethnicity" class="level2" data-number="12.2"><h2 data-number="12.2" class="anchored" data-anchor-id="dummy-variables-for-site-and-ethnicity">
 <span class="header-section-number">12.2</span> Dummy variables for <code>site</code> and <code>ethnicity</code>
 </h2>
@@ -3483,8 +3485,12 @@ Tables for the models</p></li>
 jmb2.120 &lt;- JMbayes2::jm(Surv_object = surv20,
                                Mixed_objects = lme1, 
                                time_var = "time",
-                               control = jmcontrol) 
-</code></pre>
+                               control = jmcontrol) </code></pre>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" checked="">
+You are breathtaking!</li>
+</ul>
 
 
 <!-- -->
@@ -3651,537 +3657,522 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Model Selection I - Dummy"</span></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">warnings =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">message =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">comment =</span> <span class="st">"#&gt;"</span>,</span>
-<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">cache =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>                      <span class="co">#results = "hide",</span></span>
-<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">digits =</span> <span class="dv">4</span>,</span>
-<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ## clean the R environment</span></span>
-<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a><span class="co"># graphics.off()</span></span>
-<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a><span class="co"># rm(list = ls())</span></span>
-<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a><span class="co"># freshr::freshr()</span></span>
-<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a><span class="do">## load packages</span></span>
-<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-23"><a href="#cb52-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-24"><a href="#cb52-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
-<span id="cb52-25"><a href="#cb52-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JMbayes2, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-26"><a href="#cb52-26" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">load_all</span>()</span>
-<span id="cb52-27"><a href="#cb52-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-28"><a href="#cb52-28" aria-hidden="true" tabindex="-1"></a><span class="do">## check the directory for the file</span></span>
-<span id="cb52-29"><a href="#cb52-29" aria-hidden="true" tabindex="-1"></a><span class="co"># here::dr_here()</span></span>
-<span id="cb52-30"><a href="#cb52-30" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">set_here</span>()</span>
-<span id="cb52-31"><a href="#cb52-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-32"><a href="#cb52-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-33"><a href="#cb52-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-34"><a href="#cb52-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{css, "css-setup", echo=FALSE}</span></span>
-<span id="cb52-35"><a href="#cb52-35" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">scroll</span><span class="dv">-100</span> <span class="op">{</span></span>
-<span id="cb52-36"><a href="#cb52-36" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>height<span class="op">:</span> 300px<span class="op">;</span></span>
-<span id="cb52-37"><a href="#cb52-37" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>width<span class="op">:</span> 1000px<span class="op">;</span></span>
-<span id="cb52-38"><a href="#cb52-38" aria-hidden="true" tabindex="-1"></a>  overflow<span class="op">-</span>y<span class="op">:</span> auto<span class="op">;</span></span>
-<span id="cb52-39"><a href="#cb52-39" aria-hidden="true" tabindex="-1"></a>  background<span class="op">-</span>color<span class="op">:</span> inherit<span class="op">;</span></span>
-<span id="cb52-40"><a href="#cb52-40" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb52-41"><a href="#cb52-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-42"><a href="#cb52-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-43"><a href="#cb52-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal of the analysis</span></span>
-<span id="cb52-44"><a href="#cb52-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-45"><a href="#cb52-45" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Backward model selection joint model (without rate) with <span class="in">`JMbayes2`</span> </span>
-<span id="cb52-46"><a href="#cb52-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-47"><a href="#cb52-47" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Rate model, Baseline Rate model, Value model comparison</span>
-<span id="cb52-48"><a href="#cb52-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-49"><a href="#cb52-49" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Tables for the models</span>
-<span id="cb52-50"><a href="#cb52-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-51"><a href="#cb52-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dummy variables for `site` and `ethnicity`</span></span>
-<span id="cb52-52"><a href="#cb52-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-55"><a href="#cb52-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-56"><a href="#cb52-56" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dummy_variables"</span></span>
-<span id="cb52-57"><a href="#cb52-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-58"><a href="#cb52-58" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh03.rda"</span>)</span>
-<span id="cb52-59"><a href="#cb52-59" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh13.rda"</span>)</span>
-<span id="cb52-60"><a href="#cb52-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">warnings =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">message =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">comment =</span> <span class="st">"#&gt;"</span>,</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">cache =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>                      <span class="co">#results = "hide",</span></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ## clean the R environment</span></span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a><span class="co"># graphics.off()</span></span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a><span class="co"># rm(list = ls())</span></span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a><span class="co"># freshr::freshr()</span></span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a><span class="do">## load packages</span></span>
+<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-23"><a href="#cb52-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
+<span id="cb52-24"><a href="#cb52-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JMbayes2, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-25"><a href="#cb52-25" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">load_all</span>()</span>
+<span id="cb52-26"><a href="#cb52-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-27"><a href="#cb52-27" aria-hidden="true" tabindex="-1"></a><span class="do">## check the directory for the file</span></span>
+<span id="cb52-28"><a href="#cb52-28" aria-hidden="true" tabindex="-1"></a><span class="co"># here::dr_here()</span></span>
+<span id="cb52-29"><a href="#cb52-29" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">set_here</span>()</span>
+<span id="cb52-30"><a href="#cb52-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-31"><a href="#cb52-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-32"><a href="#cb52-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-33"><a href="#cb52-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{css, "css-setup", echo=FALSE}</span></span>
+<span id="cb52-34"><a href="#cb52-34" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">scroll</span><span class="dv">-100</span> <span class="op">{</span></span>
+<span id="cb52-35"><a href="#cb52-35" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>height<span class="op">:</span> 300px<span class="op">;</span></span>
+<span id="cb52-36"><a href="#cb52-36" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>width<span class="op">:</span> 1000px<span class="op">;</span></span>
+<span id="cb52-37"><a href="#cb52-37" aria-hidden="true" tabindex="-1"></a>  overflow<span class="op">-</span>y<span class="op">:</span> auto<span class="op">;</span></span>
+<span id="cb52-38"><a href="#cb52-38" aria-hidden="true" tabindex="-1"></a>  background<span class="op">-</span>color<span class="op">:</span> inherit<span class="op">;</span></span>
+<span id="cb52-39"><a href="#cb52-39" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb52-40"><a href="#cb52-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-41"><a href="#cb52-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-42"><a href="#cb52-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal of the analysis</span></span>
+<span id="cb52-43"><a href="#cb52-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-44"><a href="#cb52-44" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Backward model selection joint model (without rate) with <span class="in">`JMbayes2`</span></span>
+<span id="cb52-45"><a href="#cb52-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-46"><a href="#cb52-46" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Rate model, Baseline Rate model, Value model comparison</span>
+<span id="cb52-47"><a href="#cb52-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-48"><a href="#cb52-48" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Tables for the models</span>
+<span id="cb52-49"><a href="#cb52-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-50"><a href="#cb52-50" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
+<span id="cb52-51"><a href="#cb52-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-52"><a href="#cb52-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dummy variables for `site` and `ethnicity`</span></span>
+<span id="cb52-53"><a href="#cb52-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-56"><a href="#cb52-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-57"><a href="#cb52-57" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dummy_variables"</span></span>
+<span id="cb52-58"><a href="#cb52-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-59"><a href="#cb52-59" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh03.rda"</span>)</span>
+<span id="cb52-60"><a href="#cb52-60" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh13.rda"</span>)</span>
 <span id="cb52-61"><a href="#cb52-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-62"><a href="#cb52-62" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
-<span id="cb52-63"><a href="#cb52-63" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
-<span id="cb52-64"><a href="#cb52-64" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
-<span id="cb52-65"><a href="#cb52-65" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">3</span>,</span>
-<span id="cb52-66"><a href="#cb52-66" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
-<span id="cb52-67"><a href="#cb52-67" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">3</span>)</span>
-<span id="cb52-68"><a href="#cb52-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-69"><a href="#cb52-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-70"><a href="#cb52-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fit the joint model</span></span>
-<span id="cb52-71"><a href="#cb52-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-72"><a href="#cb52-72" aria-hidden="true" tabindex="-1"></a>Need to keep $site + ethnic + smoke + bmi$</span>
-<span id="cb52-73"><a href="#cb52-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-74"><a href="#cb52-74" aria-hidden="true" tabindex="-1"></a><span class="fu">### Full model</span></span>
-<span id="cb52-75"><a href="#cb52-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-78"><a href="#cb52-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-79"><a href="#cb52-79" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
-<span id="cb52-80"><a href="#cb52-80" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh03,</span>
-<span id="cb52-81"><a href="#cb52-81" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
-<span id="cb52-82"><a href="#cb52-82" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
-<span id="cb52-83"><a href="#cb52-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-84"><a href="#cb52-84" aria-hidden="true" tabindex="-1"></a><span class="do">## surv11 is the full model with all the variables</span></span>
-<span id="cb52-85"><a href="#cb52-85" aria-hidden="true" tabindex="-1"></a>surv11 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-86"><a href="#cb52-86" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-87"><a href="#cb52-87" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
-<span id="cb52-88"><a href="#cb52-88" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb52-89"><a href="#cb52-89" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
-<span id="cb52-90"><a href="#cb52-90" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-91"><a href="#cb52-91" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-92"><a href="#cb52-92" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-93"><a href="#cb52-93" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-94"><a href="#cb52-94" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb52-95"><a href="#cb52-95" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-96"><a href="#cb52-96" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-97"><a href="#cb52-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-98"><a href="#cb52-98" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.111</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv11,</span>
-<span id="cb52-99"><a href="#cb52-99" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-100"><a href="#cb52-100" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-101"><a href="#cb52-101" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-102"><a href="#cb52-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-103"><a href="#cb52-103" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.111</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-104"><a href="#cb52-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-105"><a href="#cb52-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-106"><a href="#cb52-106" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `alcohol &lt; 1/wk`  variable</span></span>
-<span id="cb52-107"><a href="#cb52-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-110"><a href="#cb52-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-111"><a href="#cb52-111" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="sc">$</span>alcohol)</span>
-<span id="cb52-112"><a href="#cb52-112" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.12</span> <span class="ot">&lt;-</span> swan_amh13 <span class="sc">%&gt;%</span></span>
-<span id="cb52-113"><a href="#cb52-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">alcohol =</span> <span class="fu">revalue</span>(alcohol,</span>
-<span id="cb52-114"><a href="#cb52-114" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">c</span>(<span class="st">"&lt;1/wk"</span> <span class="ot">=</span> <span class="st">"None"</span>)))</span>
-<span id="cb52-115"><a href="#cb52-115" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.12</span><span class="sc">$</span>alcohol)</span>
-<span id="cb52-116"><a href="#cb52-116" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13)</span>
-<span id="cb52-117"><a href="#cb52-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-118"><a href="#cb52-118" aria-hidden="true" tabindex="-1"></a>surv12 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-119"><a href="#cb52-119" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-120"><a href="#cb52-120" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
-<span id="cb52-121"><a href="#cb52-121" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb52-122"><a href="#cb52-122" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
-<span id="cb52-123"><a href="#cb52-123" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-124"><a href="#cb52-124" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-125"><a href="#cb52-125" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-126"><a href="#cb52-126" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-127"><a href="#cb52-127" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.12</span>, </span>
-<span id="cb52-128"><a href="#cb52-128" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-129"><a href="#cb52-129" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-130"><a href="#cb52-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-131"><a href="#cb52-131" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.112</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv12,</span>
-<span id="cb52-132"><a href="#cb52-132" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-133"><a href="#cb52-133" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-134"><a href="#cb52-134" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-135"><a href="#cb52-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-136"><a href="#cb52-136" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.112</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-137"><a href="#cb52-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-138"><a href="#cb52-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-62"><a href="#cb52-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-63"><a href="#cb52-63" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
+<span id="cb52-64"><a href="#cb52-64" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
+<span id="cb52-65"><a href="#cb52-65" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
+<span id="cb52-66"><a href="#cb52-66" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">3</span>,</span>
+<span id="cb52-67"><a href="#cb52-67" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
+<span id="cb52-68"><a href="#cb52-68" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">3</span>)</span>
+<span id="cb52-69"><a href="#cb52-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-70"><a href="#cb52-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-71"><a href="#cb52-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fit the joint model</span></span>
+<span id="cb52-72"><a href="#cb52-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-73"><a href="#cb52-73" aria-hidden="true" tabindex="-1"></a>Need to keep $site + ethnic + smoke + bmi$</span>
+<span id="cb52-74"><a href="#cb52-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-75"><a href="#cb52-75" aria-hidden="true" tabindex="-1"></a><span class="fu">### Full model</span></span>
+<span id="cb52-76"><a href="#cb52-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-79"><a href="#cb52-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-80"><a href="#cb52-80" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
+<span id="cb52-81"><a href="#cb52-81" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh03,</span>
+<span id="cb52-82"><a href="#cb52-82" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
+<span id="cb52-83"><a href="#cb52-83" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
+<span id="cb52-84"><a href="#cb52-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-85"><a href="#cb52-85" aria-hidden="true" tabindex="-1"></a><span class="do">## surv11 is the full model with all the variables</span></span>
+<span id="cb52-86"><a href="#cb52-86" aria-hidden="true" tabindex="-1"></a>surv11 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-87"><a href="#cb52-87" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-88"><a href="#cb52-88" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
+<span id="cb52-89"><a href="#cb52-89" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb52-90"><a href="#cb52-90" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
+<span id="cb52-91"><a href="#cb52-91" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-92"><a href="#cb52-92" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-93"><a href="#cb52-93" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-94"><a href="#cb52-94" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-95"><a href="#cb52-95" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb52-96"><a href="#cb52-96" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-97"><a href="#cb52-97" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-98"><a href="#cb52-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-99"><a href="#cb52-99" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.111</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv11,</span>
+<span id="cb52-100"><a href="#cb52-100" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-101"><a href="#cb52-101" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-102"><a href="#cb52-102" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-103"><a href="#cb52-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-104"><a href="#cb52-104" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.111</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-105"><a href="#cb52-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-106"><a href="#cb52-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-107"><a href="#cb52-107" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `alcohol &lt; 1/wk` variable</span></span>
+<span id="cb52-108"><a href="#cb52-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-111"><a href="#cb52-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-112"><a href="#cb52-112" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="sc">$</span>alcohol)</span>
+<span id="cb52-113"><a href="#cb52-113" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.12</span> <span class="ot">&lt;-</span> swan_amh13 <span class="sc">%&gt;%</span></span>
+<span id="cb52-114"><a href="#cb52-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">alcohol =</span> <span class="fu">revalue</span>(alcohol,</span>
+<span id="cb52-115"><a href="#cb52-115" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">c</span>(<span class="st">"&lt;1/wk"</span> <span class="ot">=</span> <span class="st">"None"</span>)))</span>
+<span id="cb52-116"><a href="#cb52-116" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.12</span><span class="sc">$</span>alcohol)</span>
+<span id="cb52-117"><a href="#cb52-117" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13)</span>
+<span id="cb52-118"><a href="#cb52-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-119"><a href="#cb52-119" aria-hidden="true" tabindex="-1"></a>surv12 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-120"><a href="#cb52-120" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-121"><a href="#cb52-121" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
+<span id="cb52-122"><a href="#cb52-122" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb52-123"><a href="#cb52-123" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
+<span id="cb52-124"><a href="#cb52-124" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-125"><a href="#cb52-125" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-126"><a href="#cb52-126" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-127"><a href="#cb52-127" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-128"><a href="#cb52-128" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.12</span>, </span>
+<span id="cb52-129"><a href="#cb52-129" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-130"><a href="#cb52-130" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-131"><a href="#cb52-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-132"><a href="#cb52-132" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.112</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv12,</span>
+<span id="cb52-133"><a href="#cb52-133" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-134"><a href="#cb52-134" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-135"><a href="#cb52-135" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-136"><a href="#cb52-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-137"><a href="#cb52-137" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.112</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-138"><a href="#cb52-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb52-139"><a href="#cb52-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-140"><a href="#cb52-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-141"><a href="#cb52-141" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping The `edu College degree or higher`  variable</span></span>
-<span id="cb52-142"><a href="#cb52-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-145"><a href="#cb52-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-146"><a href="#cb52-146" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.12</span><span class="sc">$</span>edu)</span>
-<span id="cb52-147"><a href="#cb52-147" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.13</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.12</span> <span class="sc">%&gt;%</span></span>
-<span id="cb52-148"><a href="#cb52-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">edu =</span> <span class="fu">revalue</span>(edu,</span>
-<span id="cb52-149"><a href="#cb52-149" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">c</span>(<span class="st">"College degree or higher"</span> <span class="ot">=</span> <span class="st">"Some College"</span>)))</span>
-<span id="cb52-150"><a href="#cb52-150" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.13</span><span class="sc">$</span>edu)</span>
-<span id="cb52-151"><a href="#cb52-151" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.12</span>)</span>
-<span id="cb52-152"><a href="#cb52-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-153"><a href="#cb52-153" aria-hidden="true" tabindex="-1"></a>surv13 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-154"><a href="#cb52-154" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-155"><a href="#cb52-155" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
-<span id="cb52-156"><a href="#cb52-156" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb52-157"><a href="#cb52-157" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
-<span id="cb52-158"><a href="#cb52-158" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-159"><a href="#cb52-159" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-160"><a href="#cb52-160" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-161"><a href="#cb52-161" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-162"><a href="#cb52-162" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.13</span>, </span>
-<span id="cb52-163"><a href="#cb52-163" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-164"><a href="#cb52-164" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-165"><a href="#cb52-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-166"><a href="#cb52-166" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.113</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv13,</span>
-<span id="cb52-167"><a href="#cb52-167" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-168"><a href="#cb52-168" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-169"><a href="#cb52-169" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-170"><a href="#cb52-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-171"><a href="#cb52-171" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.113</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-172"><a href="#cb52-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-173"><a href="#cb52-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-140"><a href="#cb52-140" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping The `edu College degree or higher` variable</span></span>
+<span id="cb52-141"><a href="#cb52-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-144"><a href="#cb52-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-145"><a href="#cb52-145" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.12</span><span class="sc">$</span>edu)</span>
+<span id="cb52-146"><a href="#cb52-146" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.13</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.12</span> <span class="sc">%&gt;%</span></span>
+<span id="cb52-147"><a href="#cb52-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">edu =</span> <span class="fu">revalue</span>(edu,</span>
+<span id="cb52-148"><a href="#cb52-148" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">c</span>(<span class="st">"College degree or higher"</span> <span class="ot">=</span> <span class="st">"Some College"</span>)))</span>
+<span id="cb52-149"><a href="#cb52-149" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.13</span><span class="sc">$</span>edu)</span>
+<span id="cb52-150"><a href="#cb52-150" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.12</span>)</span>
+<span id="cb52-151"><a href="#cb52-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-152"><a href="#cb52-152" aria-hidden="true" tabindex="-1"></a>surv13 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-153"><a href="#cb52-153" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-154"><a href="#cb52-154" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
+<span id="cb52-155"><a href="#cb52-155" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb52-156"><a href="#cb52-156" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
+<span id="cb52-157"><a href="#cb52-157" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-158"><a href="#cb52-158" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-159"><a href="#cb52-159" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-160"><a href="#cb52-160" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-161"><a href="#cb52-161" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.13</span>, </span>
+<span id="cb52-162"><a href="#cb52-162" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-163"><a href="#cb52-163" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-164"><a href="#cb52-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-165"><a href="#cb52-165" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.113</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv13,</span>
+<span id="cb52-166"><a href="#cb52-166" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-167"><a href="#cb52-167" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-168"><a href="#cb52-168" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-169"><a href="#cb52-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-170"><a href="#cb52-170" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.113</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-171"><a href="#cb52-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-172"><a href="#cb52-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-173"><a href="#cb52-173" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `health Good` variable</span></span>
 <span id="cb52-174"><a href="#cb52-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-175"><a href="#cb52-175" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `health Good`  variable</span></span>
-<span id="cb52-176"><a href="#cb52-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-179"><a href="#cb52-179" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-180"><a href="#cb52-180" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.13</span><span class="sc">$</span>health)</span>
-<span id="cb52-181"><a href="#cb52-181" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.14</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.13</span> <span class="sc">%&gt;%</span></span>
-<span id="cb52-182"><a href="#cb52-182" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">health =</span> <span class="fu">revalue</span>(health,</span>
-<span id="cb52-183"><a href="#cb52-183" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="st">"Good"</span> <span class="ot">=</span> <span class="st">"Excellent"</span>)))</span>
-<span id="cb52-184"><a href="#cb52-184" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.14</span><span class="sc">$</span>health)</span>
-<span id="cb52-185"><a href="#cb52-185" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.13</span>)</span>
-<span id="cb52-186"><a href="#cb52-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-187"><a href="#cb52-187" aria-hidden="true" tabindex="-1"></a>surv14 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-188"><a href="#cb52-188" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-189"><a href="#cb52-189" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
-<span id="cb52-190"><a href="#cb52-190" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb52-191"><a href="#cb52-191" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
-<span id="cb52-192"><a href="#cb52-192" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-193"><a href="#cb52-193" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-194"><a href="#cb52-194" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-195"><a href="#cb52-195" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-196"><a href="#cb52-196" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.14</span>, </span>
-<span id="cb52-197"><a href="#cb52-197" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-198"><a href="#cb52-198" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-199"><a href="#cb52-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-200"><a href="#cb52-200" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.114</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv14,</span>
-<span id="cb52-201"><a href="#cb52-201" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-202"><a href="#cb52-202" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-203"><a href="#cb52-203" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-204"><a href="#cb52-204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-205"><a href="#cb52-205" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.114</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-206"><a href="#cb52-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-177"><a href="#cb52-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-178"><a href="#cb52-178" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.13</span><span class="sc">$</span>health)</span>
+<span id="cb52-179"><a href="#cb52-179" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.14</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.13</span> <span class="sc">%&gt;%</span></span>
+<span id="cb52-180"><a href="#cb52-180" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">health =</span> <span class="fu">revalue</span>(health,</span>
+<span id="cb52-181"><a href="#cb52-181" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="st">"Good"</span> <span class="ot">=</span> <span class="st">"Excellent"</span>)))</span>
+<span id="cb52-182"><a href="#cb52-182" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.14</span><span class="sc">$</span>health)</span>
+<span id="cb52-183"><a href="#cb52-183" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.13</span>)</span>
+<span id="cb52-184"><a href="#cb52-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-185"><a href="#cb52-185" aria-hidden="true" tabindex="-1"></a>surv14 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-186"><a href="#cb52-186" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-187"><a href="#cb52-187" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
+<span id="cb52-188"><a href="#cb52-188" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb52-189"><a href="#cb52-189" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
+<span id="cb52-190"><a href="#cb52-190" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-191"><a href="#cb52-191" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-192"><a href="#cb52-192" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-193"><a href="#cb52-193" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-194"><a href="#cb52-194" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.14</span>, </span>
+<span id="cb52-195"><a href="#cb52-195" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-196"><a href="#cb52-196" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-197"><a href="#cb52-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-198"><a href="#cb52-198" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.114</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv14,</span>
+<span id="cb52-199"><a href="#cb52-199" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-200"><a href="#cb52-200" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-201"><a href="#cb52-201" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-202"><a href="#cb52-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-203"><a href="#cb52-203" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.114</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-204"><a href="#cb52-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-205"><a href="#cb52-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-206"><a href="#cb52-206" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `health Fair/Poor` variable</span></span>
 <span id="cb52-207"><a href="#cb52-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-208"><a href="#cb52-208" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `health Fair/Poor` variable</span></span>
-<span id="cb52-209"><a href="#cb52-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-210"><a href="#cb52-210" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-213"><a href="#cb52-213" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-214"><a href="#cb52-214" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.14</span><span class="sc">$</span>health)</span>
-<span id="cb52-215"><a href="#cb52-215" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.15</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.14</span> <span class="sc">%&gt;%</span></span>
-<span id="cb52-216"><a href="#cb52-216" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">health =</span> <span class="fu">revalue</span>(health,</span>
-<span id="cb52-217"><a href="#cb52-217" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="st">"Fair/Poor"</span> <span class="ot">=</span> <span class="st">"Excellent"</span>)))</span>
-<span id="cb52-218"><a href="#cb52-218" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.15</span><span class="sc">$</span>health)</span>
-<span id="cb52-219"><a href="#cb52-219" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.14</span>)</span>
-<span id="cb52-220"><a href="#cb52-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-221"><a href="#cb52-221" aria-hidden="true" tabindex="-1"></a>surv15 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-222"><a href="#cb52-222" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-223"><a href="#cb52-223" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
-<span id="cb52-224"><a href="#cb52-224" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb52-225"><a href="#cb52-225" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
-<span id="cb52-226"><a href="#cb52-226" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-227"><a href="#cb52-227" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-228"><a href="#cb52-228" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-229"><a href="#cb52-229" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-230"><a href="#cb52-230" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.15</span>, </span>
-<span id="cb52-231"><a href="#cb52-231" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-232"><a href="#cb52-232" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-233"><a href="#cb52-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-234"><a href="#cb52-234" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.115</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv15,</span>
-<span id="cb52-235"><a href="#cb52-235" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-236"><a href="#cb52-236" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-237"><a href="#cb52-237" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-210"><a href="#cb52-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-211"><a href="#cb52-211" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.14</span><span class="sc">$</span>health)</span>
+<span id="cb52-212"><a href="#cb52-212" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.15</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.14</span> <span class="sc">%&gt;%</span></span>
+<span id="cb52-213"><a href="#cb52-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">health =</span> <span class="fu">revalue</span>(health,</span>
+<span id="cb52-214"><a href="#cb52-214" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">c</span>(<span class="st">"Fair/Poor"</span> <span class="ot">=</span> <span class="st">"Excellent"</span>)))</span>
+<span id="cb52-215"><a href="#cb52-215" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.15</span><span class="sc">$</span>health)</span>
+<span id="cb52-216"><a href="#cb52-216" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.14</span>)</span>
+<span id="cb52-217"><a href="#cb52-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-218"><a href="#cb52-218" aria-hidden="true" tabindex="-1"></a>surv15 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-219"><a href="#cb52-219" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-220"><a href="#cb52-220" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
+<span id="cb52-221"><a href="#cb52-221" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb52-222"><a href="#cb52-222" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
+<span id="cb52-223"><a href="#cb52-223" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-224"><a href="#cb52-224" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-225"><a href="#cb52-225" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-226"><a href="#cb52-226" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-227"><a href="#cb52-227" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.15</span>, </span>
+<span id="cb52-228"><a href="#cb52-228" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-229"><a href="#cb52-229" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-230"><a href="#cb52-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-231"><a href="#cb52-231" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.115</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv15,</span>
+<span id="cb52-232"><a href="#cb52-232" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-233"><a href="#cb52-233" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-234"><a href="#cb52-234" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-235"><a href="#cb52-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-236"><a href="#cb52-236" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.115</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-237"><a href="#cb52-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb52-238"><a href="#cb52-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-239"><a href="#cb52-239" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.115</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-240"><a href="#cb52-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-241"><a href="#cb52-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-242"><a href="#cb52-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-243"><a href="#cb52-243" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `alcohol &gt;7/wk` variable</span></span>
-<span id="cb52-244"><a href="#cb52-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-245"><a href="#cb52-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-248"><a href="#cb52-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-249"><a href="#cb52-249" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.15</span><span class="sc">$</span>alcohol)</span>
-<span id="cb52-250"><a href="#cb52-250" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.16</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.15</span> <span class="sc">%&gt;%</span></span>
-<span id="cb52-251"><a href="#cb52-251" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">alcohol =</span> <span class="fu">revalue</span>(alcohol,</span>
-<span id="cb52-252"><a href="#cb52-252" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">c</span>(<span class="st">"&gt;7/wk"</span> <span class="ot">=</span> <span class="st">"None"</span>)))</span>
-<span id="cb52-253"><a href="#cb52-253" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.16</span><span class="sc">$</span>alcohol)</span>
-<span id="cb52-254"><a href="#cb52-254" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.15</span>)</span>
-<span id="cb52-255"><a href="#cb52-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-256"><a href="#cb52-256" aria-hidden="true" tabindex="-1"></a>surv16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-257"><a href="#cb52-257" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-258"><a href="#cb52-258" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
-<span id="cb52-259"><a href="#cb52-259" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb52-260"><a href="#cb52-260" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
-<span id="cb52-261"><a href="#cb52-261" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-262"><a href="#cb52-262" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-263"><a href="#cb52-263" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-264"><a href="#cb52-264" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-265"><a href="#cb52-265" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.16</span>, </span>
-<span id="cb52-266"><a href="#cb52-266" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-267"><a href="#cb52-267" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-239"><a href="#cb52-239" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `alcohol &gt;7/wk` variable</span></span>
+<span id="cb52-240"><a href="#cb52-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-243"><a href="#cb52-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-244"><a href="#cb52-244" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.15</span><span class="sc">$</span>alcohol)</span>
+<span id="cb52-245"><a href="#cb52-245" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.16</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.15</span> <span class="sc">%&gt;%</span></span>
+<span id="cb52-246"><a href="#cb52-246" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">alcohol =</span> <span class="fu">revalue</span>(alcohol,</span>
+<span id="cb52-247"><a href="#cb52-247" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">c</span>(<span class="st">"&gt;7/wk"</span> <span class="ot">=</span> <span class="st">"None"</span>)))</span>
+<span id="cb52-248"><a href="#cb52-248" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.16</span><span class="sc">$</span>alcohol)</span>
+<span id="cb52-249"><a href="#cb52-249" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.15</span>)</span>
+<span id="cb52-250"><a href="#cb52-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-251"><a href="#cb52-251" aria-hidden="true" tabindex="-1"></a>surv16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-252"><a href="#cb52-252" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-253"><a href="#cb52-253" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
+<span id="cb52-254"><a href="#cb52-254" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb52-255"><a href="#cb52-255" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
+<span id="cb52-256"><a href="#cb52-256" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-257"><a href="#cb52-257" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-258"><a href="#cb52-258" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-259"><a href="#cb52-259" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-260"><a href="#cb52-260" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.16</span>, </span>
+<span id="cb52-261"><a href="#cb52-261" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-262"><a href="#cb52-262" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-263"><a href="#cb52-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-264"><a href="#cb52-264" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.116</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv16,</span>
+<span id="cb52-265"><a href="#cb52-265" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-266"><a href="#cb52-266" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-267"><a href="#cb52-267" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
 <span id="cb52-268"><a href="#cb52-268" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-269"><a href="#cb52-269" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.116</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv16,</span>
-<span id="cb52-270"><a href="#cb52-270" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-271"><a href="#cb52-271" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-272"><a href="#cb52-272" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-269"><a href="#cb52-269" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.116</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-270"><a href="#cb52-270" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-271"><a href="#cb52-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-272"><a href="#cb52-272" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `bc_pills Ever use BC pills` variable</span></span>
 <span id="cb52-273"><a href="#cb52-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-274"><a href="#cb52-274" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.116</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-275"><a href="#cb52-275" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-276"><a href="#cb52-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-277"><a href="#cb52-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-278"><a href="#cb52-278" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `bc_pills Ever use BC pills` variable</span></span>
+<span id="cb52-276"><a href="#cb52-276" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-277"><a href="#cb52-277" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.16</span><span class="sc">$</span>bc_pills)</span>
+<span id="cb52-278"><a href="#cb52-278" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.17</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.16</span></span>
 <span id="cb52-279"><a href="#cb52-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-282"><a href="#cb52-282" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-283"><a href="#cb52-283" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.16</span><span class="sc">$</span>bc_pills)</span>
-<span id="cb52-284"><a href="#cb52-284" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.17</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.16</span></span>
-<span id="cb52-285"><a href="#cb52-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-286"><a href="#cb52-286" aria-hidden="true" tabindex="-1"></a><span class="co"># swan_amh13.6 &lt;- swan_amh13.5 %&gt;%</span></span>
-<span id="cb52-287"><a href="#cb52-287" aria-hidden="true" tabindex="-1"></a><span class="co">#   transform(alcohol = revalue(alcohol,</span></span>
-<span id="cb52-288"><a href="#cb52-288" aria-hidden="true" tabindex="-1"></a><span class="co">#                               c("&gt;7/wk" = "None")))</span></span>
-<span id="cb52-289"><a href="#cb52-289" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.16</span>)</span>
-<span id="cb52-290"><a href="#cb52-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-291"><a href="#cb52-291" aria-hidden="true" tabindex="-1"></a>surv17 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-292"><a href="#cb52-292" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-293"><a href="#cb52-293" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
-<span id="cb52-294"><a href="#cb52-294" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
-<span id="cb52-295"><a href="#cb52-295" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
-<span id="cb52-296"><a href="#cb52-296" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
-<span id="cb52-297"><a href="#cb52-297" aria-hidden="true" tabindex="-1"></a>                  employed <span class="sc">+</span></span>
-<span id="cb52-298"><a href="#cb52-298" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
-<span id="cb52-299"><a href="#cb52-299" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-300"><a href="#cb52-300" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-301"><a href="#cb52-301" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-302"><a href="#cb52-302" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-303"><a href="#cb52-303" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.17</span>, </span>
-<span id="cb52-304"><a href="#cb52-304" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-305"><a href="#cb52-305" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-306"><a href="#cb52-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-307"><a href="#cb52-307" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.117</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv17,</span>
-<span id="cb52-308"><a href="#cb52-308" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-309"><a href="#cb52-309" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-310"><a href="#cb52-310" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-311"><a href="#cb52-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-312"><a href="#cb52-312" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.117</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-313"><a href="#cb52-313" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-314"><a href="#cb52-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-315"><a href="#cb52-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-316"><a href="#cb52-316" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `health Very Good` variable</span></span>
+<span id="cb52-280"><a href="#cb52-280" aria-hidden="true" tabindex="-1"></a><span class="co"># swan_amh13.6 &lt;- swan_amh13.5 %&gt;%</span></span>
+<span id="cb52-281"><a href="#cb52-281" aria-hidden="true" tabindex="-1"></a><span class="co">#   transform(alcohol = revalue(alcohol,</span></span>
+<span id="cb52-282"><a href="#cb52-282" aria-hidden="true" tabindex="-1"></a><span class="co">#                               c("&gt;7/wk" = "None")))</span></span>
+<span id="cb52-283"><a href="#cb52-283" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.16</span>)</span>
+<span id="cb52-284"><a href="#cb52-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-285"><a href="#cb52-285" aria-hidden="true" tabindex="-1"></a>surv17 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-286"><a href="#cb52-286" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-287"><a href="#cb52-287" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
+<span id="cb52-288"><a href="#cb52-288" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
+<span id="cb52-289"><a href="#cb52-289" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
+<span id="cb52-290"><a href="#cb52-290" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
+<span id="cb52-291"><a href="#cb52-291" aria-hidden="true" tabindex="-1"></a>                  employed <span class="sc">+</span></span>
+<span id="cb52-292"><a href="#cb52-292" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
+<span id="cb52-293"><a href="#cb52-293" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-294"><a href="#cb52-294" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-295"><a href="#cb52-295" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-296"><a href="#cb52-296" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-297"><a href="#cb52-297" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.17</span>, </span>
+<span id="cb52-298"><a href="#cb52-298" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-299"><a href="#cb52-299" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-300"><a href="#cb52-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-301"><a href="#cb52-301" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.117</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv17,</span>
+<span id="cb52-302"><a href="#cb52-302" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-303"><a href="#cb52-303" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-304"><a href="#cb52-304" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-305"><a href="#cb52-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-306"><a href="#cb52-306" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.117</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-307"><a href="#cb52-307" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-308"><a href="#cb52-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-309"><a href="#cb52-309" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `health Very Good` variable</span></span>
+<span id="cb52-310"><a href="#cb52-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-313"><a href="#cb52-313" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-314"><a href="#cb52-314" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.17</span><span class="sc">$</span>health)</span>
+<span id="cb52-315"><a href="#cb52-315" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.18</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.17</span></span>
+<span id="cb52-316"><a href="#cb52-316" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.17</span>)</span>
 <span id="cb52-317"><a href="#cb52-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-318"><a href="#cb52-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-321"><a href="#cb52-321" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-322"><a href="#cb52-322" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.17</span><span class="sc">$</span>health)</span>
-<span id="cb52-323"><a href="#cb52-323" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.18</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.17</span></span>
-<span id="cb52-324"><a href="#cb52-324" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.17</span>)</span>
-<span id="cb52-325"><a href="#cb52-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-326"><a href="#cb52-326" aria-hidden="true" tabindex="-1"></a>surv18 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-327"><a href="#cb52-327" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-328"><a href="#cb52-328" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span>  </span>
-<span id="cb52-329"><a href="#cb52-329" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
-<span id="cb52-330"><a href="#cb52-330" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
-<span id="cb52-331"><a href="#cb52-331" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb52-332"><a href="#cb52-332" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb52-333"><a href="#cb52-333" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-334"><a href="#cb52-334" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-335"><a href="#cb52-335" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-336"><a href="#cb52-336" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-337"><a href="#cb52-337" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.18</span>, </span>
-<span id="cb52-338"><a href="#cb52-338" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-339"><a href="#cb52-339" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-318"><a href="#cb52-318" aria-hidden="true" tabindex="-1"></a>surv18 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-319"><a href="#cb52-319" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-320"><a href="#cb52-320" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span>  </span>
+<span id="cb52-321"><a href="#cb52-321" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
+<span id="cb52-322"><a href="#cb52-322" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
+<span id="cb52-323"><a href="#cb52-323" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb52-324"><a href="#cb52-324" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb52-325"><a href="#cb52-325" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-326"><a href="#cb52-326" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-327"><a href="#cb52-327" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-328"><a href="#cb52-328" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-329"><a href="#cb52-329" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.18</span>, </span>
+<span id="cb52-330"><a href="#cb52-330" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-331"><a href="#cb52-331" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-332"><a href="#cb52-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-333"><a href="#cb52-333" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.118</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv18,</span>
+<span id="cb52-334"><a href="#cb52-334" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-335"><a href="#cb52-335" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-336"><a href="#cb52-336" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-337"><a href="#cb52-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-338"><a href="#cb52-338" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.118</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-339"><a href="#cb52-339" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb52-340"><a href="#cb52-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-341"><a href="#cb52-341" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.118</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv18,</span>
-<span id="cb52-342"><a href="#cb52-342" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-343"><a href="#cb52-343" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-344"><a href="#cb52-344" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-345"><a href="#cb52-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-346"><a href="#cb52-346" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.118</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-347"><a href="#cb52-347" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-348"><a href="#cb52-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-341"><a href="#cb52-341" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `employed Employed` variable</span></span>
+<span id="cb52-342"><a href="#cb52-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-345"><a href="#cb52-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-346"><a href="#cb52-346" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.18</span><span class="sc">$</span>employed)</span>
+<span id="cb52-347"><a href="#cb52-347" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.19</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.18</span></span>
+<span id="cb52-348"><a href="#cb52-348" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.18</span>)</span>
 <span id="cb52-349"><a href="#cb52-349" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-350"><a href="#cb52-350" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-351"><a href="#cb52-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-352"><a href="#cb52-352" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `employed Employed` variable</span></span>
-<span id="cb52-353"><a href="#cb52-353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-356"><a href="#cb52-356" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-357"><a href="#cb52-357" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(swan_amh13<span class="fl">.18</span><span class="sc">$</span>employed)</span>
-<span id="cb52-358"><a href="#cb52-358" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.19</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.18</span></span>
-<span id="cb52-359"><a href="#cb52-359" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.18</span>)</span>
-<span id="cb52-360"><a href="#cb52-360" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-361"><a href="#cb52-361" aria-hidden="true" tabindex="-1"></a>surv19 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-362"><a href="#cb52-362" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-363"><a href="#cb52-363" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
-<span id="cb52-364"><a href="#cb52-364" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
-<span id="cb52-365"><a href="#cb52-365" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
-<span id="cb52-366"><a href="#cb52-366" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
-<span id="cb52-367"><a href="#cb52-367" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb52-368"><a href="#cb52-368" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb52-369"><a href="#cb52-369" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-370"><a href="#cb52-370" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-371"><a href="#cb52-371" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-372"><a href="#cb52-372" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-373"><a href="#cb52-373" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.19</span>, </span>
-<span id="cb52-374"><a href="#cb52-374" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-375"><a href="#cb52-375" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-376"><a href="#cb52-376" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-377"><a href="#cb52-377" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.119</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv19,</span>
-<span id="cb52-378"><a href="#cb52-378" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-379"><a href="#cb52-379" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-380"><a href="#cb52-380" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-381"><a href="#cb52-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-382"><a href="#cb52-382" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.119</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-383"><a href="#cb52-383" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-384"><a href="#cb52-384" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-385"><a href="#cb52-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-386"><a href="#cb52-386" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `children` variable</span></span>
-<span id="cb52-387"><a href="#cb52-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-390"><a href="#cb52-390" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-391"><a href="#cb52-391" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(swan_amh13<span class="fl">.19</span><span class="sc">$</span>children)</span>
-<span id="cb52-392"><a href="#cb52-392" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.20</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.19</span></span>
-<span id="cb52-393"><a href="#cb52-393" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.19</span>)</span>
-<span id="cb52-394"><a href="#cb52-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-395"><a href="#cb52-395" aria-hidden="true" tabindex="-1"></a>surv20 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-396"><a href="#cb52-396" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-397"><a href="#cb52-397" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
-<span id="cb52-398"><a href="#cb52-398" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children +</span></span>
-<span id="cb52-399"><a href="#cb52-399" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
-<span id="cb52-400"><a href="#cb52-400" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb52-401"><a href="#cb52-401" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb52-402"><a href="#cb52-402" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb52-403"><a href="#cb52-403" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-404"><a href="#cb52-404" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-405"><a href="#cb52-405" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-406"><a href="#cb52-406" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.20</span>, </span>
-<span id="cb52-407"><a href="#cb52-407" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-408"><a href="#cb52-408" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-409"><a href="#cb52-409" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-410"><a href="#cb52-410" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.120</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv20,</span>
-<span id="cb52-411"><a href="#cb52-411" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-412"><a href="#cb52-412" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-413"><a href="#cb52-413" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-350"><a href="#cb52-350" aria-hidden="true" tabindex="-1"></a>surv19 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-351"><a href="#cb52-351" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-352"><a href="#cb52-352" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
+<span id="cb52-353"><a href="#cb52-353" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
+<span id="cb52-354"><a href="#cb52-354" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
+<span id="cb52-355"><a href="#cb52-355" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
+<span id="cb52-356"><a href="#cb52-356" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb52-357"><a href="#cb52-357" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb52-358"><a href="#cb52-358" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-359"><a href="#cb52-359" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-360"><a href="#cb52-360" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-361"><a href="#cb52-361" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-362"><a href="#cb52-362" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.19</span>, </span>
+<span id="cb52-363"><a href="#cb52-363" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-364"><a href="#cb52-364" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-365"><a href="#cb52-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-366"><a href="#cb52-366" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.119</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv19,</span>
+<span id="cb52-367"><a href="#cb52-367" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-368"><a href="#cb52-368" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-369"><a href="#cb52-369" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-370"><a href="#cb52-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-371"><a href="#cb52-371" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.119</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-372"><a href="#cb52-372" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-373"><a href="#cb52-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-374"><a href="#cb52-374" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `children` variable</span></span>
+<span id="cb52-375"><a href="#cb52-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-378"><a href="#cb52-378" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-379"><a href="#cb52-379" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(swan_amh13<span class="fl">.19</span><span class="sc">$</span>children)</span>
+<span id="cb52-380"><a href="#cb52-380" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.20</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.19</span></span>
+<span id="cb52-381"><a href="#cb52-381" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.19</span>)</span>
+<span id="cb52-382"><a href="#cb52-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-383"><a href="#cb52-383" aria-hidden="true" tabindex="-1"></a>surv20 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-384"><a href="#cb52-384" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-385"><a href="#cb52-385" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
+<span id="cb52-386"><a href="#cb52-386" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children +</span></span>
+<span id="cb52-387"><a href="#cb52-387" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
+<span id="cb52-388"><a href="#cb52-388" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb52-389"><a href="#cb52-389" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb52-390"><a href="#cb52-390" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb52-391"><a href="#cb52-391" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-392"><a href="#cb52-392" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-393"><a href="#cb52-393" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-394"><a href="#cb52-394" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.20</span>, </span>
+<span id="cb52-395"><a href="#cb52-395" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-396"><a href="#cb52-396" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-397"><a href="#cb52-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-398"><a href="#cb52-398" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.120</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv20,</span>
+<span id="cb52-399"><a href="#cb52-399" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-400"><a href="#cb52-400" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-401"><a href="#cb52-401" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-402"><a href="#cb52-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-403"><a href="#cb52-403" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.120</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-404"><a href="#cb52-404" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-405"><a href="#cb52-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-406"><a href="#cb52-406" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `married Married/Partnered` variable</span></span>
+<span id="cb52-407"><a href="#cb52-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-410"><a href="#cb52-410" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-411"><a href="#cb52-411" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(swan_amh13<span class="fl">.20</span><span class="sc">$</span>married)</span>
+<span id="cb52-412"><a href="#cb52-412" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.21</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.20</span></span>
+<span id="cb52-413"><a href="#cb52-413" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.20</span>)</span>
 <span id="cb52-414"><a href="#cb52-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-415"><a href="#cb52-415" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.120</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-416"><a href="#cb52-416" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-417"><a href="#cb52-417" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-418"><a href="#cb52-418" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-419"><a href="#cb52-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-420"><a href="#cb52-420" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `married Married/Partnered` variable</span></span>
-<span id="cb52-421"><a href="#cb52-421" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-424"><a href="#cb52-424" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-425"><a href="#cb52-425" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(swan_amh13<span class="fl">.20</span><span class="sc">$</span>married)</span>
-<span id="cb52-426"><a href="#cb52-426" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.21</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.20</span></span>
-<span id="cb52-427"><a href="#cb52-427" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.20</span>)</span>
-<span id="cb52-428"><a href="#cb52-428" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-429"><a href="#cb52-429" aria-hidden="true" tabindex="-1"></a>surv21 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-430"><a href="#cb52-430" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb52-431"><a href="#cb52-431" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
-<span id="cb52-432"><a href="#cb52-432" aria-hidden="true" tabindex="-1"></a>                  <span class="co">#children +</span></span>
-<span id="cb52-433"><a href="#cb52-433" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
-<span id="cb52-434"><a href="#cb52-434" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb52-435"><a href="#cb52-435" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb52-436"><a href="#cb52-436" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
-<span id="cb52-437"><a href="#cb52-437" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-438"><a href="#cb52-438" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-439"><a href="#cb52-439" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-440"><a href="#cb52-440" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.21</span>, </span>
-<span id="cb52-441"><a href="#cb52-441" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-442"><a href="#cb52-442" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-443"><a href="#cb52-443" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-444"><a href="#cb52-444" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.121</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv21,</span>
-<span id="cb52-445"><a href="#cb52-445" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-446"><a href="#cb52-446" aria-hidden="true" tabindex="-1"></a>                         <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-447"><a href="#cb52-447" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-448"><a href="#cb52-448" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-449"><a href="#cb52-449" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.121</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-450"><a href="#cb52-450" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-451"><a href="#cb52-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-452"><a href="#cb52-452" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `alcohol 1-7/wk` variable</span></span>
-<span id="cb52-453"><a href="#cb52-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-456"><a href="#cb52-456" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-457"><a href="#cb52-457" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(swan_amh13<span class="fl">.21</span><span class="sc">$</span>alcohol)</span>
-<span id="cb52-458"><a href="#cb52-458" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.22</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.21</span></span>
-<span id="cb52-459"><a href="#cb52-459" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.21</span>)</span>
-<span id="cb52-460"><a href="#cb52-460" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-461"><a href="#cb52-461" aria-hidden="true" tabindex="-1"></a>surv22 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-462"><a href="#cb52-462" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb52-463"><a href="#cb52-463" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
-<span id="cb52-464"><a href="#cb52-464" aria-hidden="true" tabindex="-1"></a>                  <span class="co">#children +</span></span>
-<span id="cb52-465"><a href="#cb52-465" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
-<span id="cb52-466"><a href="#cb52-466" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb52-467"><a href="#cb52-467" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb52-468"><a href="#cb52-468" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
-<span id="cb52-469"><a href="#cb52-469" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-470"><a href="#cb52-470" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-471"><a href="#cb52-471" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-472"><a href="#cb52-472" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.22</span>, </span>
-<span id="cb52-473"><a href="#cb52-473" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-474"><a href="#cb52-474" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-475"><a href="#cb52-475" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-476"><a href="#cb52-476" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.122</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv22,</span>
-<span id="cb52-477"><a href="#cb52-477" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-478"><a href="#cb52-478" aria-hidden="true" tabindex="-1"></a>                         <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-479"><a href="#cb52-479" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-480"><a href="#cb52-480" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-481"><a href="#cb52-481" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.122</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-482"><a href="#cb52-482" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-483"><a href="#cb52-483" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-484"><a href="#cb52-484" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-485"><a href="#cb52-485" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `edu Some College` variable</span></span>
-<span id="cb52-486"><a href="#cb52-486" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-489"><a href="#cb52-489" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-490"><a href="#cb52-490" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(swan_amh13<span class="fl">.22</span><span class="sc">$</span>edu)</span>
-<span id="cb52-491"><a href="#cb52-491" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.23</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.22</span></span>
-<span id="cb52-492"><a href="#cb52-492" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.22</span>)</span>
+<span id="cb52-415"><a href="#cb52-415" aria-hidden="true" tabindex="-1"></a>surv21 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-416"><a href="#cb52-416" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb52-417"><a href="#cb52-417" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
+<span id="cb52-418"><a href="#cb52-418" aria-hidden="true" tabindex="-1"></a>                  <span class="co">#children +</span></span>
+<span id="cb52-419"><a href="#cb52-419" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
+<span id="cb52-420"><a href="#cb52-420" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb52-421"><a href="#cb52-421" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb52-422"><a href="#cb52-422" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
+<span id="cb52-423"><a href="#cb52-423" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-424"><a href="#cb52-424" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-425"><a href="#cb52-425" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-426"><a href="#cb52-426" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.21</span>, </span>
+<span id="cb52-427"><a href="#cb52-427" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-428"><a href="#cb52-428" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-429"><a href="#cb52-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-430"><a href="#cb52-430" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.121</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv21,</span>
+<span id="cb52-431"><a href="#cb52-431" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-432"><a href="#cb52-432" aria-hidden="true" tabindex="-1"></a>                         <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-433"><a href="#cb52-433" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-434"><a href="#cb52-434" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-435"><a href="#cb52-435" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.121</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-436"><a href="#cb52-436" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-437"><a href="#cb52-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-438"><a href="#cb52-438" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `alcohol 1-7/wk` variable</span></span>
+<span id="cb52-439"><a href="#cb52-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-442"><a href="#cb52-442" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-443"><a href="#cb52-443" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(swan_amh13<span class="fl">.21</span><span class="sc">$</span>alcohol)</span>
+<span id="cb52-444"><a href="#cb52-444" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.22</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.21</span></span>
+<span id="cb52-445"><a href="#cb52-445" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.21</span>)</span>
+<span id="cb52-446"><a href="#cb52-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-447"><a href="#cb52-447" aria-hidden="true" tabindex="-1"></a>surv22 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-448"><a href="#cb52-448" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb52-449"><a href="#cb52-449" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
+<span id="cb52-450"><a href="#cb52-450" aria-hidden="true" tabindex="-1"></a>                  <span class="co">#children +</span></span>
+<span id="cb52-451"><a href="#cb52-451" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
+<span id="cb52-452"><a href="#cb52-452" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb52-453"><a href="#cb52-453" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb52-454"><a href="#cb52-454" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
+<span id="cb52-455"><a href="#cb52-455" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-456"><a href="#cb52-456" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-457"><a href="#cb52-457" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-458"><a href="#cb52-458" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.22</span>, </span>
+<span id="cb52-459"><a href="#cb52-459" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-460"><a href="#cb52-460" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb52-461"><a href="#cb52-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-462"><a href="#cb52-462" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.122</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv22,</span>
+<span id="cb52-463"><a href="#cb52-463" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-464"><a href="#cb52-464" aria-hidden="true" tabindex="-1"></a>                         <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-465"><a href="#cb52-465" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-466"><a href="#cb52-466" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-467"><a href="#cb52-467" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.122</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-468"><a href="#cb52-468" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-469"><a href="#cb52-469" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-470"><a href="#cb52-470" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `edu Some College` variable</span></span>
+<span id="cb52-471"><a href="#cb52-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-474"><a href="#cb52-474" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-475"><a href="#cb52-475" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(swan_amh13<span class="fl">.22</span><span class="sc">$</span>edu)</span>
+<span id="cb52-476"><a href="#cb52-476" aria-hidden="true" tabindex="-1"></a>swan_amh13<span class="fl">.23</span> <span class="ot">&lt;-</span> swan_amh13<span class="fl">.22</span></span>
+<span id="cb52-477"><a href="#cb52-477" aria-hidden="true" tabindex="-1"></a><span class="fu">remove</span>(swan_amh13<span class="fl">.22</span>)</span>
+<span id="cb52-478"><a href="#cb52-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-479"><a href="#cb52-479" aria-hidden="true" tabindex="-1"></a>surv23 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb52-480"><a href="#cb52-480" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb52-481"><a href="#cb52-481" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
+<span id="cb52-482"><a href="#cb52-482" aria-hidden="true" tabindex="-1"></a>                  <span class="co">#children +</span></span>
+<span id="cb52-483"><a href="#cb52-483" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
+<span id="cb52-484"><a href="#cb52-484" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb52-485"><a href="#cb52-485" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb52-486"><a href="#cb52-486" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
+<span id="cb52-487"><a href="#cb52-487" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb52-488"><a href="#cb52-488" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb52-489"><a href="#cb52-489" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb52-490"><a href="#cb52-490" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.23</span>, </span>
+<span id="cb52-491"><a href="#cb52-491" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-492"><a href="#cb52-492" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb52-493"><a href="#cb52-493" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-494"><a href="#cb52-494" aria-hidden="true" tabindex="-1"></a>surv23 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb52-495"><a href="#cb52-495" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb52-496"><a href="#cb52-496" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
-<span id="cb52-497"><a href="#cb52-497" aria-hidden="true" tabindex="-1"></a>                  <span class="co">#children +</span></span>
-<span id="cb52-498"><a href="#cb52-498" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
-<span id="cb52-499"><a href="#cb52-499" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb52-500"><a href="#cb52-500" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb52-501"><a href="#cb52-501" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
-<span id="cb52-502"><a href="#cb52-502" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb52-503"><a href="#cb52-503" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb52-504"><a href="#cb52-504" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb52-505"><a href="#cb52-505" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13<span class="fl">.23</span>, </span>
-<span id="cb52-506"><a href="#cb52-506" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb52-507"><a href="#cb52-507" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb52-508"><a href="#cb52-508" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-509"><a href="#cb52-509" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.123</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv23,</span>
-<span id="cb52-510"><a href="#cb52-510" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb52-511"><a href="#cb52-511" aria-hidden="true" tabindex="-1"></a>                         <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb52-512"><a href="#cb52-512" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> jmcontrol) </span>
-<span id="cb52-513"><a href="#cb52-513" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-514"><a href="#cb52-514" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.123</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb52-515"><a href="#cb52-515" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-516"><a href="#cb52-516" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-517"><a href="#cb52-517" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparison </span></span>
-<span id="cb52-518"><a href="#cb52-518" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-521"><a href="#cb52-521" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-522"><a href="#cb52-522" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "compare_models"</span></span>
-<span id="cb52-523"><a href="#cb52-523" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb2<span class="fl">.111</span>, </span>
-<span id="cb52-524"><a href="#cb52-524" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.112</span>,</span>
-<span id="cb52-525"><a href="#cb52-525" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.113</span>, </span>
-<span id="cb52-526"><a href="#cb52-526" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.114</span>,</span>
-<span id="cb52-527"><a href="#cb52-527" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.115</span>,</span>
-<span id="cb52-528"><a href="#cb52-528" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.116</span>,</span>
-<span id="cb52-529"><a href="#cb52-529" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.117</span>,</span>
-<span id="cb52-530"><a href="#cb52-530" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.118</span>,</span>
-<span id="cb52-531"><a href="#cb52-531" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.119</span>,</span>
-<span id="cb52-532"><a href="#cb52-532" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.120</span>,</span>
-<span id="cb52-533"><a href="#cb52-533" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.121</span>,</span>
-<span id="cb52-534"><a href="#cb52-534" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.122</span>,</span>
-<span id="cb52-535"><a href="#cb52-535" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.123</span>)</span>
-<span id="cb52-536"><a href="#cb52-536" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-537"><a href="#cb52-537" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-538"><a href="#cb52-538" aria-hidden="true" tabindex="-1"></a>Need to discuss with EJC:</span>
-<span id="cb52-539"><a href="#cb52-539" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-540"><a href="#cb52-540" aria-hidden="true" tabindex="-1"></a>how to merge <span class="in">`alcohol`</span> and <span class="in">`edu`</span> levels.</span>
-<span id="cb52-541"><a href="#cb52-541" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-542"><a href="#cb52-542" aria-hidden="true" tabindex="-1"></a><span class="in">`children`</span> variable also need to be changed.</span>
+<span id="cb52-494"><a href="#cb52-494" aria-hidden="true" tabindex="-1"></a>jmb2<span class="fl">.123</span> <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv23,</span>
+<span id="cb52-495"><a href="#cb52-495" aria-hidden="true" tabindex="-1"></a>                         <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb52-496"><a href="#cb52-496" aria-hidden="true" tabindex="-1"></a>                         <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb52-497"><a href="#cb52-497" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> jmcontrol) </span>
+<span id="cb52-498"><a href="#cb52-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-499"><a href="#cb52-499" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb2<span class="fl">.123</span>)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb52-500"><a href="#cb52-500" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-501"><a href="#cb52-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-502"><a href="#cb52-502" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparison</span></span>
+<span id="cb52-503"><a href="#cb52-503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-506"><a href="#cb52-506" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb52-507"><a href="#cb52-507" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "compare_models"</span></span>
+<span id="cb52-508"><a href="#cb52-508" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb2<span class="fl">.111</span>, </span>
+<span id="cb52-509"><a href="#cb52-509" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.112</span>,</span>
+<span id="cb52-510"><a href="#cb52-510" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.113</span>, </span>
+<span id="cb52-511"><a href="#cb52-511" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.114</span>,</span>
+<span id="cb52-512"><a href="#cb52-512" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.115</span>,</span>
+<span id="cb52-513"><a href="#cb52-513" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.116</span>,</span>
+<span id="cb52-514"><a href="#cb52-514" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.117</span>,</span>
+<span id="cb52-515"><a href="#cb52-515" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.118</span>,</span>
+<span id="cb52-516"><a href="#cb52-516" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.119</span>,</span>
+<span id="cb52-517"><a href="#cb52-517" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.120</span>,</span>
+<span id="cb52-518"><a href="#cb52-518" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.121</span>,</span>
+<span id="cb52-519"><a href="#cb52-519" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.122</span>,</span>
+<span id="cb52-520"><a href="#cb52-520" aria-hidden="true" tabindex="-1"></a>           jmb2<span class="fl">.123</span>)</span>
+<span id="cb52-521"><a href="#cb52-521" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-522"><a href="#cb52-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-523"><a href="#cb52-523" aria-hidden="true" tabindex="-1"></a>Need to discuss with EJC:</span>
+<span id="cb52-524"><a href="#cb52-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-525"><a href="#cb52-525" aria-hidden="true" tabindex="-1"></a>how to merge <span class="in">`alcohol`</span> and <span class="in">`edu`</span> levels.</span>
+<span id="cb52-526"><a href="#cb52-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-527"><a href="#cb52-527" aria-hidden="true" tabindex="-1"></a><span class="in">`children`</span> variable also need to be changed.</span>
+<span id="cb52-528"><a href="#cb52-528" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-529"><a href="#cb52-529" aria-hidden="true" tabindex="-1"></a><span class="fu">## Final model</span></span>
+<span id="cb52-530"><a href="#cb52-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-531"><a href="#cb52-531" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
+<span id="cb52-532"><a href="#cb52-532" aria-hidden="true" tabindex="-1"></a><span class="in">surv20 &lt;- coxph(Surv(etime, event) ~ </span></span>
+<span id="cb52-533"><a href="#cb52-533" aria-hidden="true" tabindex="-1"></a><span class="in">                  0 + alcohol +</span></span>
+<span id="cb52-534"><a href="#cb52-534" aria-hidden="true" tabindex="-1"></a><span class="in">                  bmi + </span></span>
+<span id="cb52-535"><a href="#cb52-535" aria-hidden="true" tabindex="-1"></a><span class="in">                  edu + </span></span>
+<span id="cb52-536"><a href="#cb52-536" aria-hidden="true" tabindex="-1"></a><span class="in">                  married + </span></span>
+<span id="cb52-537"><a href="#cb52-537" aria-hidden="true" tabindex="-1"></a><span class="in">                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + </span></span>
+<span id="cb52-538"><a href="#cb52-538" aria-hidden="true" tabindex="-1"></a><span class="in">                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + </span></span>
+<span id="cb52-539"><a href="#cb52-539" aria-hidden="true" tabindex="-1"></a><span class="in">                  smoke_current_smoker + smoke_past_only,</span></span>
+<span id="cb52-540"><a href="#cb52-540" aria-hidden="true" tabindex="-1"></a><span class="in">                data = swan_amh13.20, </span></span>
+<span id="cb52-541"><a href="#cb52-541" aria-hidden="true" tabindex="-1"></a><span class="in">                x = TRUE,</span></span>
+<span id="cb52-542"><a href="#cb52-542" aria-hidden="true" tabindex="-1"></a><span class="in">                model = TRUE)</span></span>
 <span id="cb52-543"><a href="#cb52-543" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-544"><a href="#cb52-544" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-545"><a href="#cb52-545" aria-hidden="true" tabindex="-1"></a><span class="fu">## Final model</span></span>
-<span id="cb52-546"><a href="#cb52-546" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-547"><a href="#cb52-547" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb52-548"><a href="#cb52-548" aria-hidden="true" tabindex="-1"></a><span class="in">surv20 &lt;- coxph(Surv(etime, event) ~ </span></span>
-<span id="cb52-549"><a href="#cb52-549" aria-hidden="true" tabindex="-1"></a><span class="in">                  0 + alcohol +</span></span>
-<span id="cb52-550"><a href="#cb52-550" aria-hidden="true" tabindex="-1"></a><span class="in">                  bmi + </span></span>
-<span id="cb52-551"><a href="#cb52-551" aria-hidden="true" tabindex="-1"></a><span class="in">                  edu + </span></span>
-<span id="cb52-552"><a href="#cb52-552" aria-hidden="true" tabindex="-1"></a><span class="in">                  married + </span></span>
-<span id="cb52-553"><a href="#cb52-553" aria-hidden="true" tabindex="-1"></a><span class="in">                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + </span></span>
-<span id="cb52-554"><a href="#cb52-554" aria-hidden="true" tabindex="-1"></a><span class="in">                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + </span></span>
-<span id="cb52-555"><a href="#cb52-555" aria-hidden="true" tabindex="-1"></a><span class="in">                  smoke_current_smoker + smoke_past_only,</span></span>
-<span id="cb52-556"><a href="#cb52-556" aria-hidden="true" tabindex="-1"></a><span class="in">                data = swan_amh13.20, </span></span>
-<span id="cb52-557"><a href="#cb52-557" aria-hidden="true" tabindex="-1"></a><span class="in">                x = TRUE,</span></span>
-<span id="cb52-558"><a href="#cb52-558" aria-hidden="true" tabindex="-1"></a><span class="in">                model = TRUE)</span></span>
-<span id="cb52-559"><a href="#cb52-559" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-560"><a href="#cb52-560" aria-hidden="true" tabindex="-1"></a><span class="in">jmb2.120 &lt;- JMbayes2::jm(Surv_object = surv20,</span></span>
-<span id="cb52-561"><a href="#cb52-561" aria-hidden="true" tabindex="-1"></a><span class="in">                               Mixed_objects = lme1, </span></span>
-<span id="cb52-562"><a href="#cb52-562" aria-hidden="true" tabindex="-1"></a><span class="in">                               time_var = "time",</span></span>
-<span id="cb52-563"><a href="#cb52-563" aria-hidden="true" tabindex="-1"></a><span class="in">                               control = jmcontrol) </span></span>
-<span id="cb52-564"><a href="#cb52-564" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-565"><a href="#cb52-565" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-544"><a href="#cb52-544" aria-hidden="true" tabindex="-1"></a><span class="in">jmb2.120 &lt;- JMbayes2::jm(Surv_object = surv20,</span></span>
+<span id="cb52-545"><a href="#cb52-545" aria-hidden="true" tabindex="-1"></a><span class="in">                               Mixed_objects = lme1, </span></span>
+<span id="cb52-546"><a href="#cb52-546" aria-hidden="true" tabindex="-1"></a><span class="in">                               time_var = "time",</span></span>
+<span id="cb52-547"><a href="#cb52-547" aria-hidden="true" tabindex="-1"></a><span class="in">                               control = jmcontrol) </span></span>
+<span id="cb52-548"><a href="#cb52-548" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb52-549"><a href="#cb52-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-550"><a href="#cb52-550" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

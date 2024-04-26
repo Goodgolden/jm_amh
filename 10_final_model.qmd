@@ -51,6 +51,8 @@ here::set_here()
 
 -   [x] Calculate the AUC and ROC for the joint model for $Dt = 1, 2, 3, 4, 5$ (year)
 
+-   [x] `r praise::praise()`
+
 ## Dummy variables for `site` and `ethnicity`
 
 ```{r}
@@ -401,8 +403,10 @@ dpplot_id44 <- map(c(4, 6, 8),
 
 For `JMbayes2`, the function `tvAUC()` is used to estimate the time-dependent AUC only for all the subjects (there is no function for individual AUC). Here is an error message for the AUC $Tstart = 2$ $Dt = 1$
 
-    Error in tvROC.jm(object, newdata, Tstart, Thoriz, Dt, ...) : 
-      it seems that there are no events in the interval [Tstart, Thoriz).
+```         
+Error in tvROC.jm(object, newdata, Tstart, Thoriz, Dt, ...) : 
+  it seems that there are no events in the interval [Tstart, Thoriz).
+```
 
 ```{r}
 #| label: "auc_summary"
@@ -488,10 +492,12 @@ ROC8  <- map(c(2, 3, 4, 5),
 
 The warning massage for the Brier score is shown below:
 
-    Error in br(Thoriz) : 
-      it seems that there are no events in the interval [2.000001, 3).
+```         
+Error in br(Thoriz) : 
+  it seems that there are no events in the interval [2.000001, 3).
 
-    Warning: there are fewer than 5 subjects with an event in the interval [2.000001, 4).
+Warning: there are fewer than 5 subjects with an event in the interval [2.000001, 4).
+```
 
 ```{r}
 #| label: "bs_summary"
@@ -539,3 +545,5 @@ names(tbl_auc) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 
 tbl_auc
 ```
+
+-   [x] `r praise::praise()`

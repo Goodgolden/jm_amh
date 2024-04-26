@@ -305,6 +305,8 @@ with rate</p></li>
 without rate</p></li>
 </ul>
 </li>
+<li><p><input type="checkbox" disabled="" checked="">
+You are wonderful!</p></li>
 </ul>
 <div style="page-break-after: always;"></div>
 </section><section id="table1-descriptive-summaries" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="table1-descriptive-summaries">
@@ -868,6 +870,11 @@ without rate</p></li>
    \hline
 \end{tabular}
 \end{table}</code></pre>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" checked="">
+You are awe-inspiring!</li>
+</ul>
 
 
 <!-- -->
@@ -1082,8 +1089,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="va">[x]</span> also include the min and max of AMH</span>
 <span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="va">[x]</span> How many repeated measures per woman</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span><span class="va">[x]</span> fmp_age and fmp_time sumamry</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="va">[x]</span> fmp_age and fmp_time sumamry</span>
 <span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> all the survival parameters summary</span>
 <span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
@@ -1095,299 +1102,303 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="va">[x]</span> without rate</span>
 <span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>\newpage</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 <span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## Table1: descriptive summaries</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>\newpage</span>
 <span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>Here is the Table1 for publication.</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## Table1: descriptive summaries</span></span>
 <span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{r "loading_data"}</span></span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"swan_amh1.rda"</span>))</span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"swan_amh0.rda"</span>))</span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>sum_amh0 <span class="ot">&lt;-</span> swan_amh0 <span class="sc">%&gt;%</span></span>
-<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
-<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">visit_n =</span> <span class="fu">n</span>(),</span>
-<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>            <span class="at">amh_min =</span> <span class="fu">min</span>(amh),</span>
-<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>            <span class="at">amh_max =</span> <span class="fu">max</span>(amh)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id),</span>
-<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>         <span class="at">visit_n =</span> <span class="fu">as.numeric</span>(visit_n))</span>
-<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>swan_amh2 <span class="ot">&lt;-</span> swan_amh1 <span class="sc">%&gt;%</span></span>
-<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(sum_amh0, <span class="at">by =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id),</span>
-<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>         <span class="at">visit_n =</span> <span class="fu">as.numeric</span>(visit_n))</span>
-<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>Here is the Table1 for publication.</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r "loading_data"}</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"swan_amh1.rda"</span>))</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"swan_amh0.rda"</span>))</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>sum_amh0 <span class="ot">&lt;-</span> swan_amh0 <span class="sc">%&gt;%</span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">visit_n =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>            <span class="at">amh_min =</span> <span class="fu">min</span>(amh),</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>            <span class="at">amh_max =</span> <span class="fu">max</span>(amh)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id),</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>         <span class="at">visit_n =</span> <span class="fu">as.numeric</span>(visit_n))</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>swan_amh2 <span class="ot">&lt;-</span> swan_amh1 <span class="sc">%&gt;%</span></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(sum_amh0, <span class="at">by =</span> <span class="st">"id"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id),</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>         <span class="at">visit_n =</span> <span class="fu">as.numeric</span>(visit_n))</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "create_table1"</span></span>
-<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>table1 <span class="ot">&lt;-</span> swan_amh2 <span class="sc">%&gt;%</span></span>
-<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">children =</span> <span class="fu">as.numeric</span>(children),</span>
-<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>         <span class="at">parity =</span> <span class="fu">case_when</span>(parity <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"None"</span>,</span>
-<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>                            parity <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"One"</span>,</span>
-<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>                            parity <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Two"</span>,</span>
-<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>                            parity <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Three"</span>,</span>
-<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>                            parity <span class="sc">==</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">"More than three"</span>),</span>
-<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>         <span class="at">parity =</span> <span class="fu">factor</span>(parity, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"None"</span>, <span class="st">"One"</span>,</span>
-<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>                                               <span class="st">"Two"</span>, <span class="st">"Three"</span>,</span>
-<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>                                               <span class="st">"More than three"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(age, fmp_age, etime, </span>
-<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>                ethnic, married,</span>
-<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>                alcohol, smoke, bc_pills,</span>
-<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>                bmi, health, phys_act, amh,</span>
-<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>                visit_n,  <span class="co"># visit,</span></span>
-<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a>                parity, children, </span>
-<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>                employed, edu, site)  <span class="sc">%&gt;%</span></span>
-<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="co"># by = site,</span></span>
-<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>              <span class="at">missing =</span> <span class="st">"ifany"</span>,</span>
-<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>              <span class="at">label =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"age"</span>) <span class="sc">~</span> <span class="st">"Age (years)"</span>,</span>
-<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"fmp_age"</span>) <span class="sc">~</span> <span class="st">"Age of FMP (years)"</span>,</span>
-<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"etime"</span>) <span class="sc">~</span> <span class="st">"Time of FMP(years)"</span>,</span>
-<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"ethnic"</span>) <span class="sc">~</span> <span class="st">"Ethnicity / Race"</span>,</span>
-<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"married"</span>) <span class="sc">~</span> <span class="st">"Marital Status"</span>,</span>
-<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"alcohol"</span>) <span class="sc">~</span> <span class="st">"Alcohol Use"</span>,</span>
-<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"smoke"</span>) <span class="sc">~</span> <span class="st">"Smoking History"</span>,</span>
-<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"bc_pills"</span>) <span class="sc">~</span> <span class="st">"Ever use of BC Pills"</span>,</span>
-<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"bmi"</span>) <span class="sc">~</span> <span class="st">"BMI"</span>,</span>
-<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"health"</span>) <span class="sc">~</span> <span class="st">"Overall Health"</span>,</span>
-<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"phys_act"</span>) <span class="sc">~</span> <span class="st">"Physical Activity Score"</span>,</span>
-<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"amh"</span>) <span class="sc">~</span> <span class="st">"Baseline AMH"</span>,</span>
-<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"parity"</span>) <span class="sc">~</span> <span class="st">"Parity"</span>,</span>
-<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"children"</span>) <span class="sc">~</span> <span class="st">"Children"</span>,</span>
-<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"employed"</span>) <span class="sc">~</span> <span class="st">"Employment Status"</span>,</span>
-<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"edu"</span>) <span class="sc">~</span> <span class="st">"Educational Attainment"</span>,</span>
-<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"visit_n"</span>) <span class="sc">~</span> <span class="st">"Number of Visits"</span>,</span>
-<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"site"</span>) <span class="sc">~</span> <span class="st">"Site"</span>),</span>
-<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>              <span class="at">type =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"continuous2"</span>,</span>
-<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">c</span>(<span class="st">"children"</span>, <span class="st">"visit_n"</span>) <span class="sc">~</span> <span class="st">"continuous2"</span>),</span>
-<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a>              <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="fu">c</span>(<span class="st">"{mean} ({sd})"</span>,</span>
-<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"{median} [{min}, {max}]"</span>),</span>
-<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">all_categorical</span>() <span class="sc">~</span> <span class="st">"{n} / {N} ({p}%)"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_header</span>(<span class="at">label =</span> <span class="st">"**Characteristics**"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a>  <span class="co"># update the column header</span></span>
-<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add_overall() %&gt;%</span></span>
-<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">italicize_labels</span>()</span>
-<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-150"><a href="#cb3-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb3-151"><a href="#cb3-151" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "styled_table1"</span></span>
-<span id="cb3-152"><a href="#cb3-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Descriptive Statistics for SWAN AMH Data"</span></span>
-<span id="cb3-153"><a href="#cb3-153" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb3-154"><a href="#cb3-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-155"><a href="#cb3-155" aria-hidden="true" tabindex="-1"></a><span class="fu">set_flextable_defaults</span>(<span class="at">fonts_ignore=</span><span class="cn">TRUE</span>)</span>
-<span id="cb3-156"><a href="#cb3-156" aria-hidden="true" tabindex="-1"></a><span class="co"># set_flextable_defaults(font.size = 8, </span></span>
-<span id="cb3-157"><a href="#cb3-157" aria-hidden="true" tabindex="-1"></a><span class="co">#                        # text.align = "left",</span></span>
-<span id="cb3-158"><a href="#cb3-158" aria-hidden="true" tabindex="-1"></a><span class="co">#                        # theme_fun = theme_zebra,</span></span>
-<span id="cb3-159"><a href="#cb3-159" aria-hidden="true" tabindex="-1"></a><span class="co">#                        padding = 2)</span></span>
-<span id="cb3-160"><a href="#cb3-160" aria-hidden="true" tabindex="-1"></a>table1 <span class="sc">%&gt;%</span> </span>
-<span id="cb3-161"><a href="#cb3-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_flex_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-162"><a href="#cb3-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fontsize</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
-<span id="cb3-163"><a href="#cb3-163" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-164"><a href="#cb3-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-165"><a href="#cb3-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-166"><a href="#cb3-166" aria-hidden="true" tabindex="-1"></a>Here is the LaTeX code for the table1.</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "create_table1"</span></span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>table1 <span class="ot">&lt;-</span> swan_amh2 <span class="sc">%&gt;%</span></span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">children =</span> <span class="fu">as.numeric</span>(children),</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>         <span class="at">parity =</span> <span class="fu">case_when</span>(parity <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"None"</span>,</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>                            parity <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"One"</span>,</span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>                            parity <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Two"</span>,</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>                            parity <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Three"</span>,</span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>                            parity <span class="sc">==</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">"More than three"</span>),</span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>         <span class="at">parity =</span> <span class="fu">factor</span>(parity, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"None"</span>, <span class="st">"One"</span>,</span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>                                               <span class="st">"Two"</span>, <span class="st">"Three"</span>,</span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>                                               <span class="st">"More than three"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(age, fmp_age, etime, </span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>                ethnic, married,</span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>                alcohol, smoke, bc_pills,</span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a>                bmi, health, phys_act, amh,</span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>                visit_n,  <span class="co"># visit,</span></span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>                parity, children, </span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>                employed, edu, site)  <span class="sc">%&gt;%</span></span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="co"># by = site,</span></span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>              <span class="at">missing =</span> <span class="st">"ifany"</span>,</span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>              <span class="at">label =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"age"</span>) <span class="sc">~</span> <span class="st">"Age (years)"</span>,</span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"fmp_age"</span>) <span class="sc">~</span> <span class="st">"Age of FMP (years)"</span>,</span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"etime"</span>) <span class="sc">~</span> <span class="st">"Time of FMP(years)"</span>,</span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"ethnic"</span>) <span class="sc">~</span> <span class="st">"Ethnicity / Race"</span>,</span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"married"</span>) <span class="sc">~</span> <span class="st">"Marital Status"</span>,</span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"alcohol"</span>) <span class="sc">~</span> <span class="st">"Alcohol Use"</span>,</span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"smoke"</span>) <span class="sc">~</span> <span class="st">"Smoking History"</span>,</span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"bc_pills"</span>) <span class="sc">~</span> <span class="st">"Ever use of BC Pills"</span>,</span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"bmi"</span>) <span class="sc">~</span> <span class="st">"BMI"</span>,</span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"health"</span>) <span class="sc">~</span> <span class="st">"Overall Health"</span>,</span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"phys_act"</span>) <span class="sc">~</span> <span class="st">"Physical Activity Score"</span>,</span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"amh"</span>) <span class="sc">~</span> <span class="st">"Baseline AMH"</span>,</span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"parity"</span>) <span class="sc">~</span> <span class="st">"Parity"</span>,</span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"children"</span>) <span class="sc">~</span> <span class="st">"Children"</span>,</span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"employed"</span>) <span class="sc">~</span> <span class="st">"Employment Status"</span>,</span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"edu"</span>) <span class="sc">~</span> <span class="st">"Educational Attainment"</span>,</span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"visit_n"</span>) <span class="sc">~</span> <span class="st">"Number of Visits"</span>,</span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">c</span>(<span class="st">"site"</span>) <span class="sc">~</span> <span class="st">"Site"</span>),</span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a>              <span class="at">type =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"continuous2"</span>,</span>
+<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">c</span>(<span class="st">"children"</span>, <span class="st">"visit_n"</span>) <span class="sc">~</span> <span class="st">"continuous2"</span>),</span>
+<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>              <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="fu">c</span>(<span class="st">"{mean} ({sd})"</span>,</span>
+<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a>                                                    <span class="st">"{median} [{min}, {max}]"</span>),</span>
+<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">all_categorical</span>() <span class="sc">~</span> <span class="st">"{n} / {N} ({p}%)"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_header</span>(<span class="at">label =</span> <span class="st">"**Characteristics**"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a>  <span class="co"># update the column header</span></span>
+<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add_overall() %&gt;%</span></span>
+<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">italicize_labels</span>()</span>
+<span id="cb3-148"><a href="#cb3-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-149"><a href="#cb3-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-152"><a href="#cb3-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb3-153"><a href="#cb3-153" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "styled_table1"</span></span>
+<span id="cb3-154"><a href="#cb3-154" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Descriptive Statistics for SWAN AMH Data"</span></span>
+<span id="cb3-155"><a href="#cb3-155" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb3-156"><a href="#cb3-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-157"><a href="#cb3-157" aria-hidden="true" tabindex="-1"></a><span class="fu">set_flextable_defaults</span>(<span class="at">fonts_ignore=</span><span class="cn">TRUE</span>)</span>
+<span id="cb3-158"><a href="#cb3-158" aria-hidden="true" tabindex="-1"></a><span class="co"># set_flextable_defaults(font.size = 8, </span></span>
+<span id="cb3-159"><a href="#cb3-159" aria-hidden="true" tabindex="-1"></a><span class="co">#                        # text.align = "left",</span></span>
+<span id="cb3-160"><a href="#cb3-160" aria-hidden="true" tabindex="-1"></a><span class="co">#                        # theme_fun = theme_zebra,</span></span>
+<span id="cb3-161"><a href="#cb3-161" aria-hidden="true" tabindex="-1"></a><span class="co">#                        padding = 2)</span></span>
+<span id="cb3-162"><a href="#cb3-162" aria-hidden="true" tabindex="-1"></a>table1 <span class="sc">%&gt;%</span> </span>
+<span id="cb3-163"><a href="#cb3-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_flex_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-164"><a href="#cb3-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fontsize</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
+<span id="cb3-165"><a href="#cb3-165" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-166"><a href="#cb3-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb3-167"><a href="#cb3-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-168"><a href="#cb3-168" aria-hidden="true" tabindex="-1"></a><span class="in">```{r "table1_latex"}</span></span>
-<span id="cb3-169"><a href="#cb3-169" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "table_latex"</span></span>
-<span id="cb3-170"><a href="#cb3-170" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb3-171"><a href="#cb3-171" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xtable)</span>
-<span id="cb3-172"><a href="#cb3-172" aria-hidden="true" tabindex="-1"></a><span class="fu">xtable</span>(<span class="fu">as.data.frame</span>(table1), <span class="at">type =</span> <span class="st">"latex"</span>,</span>
-<span id="cb3-173"><a href="#cb3-173" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"figure/swan_amh_09_publish_table1_"</span>, <span class="fu">Sys.Date</span>(), <span class="st">".tex"</span>))</span>
-<span id="cb3-174"><a href="#cb3-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-175"><a href="#cb3-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-168"><a href="#cb3-168" aria-hidden="true" tabindex="-1"></a>Here is the LaTeX code for the table1.</span>
+<span id="cb3-169"><a href="#cb3-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-170"><a href="#cb3-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r "table1_latex"}</span></span>
+<span id="cb3-171"><a href="#cb3-171" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "table_latex"</span></span>
+<span id="cb3-172"><a href="#cb3-172" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb3-173"><a href="#cb3-173" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xtable)</span>
+<span id="cb3-174"><a href="#cb3-174" aria-hidden="true" tabindex="-1"></a><span class="fu">xtable</span>(<span class="fu">as.data.frame</span>(table1), <span class="at">type =</span> <span class="st">"latex"</span>,</span>
+<span id="cb3-175"><a href="#cb3-175" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"figure/swan_amh_09_publish_table1_"</span>, <span class="fu">Sys.Date</span>(), <span class="st">".tex"</span>))</span>
 <span id="cb3-176"><a href="#cb3-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-177"><a href="#cb3-177" aria-hidden="true" tabindex="-1"></a><span class="in">% latex table generated in R 4.2.2 by xtable 1.8-4 package</span></span>
-<span id="cb3-178"><a href="#cb3-178" aria-hidden="true" tabindex="-1"></a><span class="in">% Wed Apr 10 20:57:15 2024</span></span>
-<span id="cb3-179"><a href="#cb3-179" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{table}[ht]</span></span>
-<span id="cb3-180"><a href="#cb3-180" aria-hidden="true" tabindex="-1"></a><span class="in">\centering</span></span>
-<span id="cb3-181"><a href="#cb3-181" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{tabular}{rll}</span></span>
-<span id="cb3-182"><a href="#cb3-182" aria-hidden="true" tabindex="-1"></a><span class="in">  \hline</span></span>
-<span id="cb3-183"><a href="#cb3-183" aria-hidden="true" tabindex="-1"></a><span class="in"> &amp; **Characteristics** &amp; **N = 600** \\ </span></span>
+<span id="cb3-177"><a href="#cb3-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-178"><a href="#cb3-178" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
+<span id="cb3-179"><a href="#cb3-179" aria-hidden="true" tabindex="-1"></a><span class="in">% latex table generated in R 4.2.2 by xtable 1.8-4 package</span></span>
+<span id="cb3-180"><a href="#cb3-180" aria-hidden="true" tabindex="-1"></a><span class="in">% Wed Apr 10 20:57:15 2024</span></span>
+<span id="cb3-181"><a href="#cb3-181" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{table}[ht]</span></span>
+<span id="cb3-182"><a href="#cb3-182" aria-hidden="true" tabindex="-1"></a><span class="in">\centering</span></span>
+<span id="cb3-183"><a href="#cb3-183" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{tabular}{rll}</span></span>
 <span id="cb3-184"><a href="#cb3-184" aria-hidden="true" tabindex="-1"></a><span class="in">  \hline</span></span>
-<span id="cb3-185"><a href="#cb3-185" aria-hidden="true" tabindex="-1"></a><span class="in">  1 &amp; \_\_\_Age (years)\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-186"><a href="#cb3-186" aria-hidden="true" tabindex="-1"></a><span class="in">  2 &amp; Mean (SD) &amp; 46.42 (2.41) \\ </span></span>
-<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a><span class="in">  3 &amp; Median [Range] &amp; 46.00 [42.00, 53.00] \\ </span></span>
-<span id="cb3-188"><a href="#cb3-188" aria-hidden="true" tabindex="-1"></a><span class="in">  4 &amp; \_\_\_Age of FMP (years)\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-189"><a href="#cb3-189" aria-hidden="true" tabindex="-1"></a><span class="in">  5 &amp; Mean (SD) &amp; 52.98 (2.51) \\ </span></span>
-<span id="cb3-190"><a href="#cb3-190" aria-hidden="true" tabindex="-1"></a><span class="in">  6 &amp; Median [Range] &amp; 53.05 [45.59, 62.10] \\ </span></span>
-<span id="cb3-191"><a href="#cb3-191" aria-hidden="true" tabindex="-1"></a><span class="in">  7 &amp; \_\_\_Time of FMP(years)\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-192"><a href="#cb3-192" aria-hidden="true" tabindex="-1"></a><span class="in">  8 &amp; Mean (SD) &amp; 10.98 (2.51) \\ </span></span>
-<span id="cb3-193"><a href="#cb3-193" aria-hidden="true" tabindex="-1"></a><span class="in">  9 &amp; Median [Range] &amp; 11.05 [3.59, 20.10] \\ </span></span>
-<span id="cb3-194"><a href="#cb3-194" aria-hidden="true" tabindex="-1"></a><span class="in">  10 &amp; \_\_\_Ethnicity / Race\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-195"><a href="#cb3-195" aria-hidden="true" tabindex="-1"></a><span class="in">  11 &amp; CAUCA &amp; 265 / 600 (44\%) \\ </span></span>
-<span id="cb3-196"><a href="#cb3-196" aria-hidden="true" tabindex="-1"></a><span class="in">  12 &amp; BLACK &amp; 170 / 600 (28\%) \\ </span></span>
-<span id="cb3-197"><a href="#cb3-197" aria-hidden="true" tabindex="-1"></a><span class="in">  13 &amp; CHINE &amp; 62 / 600 (10\%) \\ </span></span>
-<span id="cb3-198"><a href="#cb3-198" aria-hidden="true" tabindex="-1"></a><span class="in">  14 &amp; HISPA &amp; 18 / 600 (3.0\%) \\ </span></span>
-<span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a><span class="in">  15 &amp; JAPAN &amp; 85 / 600 (14\%) \\ </span></span>
-<span id="cb3-200"><a href="#cb3-200" aria-hidden="true" tabindex="-1"></a><span class="in">  16 &amp; \_\_\_Marital Status\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-201"><a href="#cb3-201" aria-hidden="true" tabindex="-1"></a><span class="in">  17 &amp; Not Married/Partnered &amp; 191 / 600 (32\%) \\ </span></span>
-<span id="cb3-202"><a href="#cb3-202" aria-hidden="true" tabindex="-1"></a><span class="in">  18 &amp; Married/Partnered &amp; 409 / 600 (68\%) \\ </span></span>
-<span id="cb3-203"><a href="#cb3-203" aria-hidden="true" tabindex="-1"></a><span class="in">  19 &amp; \_\_\_Alcohol Use\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-204"><a href="#cb3-204" aria-hidden="true" tabindex="-1"></a><span class="in">  20 &amp; None &amp; 308 / 600 (51\%) \\ </span></span>
-<span id="cb3-205"><a href="#cb3-205" aria-hidden="true" tabindex="-1"></a><span class="in">  21 &amp; $&lt;$1/wk &amp; 71 / 600 (12\%) \\ </span></span>
-<span id="cb3-206"><a href="#cb3-206" aria-hidden="true" tabindex="-1"></a><span class="in">  22 &amp; 1-7/wk &amp; 161 / 600 (27\%) \\ </span></span>
-<span id="cb3-207"><a href="#cb3-207" aria-hidden="true" tabindex="-1"></a><span class="in">  23 &amp; $&gt;$7/wk &amp; 60 / 600 (10\%) \\ </span></span>
-<span id="cb3-208"><a href="#cb3-208" aria-hidden="true" tabindex="-1"></a><span class="in">  24 &amp; \_\_\_Smoking History\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-209"><a href="#cb3-209" aria-hidden="true" tabindex="-1"></a><span class="in">  25 &amp; Never Smoked &amp; 373 / 600 (62\%) \\ </span></span>
-<span id="cb3-210"><a href="#cb3-210" aria-hidden="true" tabindex="-1"></a><span class="in">  26 &amp; Past Only &amp; 149 / 600 (25\%) \\ </span></span>
-<span id="cb3-211"><a href="#cb3-211" aria-hidden="true" tabindex="-1"></a><span class="in">  27 &amp; Current Smoker &amp; 78 / 600 (13\%) \\ </span></span>
-<span id="cb3-212"><a href="#cb3-212" aria-hidden="true" tabindex="-1"></a><span class="in">  28 &amp; \_\_\_Ever use of BC Pills\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-213"><a href="#cb3-213" aria-hidden="true" tabindex="-1"></a><span class="in">  29 &amp; Never &amp; 155 / 600 (26\%) \\ </span></span>
-<span id="cb3-214"><a href="#cb3-214" aria-hidden="true" tabindex="-1"></a><span class="in">  30 &amp; Ever use BC pills &amp; 445 / 600 (74\%) \\ </span></span>
-<span id="cb3-215"><a href="#cb3-215" aria-hidden="true" tabindex="-1"></a><span class="in">  31 &amp; \_\_\_BMI\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-216"><a href="#cb3-216" aria-hidden="true" tabindex="-1"></a><span class="in">  32 &amp; Mean (SD) &amp; 28 (7) \\ </span></span>
-<span id="cb3-217"><a href="#cb3-217" aria-hidden="true" tabindex="-1"></a><span class="in">  33 &amp; Median [Range] &amp; 26 [16, 56] \\ </span></span>
-<span id="cb3-218"><a href="#cb3-218" aria-hidden="true" tabindex="-1"></a><span class="in">  34 &amp; \_\_\_Overall Health\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-219"><a href="#cb3-219" aria-hidden="true" tabindex="-1"></a><span class="in">  35 &amp; Excellent &amp; 147 / 600 (25\%) \\ </span></span>
-<span id="cb3-220"><a href="#cb3-220" aria-hidden="true" tabindex="-1"></a><span class="in">  36 &amp; Very Good &amp; 233 / 600 (39\%) \\ </span></span>
-<span id="cb3-221"><a href="#cb3-221" aria-hidden="true" tabindex="-1"></a><span class="in">  37 &amp; Good &amp; 151 / 600 (25\%) \\ </span></span>
-<span id="cb3-222"><a href="#cb3-222" aria-hidden="true" tabindex="-1"></a><span class="in">  38 &amp; Fair/Poor &amp; 69 / 600 (12\%) \\ </span></span>
-<span id="cb3-223"><a href="#cb3-223" aria-hidden="true" tabindex="-1"></a><span class="in">  39 &amp; \_\_\_Physical Activity Score\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-224"><a href="#cb3-224" aria-hidden="true" tabindex="-1"></a><span class="in">  40 &amp; Mean (SD) &amp; 7.75 (1.77) \\ </span></span>
-<span id="cb3-225"><a href="#cb3-225" aria-hidden="true" tabindex="-1"></a><span class="in">  41 &amp; Median [Range] &amp; 7.60 [3.40, 12.80] \\ </span></span>
-<span id="cb3-226"><a href="#cb3-226" aria-hidden="true" tabindex="-1"></a><span class="in">  42 &amp; \_\_\_Baseline AMH\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a><span class="in">  43 &amp; Mean (SD) &amp; 540 (702) \\ </span></span>
-<span id="cb3-228"><a href="#cb3-228" aria-hidden="true" tabindex="-1"></a><span class="in">  44 &amp; Median [Range] &amp; 273 [1, 4,652] \\ </span></span>
-<span id="cb3-229"><a href="#cb3-229" aria-hidden="true" tabindex="-1"></a><span class="in">  45 &amp; \_\_\_Number of Visits\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-230"><a href="#cb3-230" aria-hidden="true" tabindex="-1"></a><span class="in">  46 &amp; Mean (SD) &amp; 5.54 (2.14) \\ </span></span>
-<span id="cb3-231"><a href="#cb3-231" aria-hidden="true" tabindex="-1"></a><span class="in">  47 &amp; Median [Range] &amp; 5.00 [3.00, 11.00] \\ </span></span>
-<span id="cb3-232"><a href="#cb3-232" aria-hidden="true" tabindex="-1"></a><span class="in">  48 &amp; \_\_\_Parity\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-233"><a href="#cb3-233" aria-hidden="true" tabindex="-1"></a><span class="in">  49 &amp; None &amp; 111 / 600 (19\%) \\ </span></span>
-<span id="cb3-234"><a href="#cb3-234" aria-hidden="true" tabindex="-1"></a><span class="in">  50 &amp; One &amp; 88 / 600 (15\%) \\ </span></span>
-<span id="cb3-235"><a href="#cb3-235" aria-hidden="true" tabindex="-1"></a><span class="in">  51 &amp; Two &amp; 210 / 600 (35\%) \\ </span></span>
-<span id="cb3-236"><a href="#cb3-236" aria-hidden="true" tabindex="-1"></a><span class="in">  52 &amp; Three &amp; 116 / 600 (19\%) \\ </span></span>
-<span id="cb3-237"><a href="#cb3-237" aria-hidden="true" tabindex="-1"></a><span class="in">  53 &amp; More than three &amp; 75 / 600 (13\%) \\ </span></span>
-<span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a><span class="in">  54 &amp; \_\_\_Children\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-239"><a href="#cb3-239" aria-hidden="true" tabindex="-1"></a><span class="in">  55 &amp; Mean (SD) &amp; 1.98 (1.41) \\ </span></span>
-<span id="cb3-240"><a href="#cb3-240" aria-hidden="true" tabindex="-1"></a><span class="in">  56 &amp; Median [Range] &amp; 2.00 [0.00, 12.00] \\ </span></span>
-<span id="cb3-241"><a href="#cb3-241" aria-hidden="true" tabindex="-1"></a><span class="in">  57 &amp; \_\_\_Employment Status\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a><span class="in">  58 &amp; Unemployed &amp; 104 / 600 (17\%) \\ </span></span>
-<span id="cb3-243"><a href="#cb3-243" aria-hidden="true" tabindex="-1"></a><span class="in">  59 &amp; Employed &amp; 496 / 600 (83\%) \\ </span></span>
-<span id="cb3-244"><a href="#cb3-244" aria-hidden="true" tabindex="-1"></a><span class="in">  60 &amp; \_\_\_Educational Attainment\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-245"><a href="#cb3-245" aria-hidden="true" tabindex="-1"></a><span class="in">  61 &amp; High School or Less &amp; 125 / 600 (21\%) \\ </span></span>
-<span id="cb3-246"><a href="#cb3-246" aria-hidden="true" tabindex="-1"></a><span class="in">  62 &amp; Some College &amp; 190 / 600 (32\%) \\ </span></span>
-<span id="cb3-247"><a href="#cb3-247" aria-hidden="true" tabindex="-1"></a><span class="in">  63 &amp; College degree or higher &amp; 285 / 600 (48\%) \\ </span></span>
-<span id="cb3-248"><a href="#cb3-248" aria-hidden="true" tabindex="-1"></a><span class="in">  64 &amp; \_\_\_Site\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-249"><a href="#cb3-249" aria-hidden="true" tabindex="-1"></a><span class="in">  65 &amp; B &amp; 96 / 600 (16\%) \\ </span></span>
-<span id="cb3-250"><a href="#cb3-250" aria-hidden="true" tabindex="-1"></a><span class="in">  66 &amp; C &amp; 76 / 600 (13\%) \\ </span></span>
-<span id="cb3-251"><a href="#cb3-251" aria-hidden="true" tabindex="-1"></a><span class="in">  67 &amp; M &amp; 103 / 600 (17\%) \\ </span></span>
-<span id="cb3-252"><a href="#cb3-252" aria-hidden="true" tabindex="-1"></a><span class="in">  68 &amp; NJ &amp; 27 / 600 (4.5\%) \\ </span></span>
-<span id="cb3-253"><a href="#cb3-253" aria-hidden="true" tabindex="-1"></a><span class="in">  69 &amp; P &amp; 74 / 600 (12\%) \\ </span></span>
-<span id="cb3-254"><a href="#cb3-254" aria-hidden="true" tabindex="-1"></a><span class="in">  70 &amp; UCD &amp; 102 / 600 (17\%) \\ </span></span>
-<span id="cb3-255"><a href="#cb3-255" aria-hidden="true" tabindex="-1"></a><span class="in">  71 &amp; UCLA &amp; 122 / 600 (20\%) \\ </span></span>
-<span id="cb3-256"><a href="#cb3-256" aria-hidden="true" tabindex="-1"></a><span class="in">   \hline</span></span>
-<span id="cb3-257"><a href="#cb3-257" aria-hidden="true" tabindex="-1"></a><span class="in">\end{tabular}</span></span>
-<span id="cb3-258"><a href="#cb3-258" aria-hidden="true" tabindex="-1"></a><span class="in">\end{table}</span></span>
-<span id="cb3-259"><a href="#cb3-259" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-260"><a href="#cb3-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-261"><a href="#cb3-261" aria-hidden="true" tabindex="-1"></a>\newpage</span>
+<span id="cb3-185"><a href="#cb3-185" aria-hidden="true" tabindex="-1"></a><span class="in"> &amp; **Characteristics** &amp; **N = 600** \\ </span></span>
+<span id="cb3-186"><a href="#cb3-186" aria-hidden="true" tabindex="-1"></a><span class="in">  \hline</span></span>
+<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a><span class="in">  1 &amp; \_\_\_Age (years)\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-188"><a href="#cb3-188" aria-hidden="true" tabindex="-1"></a><span class="in">  2 &amp; Mean (SD) &amp; 46.42 (2.41) \\ </span></span>
+<span id="cb3-189"><a href="#cb3-189" aria-hidden="true" tabindex="-1"></a><span class="in">  3 &amp; Median [Range] &amp; 46.00 [42.00, 53.00] \\ </span></span>
+<span id="cb3-190"><a href="#cb3-190" aria-hidden="true" tabindex="-1"></a><span class="in">  4 &amp; \_\_\_Age of FMP (years)\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-191"><a href="#cb3-191" aria-hidden="true" tabindex="-1"></a><span class="in">  5 &amp; Mean (SD) &amp; 52.98 (2.51) \\ </span></span>
+<span id="cb3-192"><a href="#cb3-192" aria-hidden="true" tabindex="-1"></a><span class="in">  6 &amp; Median [Range] &amp; 53.05 [45.59, 62.10] \\ </span></span>
+<span id="cb3-193"><a href="#cb3-193" aria-hidden="true" tabindex="-1"></a><span class="in">  7 &amp; \_\_\_Time of FMP(years)\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-194"><a href="#cb3-194" aria-hidden="true" tabindex="-1"></a><span class="in">  8 &amp; Mean (SD) &amp; 10.98 (2.51) \\ </span></span>
+<span id="cb3-195"><a href="#cb3-195" aria-hidden="true" tabindex="-1"></a><span class="in">  9 &amp; Median [Range] &amp; 11.05 [3.59, 20.10] \\ </span></span>
+<span id="cb3-196"><a href="#cb3-196" aria-hidden="true" tabindex="-1"></a><span class="in">  10 &amp; \_\_\_Ethnicity / Race\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-197"><a href="#cb3-197" aria-hidden="true" tabindex="-1"></a><span class="in">  11 &amp; CAUCA &amp; 265 / 600 (44\%) \\ </span></span>
+<span id="cb3-198"><a href="#cb3-198" aria-hidden="true" tabindex="-1"></a><span class="in">  12 &amp; BLACK &amp; 170 / 600 (28\%) \\ </span></span>
+<span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a><span class="in">  13 &amp; CHINE &amp; 62 / 600 (10\%) \\ </span></span>
+<span id="cb3-200"><a href="#cb3-200" aria-hidden="true" tabindex="-1"></a><span class="in">  14 &amp; HISPA &amp; 18 / 600 (3.0\%) \\ </span></span>
+<span id="cb3-201"><a href="#cb3-201" aria-hidden="true" tabindex="-1"></a><span class="in">  15 &amp; JAPAN &amp; 85 / 600 (14\%) \\ </span></span>
+<span id="cb3-202"><a href="#cb3-202" aria-hidden="true" tabindex="-1"></a><span class="in">  16 &amp; \_\_\_Marital Status\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-203"><a href="#cb3-203" aria-hidden="true" tabindex="-1"></a><span class="in">  17 &amp; Not Married/Partnered &amp; 191 / 600 (32\%) \\ </span></span>
+<span id="cb3-204"><a href="#cb3-204" aria-hidden="true" tabindex="-1"></a><span class="in">  18 &amp; Married/Partnered &amp; 409 / 600 (68\%) \\ </span></span>
+<span id="cb3-205"><a href="#cb3-205" aria-hidden="true" tabindex="-1"></a><span class="in">  19 &amp; \_\_\_Alcohol Use\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-206"><a href="#cb3-206" aria-hidden="true" tabindex="-1"></a><span class="in">  20 &amp; None &amp; 308 / 600 (51\%) \\ </span></span>
+<span id="cb3-207"><a href="#cb3-207" aria-hidden="true" tabindex="-1"></a><span class="in">  21 &amp; $&lt;$1/wk &amp; 71 / 600 (12\%) \\ </span></span>
+<span id="cb3-208"><a href="#cb3-208" aria-hidden="true" tabindex="-1"></a><span class="in">  22 &amp; 1-7/wk &amp; 161 / 600 (27\%) \\ </span></span>
+<span id="cb3-209"><a href="#cb3-209" aria-hidden="true" tabindex="-1"></a><span class="in">  23 &amp; $&gt;$7/wk &amp; 60 / 600 (10\%) \\ </span></span>
+<span id="cb3-210"><a href="#cb3-210" aria-hidden="true" tabindex="-1"></a><span class="in">  24 &amp; \_\_\_Smoking History\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-211"><a href="#cb3-211" aria-hidden="true" tabindex="-1"></a><span class="in">  25 &amp; Never Smoked &amp; 373 / 600 (62\%) \\ </span></span>
+<span id="cb3-212"><a href="#cb3-212" aria-hidden="true" tabindex="-1"></a><span class="in">  26 &amp; Past Only &amp; 149 / 600 (25\%) \\ </span></span>
+<span id="cb3-213"><a href="#cb3-213" aria-hidden="true" tabindex="-1"></a><span class="in">  27 &amp; Current Smoker &amp; 78 / 600 (13\%) \\ </span></span>
+<span id="cb3-214"><a href="#cb3-214" aria-hidden="true" tabindex="-1"></a><span class="in">  28 &amp; \_\_\_Ever use of BC Pills\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-215"><a href="#cb3-215" aria-hidden="true" tabindex="-1"></a><span class="in">  29 &amp; Never &amp; 155 / 600 (26\%) \\ </span></span>
+<span id="cb3-216"><a href="#cb3-216" aria-hidden="true" tabindex="-1"></a><span class="in">  30 &amp; Ever use BC pills &amp; 445 / 600 (74\%) \\ </span></span>
+<span id="cb3-217"><a href="#cb3-217" aria-hidden="true" tabindex="-1"></a><span class="in">  31 &amp; \_\_\_BMI\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-218"><a href="#cb3-218" aria-hidden="true" tabindex="-1"></a><span class="in">  32 &amp; Mean (SD) &amp; 28 (7) \\ </span></span>
+<span id="cb3-219"><a href="#cb3-219" aria-hidden="true" tabindex="-1"></a><span class="in">  33 &amp; Median [Range] &amp; 26 [16, 56] \\ </span></span>
+<span id="cb3-220"><a href="#cb3-220" aria-hidden="true" tabindex="-1"></a><span class="in">  34 &amp; \_\_\_Overall Health\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-221"><a href="#cb3-221" aria-hidden="true" tabindex="-1"></a><span class="in">  35 &amp; Excellent &amp; 147 / 600 (25\%) \\ </span></span>
+<span id="cb3-222"><a href="#cb3-222" aria-hidden="true" tabindex="-1"></a><span class="in">  36 &amp; Very Good &amp; 233 / 600 (39\%) \\ </span></span>
+<span id="cb3-223"><a href="#cb3-223" aria-hidden="true" tabindex="-1"></a><span class="in">  37 &amp; Good &amp; 151 / 600 (25\%) \\ </span></span>
+<span id="cb3-224"><a href="#cb3-224" aria-hidden="true" tabindex="-1"></a><span class="in">  38 &amp; Fair/Poor &amp; 69 / 600 (12\%) \\ </span></span>
+<span id="cb3-225"><a href="#cb3-225" aria-hidden="true" tabindex="-1"></a><span class="in">  39 &amp; \_\_\_Physical Activity Score\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-226"><a href="#cb3-226" aria-hidden="true" tabindex="-1"></a><span class="in">  40 &amp; Mean (SD) &amp; 7.75 (1.77) \\ </span></span>
+<span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a><span class="in">  41 &amp; Median [Range] &amp; 7.60 [3.40, 12.80] \\ </span></span>
+<span id="cb3-228"><a href="#cb3-228" aria-hidden="true" tabindex="-1"></a><span class="in">  42 &amp; \_\_\_Baseline AMH\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-229"><a href="#cb3-229" aria-hidden="true" tabindex="-1"></a><span class="in">  43 &amp; Mean (SD) &amp; 540 (702) \\ </span></span>
+<span id="cb3-230"><a href="#cb3-230" aria-hidden="true" tabindex="-1"></a><span class="in">  44 &amp; Median [Range] &amp; 273 [1, 4,652] \\ </span></span>
+<span id="cb3-231"><a href="#cb3-231" aria-hidden="true" tabindex="-1"></a><span class="in">  45 &amp; \_\_\_Number of Visits\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-232"><a href="#cb3-232" aria-hidden="true" tabindex="-1"></a><span class="in">  46 &amp; Mean (SD) &amp; 5.54 (2.14) \\ </span></span>
+<span id="cb3-233"><a href="#cb3-233" aria-hidden="true" tabindex="-1"></a><span class="in">  47 &amp; Median [Range] &amp; 5.00 [3.00, 11.00] \\ </span></span>
+<span id="cb3-234"><a href="#cb3-234" aria-hidden="true" tabindex="-1"></a><span class="in">  48 &amp; \_\_\_Parity\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-235"><a href="#cb3-235" aria-hidden="true" tabindex="-1"></a><span class="in">  49 &amp; None &amp; 111 / 600 (19\%) \\ </span></span>
+<span id="cb3-236"><a href="#cb3-236" aria-hidden="true" tabindex="-1"></a><span class="in">  50 &amp; One &amp; 88 / 600 (15\%) \\ </span></span>
+<span id="cb3-237"><a href="#cb3-237" aria-hidden="true" tabindex="-1"></a><span class="in">  51 &amp; Two &amp; 210 / 600 (35\%) \\ </span></span>
+<span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a><span class="in">  52 &amp; Three &amp; 116 / 600 (19\%) \\ </span></span>
+<span id="cb3-239"><a href="#cb3-239" aria-hidden="true" tabindex="-1"></a><span class="in">  53 &amp; More than three &amp; 75 / 600 (13\%) \\ </span></span>
+<span id="cb3-240"><a href="#cb3-240" aria-hidden="true" tabindex="-1"></a><span class="in">  54 &amp; \_\_\_Children\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-241"><a href="#cb3-241" aria-hidden="true" tabindex="-1"></a><span class="in">  55 &amp; Mean (SD) &amp; 1.98 (1.41) \\ </span></span>
+<span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a><span class="in">  56 &amp; Median [Range] &amp; 2.00 [0.00, 12.00] \\ </span></span>
+<span id="cb3-243"><a href="#cb3-243" aria-hidden="true" tabindex="-1"></a><span class="in">  57 &amp; \_\_\_Employment Status\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-244"><a href="#cb3-244" aria-hidden="true" tabindex="-1"></a><span class="in">  58 &amp; Unemployed &amp; 104 / 600 (17\%) \\ </span></span>
+<span id="cb3-245"><a href="#cb3-245" aria-hidden="true" tabindex="-1"></a><span class="in">  59 &amp; Employed &amp; 496 / 600 (83\%) \\ </span></span>
+<span id="cb3-246"><a href="#cb3-246" aria-hidden="true" tabindex="-1"></a><span class="in">  60 &amp; \_\_\_Educational Attainment\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-247"><a href="#cb3-247" aria-hidden="true" tabindex="-1"></a><span class="in">  61 &amp; High School or Less &amp; 125 / 600 (21\%) \\ </span></span>
+<span id="cb3-248"><a href="#cb3-248" aria-hidden="true" tabindex="-1"></a><span class="in">  62 &amp; Some College &amp; 190 / 600 (32\%) \\ </span></span>
+<span id="cb3-249"><a href="#cb3-249" aria-hidden="true" tabindex="-1"></a><span class="in">  63 &amp; College degree or higher &amp; 285 / 600 (48\%) \\ </span></span>
+<span id="cb3-250"><a href="#cb3-250" aria-hidden="true" tabindex="-1"></a><span class="in">  64 &amp; \_\_\_Site\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-251"><a href="#cb3-251" aria-hidden="true" tabindex="-1"></a><span class="in">  65 &amp; B &amp; 96 / 600 (16\%) \\ </span></span>
+<span id="cb3-252"><a href="#cb3-252" aria-hidden="true" tabindex="-1"></a><span class="in">  66 &amp; C &amp; 76 / 600 (13\%) \\ </span></span>
+<span id="cb3-253"><a href="#cb3-253" aria-hidden="true" tabindex="-1"></a><span class="in">  67 &amp; M &amp; 103 / 600 (17\%) \\ </span></span>
+<span id="cb3-254"><a href="#cb3-254" aria-hidden="true" tabindex="-1"></a><span class="in">  68 &amp; NJ &amp; 27 / 600 (4.5\%) \\ </span></span>
+<span id="cb3-255"><a href="#cb3-255" aria-hidden="true" tabindex="-1"></a><span class="in">  69 &amp; P &amp; 74 / 600 (12\%) \\ </span></span>
+<span id="cb3-256"><a href="#cb3-256" aria-hidden="true" tabindex="-1"></a><span class="in">  70 &amp; UCD &amp; 102 / 600 (17\%) \\ </span></span>
+<span id="cb3-257"><a href="#cb3-257" aria-hidden="true" tabindex="-1"></a><span class="in">  71 &amp; UCLA &amp; 122 / 600 (20\%) \\ </span></span>
+<span id="cb3-258"><a href="#cb3-258" aria-hidden="true" tabindex="-1"></a><span class="in">   \hline</span></span>
+<span id="cb3-259"><a href="#cb3-259" aria-hidden="true" tabindex="-1"></a><span class="in">\end{tabular}</span></span>
+<span id="cb3-260"><a href="#cb3-260" aria-hidden="true" tabindex="-1"></a><span class="in">\end{table}</span></span>
+<span id="cb3-261"><a href="#cb3-261" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb3-262"><a href="#cb3-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-263"><a href="#cb3-263" aria-hidden="true" tabindex="-1"></a><span class="fu">## Table2: summary for AMH and visits</span></span>
+<span id="cb3-263"><a href="#cb3-263" aria-hidden="true" tabindex="-1"></a>\newpage</span>
 <span id="cb3-264"><a href="#cb3-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-267"><a href="#cb3-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb3-268"><a href="#cb3-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "create_table2"</span></span>
-<span id="cb3-269"><a href="#cb3-269" aria-hidden="true" tabindex="-1"></a>table2 <span class="ot">&lt;-</span> swan_amh2 <span class="sc">%&gt;%</span></span>
-<span id="cb3-270"><a href="#cb3-270" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-271"><a href="#cb3-271" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(etime,</span>
-<span id="cb3-272"><a href="#cb3-272" aria-hidden="true" tabindex="-1"></a>                fmp_age,</span>
-<span id="cb3-273"><a href="#cb3-273" aria-hidden="true" tabindex="-1"></a>                amh,</span>
-<span id="cb3-274"><a href="#cb3-274" aria-hidden="true" tabindex="-1"></a>                amh_min,</span>
-<span id="cb3-275"><a href="#cb3-275" aria-hidden="true" tabindex="-1"></a>                amh_max,</span>
-<span id="cb3-276"><a href="#cb3-276" aria-hidden="true" tabindex="-1"></a>                visit_n)  <span class="sc">%&gt;%</span></span>
-<span id="cb3-277"><a href="#cb3-277" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="co"># by = site,</span></span>
-<span id="cb3-278"><a href="#cb3-278" aria-hidden="true" tabindex="-1"></a>    <span class="at">missing =</span> <span class="st">"ifany"</span>,</span>
-<span id="cb3-279"><a href="#cb3-279" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"fmp_age"</span>) <span class="sc">~</span> <span class="st">"Age of FMP (years)"</span>,</span>
-<span id="cb3-280"><a href="#cb3-280" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"etime"</span>) <span class="sc">~</span> <span class="st">"Time of FMP (years)"</span>,</span>
-<span id="cb3-281"><a href="#cb3-281" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"amh"</span>) <span class="sc">~</span> <span class="st">"Baseline AMH"</span>,</span>
-<span id="cb3-282"><a href="#cb3-282" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"amh_min"</span>) <span class="sc">~</span> <span class="st">"Minimum AMH"</span>,</span>
-<span id="cb3-283"><a href="#cb3-283" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"amh_max"</span>) <span class="sc">~</span> <span class="st">"Maximum AMH"</span>,</span>
-<span id="cb3-284"><a href="#cb3-284" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"visit_n"</span>) <span class="sc">~</span> <span class="st">"Number of Visits"</span>),</span>
-<span id="cb3-285"><a href="#cb3-285" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"continuous2"</span>,</span>
-<span id="cb3-286"><a href="#cb3-286" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"visit_n"</span>) <span class="sc">~</span> <span class="st">"continuous2"</span>),</span>
-<span id="cb3-287"><a href="#cb3-287" aria-hidden="true" tabindex="-1"></a>    <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> </span>
-<span id="cb3-288"><a href="#cb3-288" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">c</span>(<span class="st">"{mean} ({sd})"</span>,</span>
-<span id="cb3-289"><a href="#cb3-289" aria-hidden="true" tabindex="-1"></a>                         <span class="co"># "{median} [{min}, {p5}, {p25}, {p75}, {p95}, {max}]",</span></span>
-<span id="cb3-290"><a href="#cb3-290" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"{median} [{p25}, {p75}]"</span>,</span>
-<span id="cb3-291"><a href="#cb3-291" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"{median} [{p5}, {p95}]"</span>,</span>
-<span id="cb3-292"><a href="#cb3-292" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"{median} [{min}, {max}]"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb3-293"><a href="#cb3-293" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_header</span>(<span class="at">label =</span> <span class="st">"**Characteristics**"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-294"><a href="#cb3-294" aria-hidden="true" tabindex="-1"></a>  <span class="co"># update the column header</span></span>
-<span id="cb3-295"><a href="#cb3-295" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-296"><a href="#cb3-296" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add_overall() %&gt;%</span></span>
-<span id="cb3-297"><a href="#cb3-297" aria-hidden="true" tabindex="-1"></a>  <span class="fu">italicize_labels</span>()</span>
-<span id="cb3-298"><a href="#cb3-298" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-299"><a href="#cb3-299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-302"><a href="#cb3-302" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb3-303"><a href="#cb3-303" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "styled_table2"</span></span>
-<span id="cb3-304"><a href="#cb3-304" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Descriptive Statistics for SWAN AMH Data"</span></span>
-<span id="cb3-305"><a href="#cb3-305" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-306"><a href="#cb3-306" aria-hidden="true" tabindex="-1"></a><span class="fu">set_flextable_defaults</span>(<span class="at">fonts_ignore =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-265"><a href="#cb3-265" aria-hidden="true" tabindex="-1"></a><span class="fu">## Table2: summary for AMH and visits</span></span>
+<span id="cb3-266"><a href="#cb3-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-269"><a href="#cb3-269" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb3-270"><a href="#cb3-270" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "create_table2"</span></span>
+<span id="cb3-271"><a href="#cb3-271" aria-hidden="true" tabindex="-1"></a>table2 <span class="ot">&lt;-</span> swan_amh2 <span class="sc">%&gt;%</span></span>
+<span id="cb3-272"><a href="#cb3-272" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-273"><a href="#cb3-273" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(etime,</span>
+<span id="cb3-274"><a href="#cb3-274" aria-hidden="true" tabindex="-1"></a>                fmp_age,</span>
+<span id="cb3-275"><a href="#cb3-275" aria-hidden="true" tabindex="-1"></a>                amh,</span>
+<span id="cb3-276"><a href="#cb3-276" aria-hidden="true" tabindex="-1"></a>                amh_min,</span>
+<span id="cb3-277"><a href="#cb3-277" aria-hidden="true" tabindex="-1"></a>                amh_max,</span>
+<span id="cb3-278"><a href="#cb3-278" aria-hidden="true" tabindex="-1"></a>                visit_n)  <span class="sc">%&gt;%</span></span>
+<span id="cb3-279"><a href="#cb3-279" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(<span class="co"># by = site,</span></span>
+<span id="cb3-280"><a href="#cb3-280" aria-hidden="true" tabindex="-1"></a>    <span class="at">missing =</span> <span class="st">"ifany"</span>,</span>
+<span id="cb3-281"><a href="#cb3-281" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"fmp_age"</span>) <span class="sc">~</span> <span class="st">"Age of FMP (years)"</span>,</span>
+<span id="cb3-282"><a href="#cb3-282" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"etime"</span>) <span class="sc">~</span> <span class="st">"Time of FMP (years)"</span>,</span>
+<span id="cb3-283"><a href="#cb3-283" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"amh"</span>) <span class="sc">~</span> <span class="st">"Baseline AMH"</span>,</span>
+<span id="cb3-284"><a href="#cb3-284" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"amh_min"</span>) <span class="sc">~</span> <span class="st">"Minimum AMH"</span>,</span>
+<span id="cb3-285"><a href="#cb3-285" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"amh_max"</span>) <span class="sc">~</span> <span class="st">"Maximum AMH"</span>,</span>
+<span id="cb3-286"><a href="#cb3-286" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">c</span>(<span class="st">"visit_n"</span>) <span class="sc">~</span> <span class="st">"Number of Visits"</span>),</span>
+<span id="cb3-287"><a href="#cb3-287" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> <span class="st">"continuous2"</span>,</span>
+<span id="cb3-288"><a href="#cb3-288" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">"visit_n"</span>) <span class="sc">~</span> <span class="st">"continuous2"</span>),</span>
+<span id="cb3-289"><a href="#cb3-289" aria-hidden="true" tabindex="-1"></a>    <span class="at">statistic =</span> <span class="fu">list</span>(<span class="fu">all_continuous</span>() <span class="sc">~</span> </span>
+<span id="cb3-290"><a href="#cb3-290" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">c</span>(<span class="st">"{mean} ({sd})"</span>,</span>
+<span id="cb3-291"><a href="#cb3-291" aria-hidden="true" tabindex="-1"></a>                         <span class="co"># "{median} [{min}, {p5}, {p25}, {p75}, {p95}, {max}]",</span></span>
+<span id="cb3-292"><a href="#cb3-292" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"{median} [{p25}, {p75}]"</span>,</span>
+<span id="cb3-293"><a href="#cb3-293" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"{median} [{p5}, {p95}]"</span>,</span>
+<span id="cb3-294"><a href="#cb3-294" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"{median} [{min}, {max}]"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb3-295"><a href="#cb3-295" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_header</span>(<span class="at">label =</span> <span class="st">"**Characteristics**"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-296"><a href="#cb3-296" aria-hidden="true" tabindex="-1"></a>  <span class="co"># update the column header</span></span>
+<span id="cb3-297"><a href="#cb3-297" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-298"><a href="#cb3-298" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add_overall() %&gt;%</span></span>
+<span id="cb3-299"><a href="#cb3-299" aria-hidden="true" tabindex="-1"></a>  <span class="fu">italicize_labels</span>()</span>
+<span id="cb3-300"><a href="#cb3-300" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-301"><a href="#cb3-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-304"><a href="#cb3-304" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb3-305"><a href="#cb3-305" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "styled_table2"</span></span>
+<span id="cb3-306"><a href="#cb3-306" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Descriptive Statistics for SWAN AMH Data"</span></span>
 <span id="cb3-307"><a href="#cb3-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-308"><a href="#cb3-308" aria-hidden="true" tabindex="-1"></a>table2 <span class="sc">%&gt;%</span> </span>
-<span id="cb3-309"><a href="#cb3-309" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_flex_table</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-310"><a href="#cb3-310" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fontsize</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
-<span id="cb3-311"><a href="#cb3-311" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-312"><a href="#cb3-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-313"><a href="#cb3-313" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-314"><a href="#cb3-314" aria-hidden="true" tabindex="-1"></a><span class="in">```{r "table2_latex"}</span></span>
-<span id="cb3-315"><a href="#cb3-315" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "table2_latex"</span></span>
-<span id="cb3-316"><a href="#cb3-316" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb3-317"><a href="#cb3-317" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xtable)</span>
-<span id="cb3-318"><a href="#cb3-318" aria-hidden="true" tabindex="-1"></a><span class="fu">xtable</span>(<span class="fu">as.data.frame</span>(table2), <span class="at">type =</span> <span class="st">"latex"</span>,</span>
-<span id="cb3-319"><a href="#cb3-319" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"figure/swan_amh_09_publish_table2_"</span>, <span class="fu">Sys.Date</span>(), <span class="st">".tex"</span>))</span>
-<span id="cb3-320"><a href="#cb3-320" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-321"><a href="#cb3-321" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-322"><a href="#cb3-322" aria-hidden="true" tabindex="-1"></a>Here is the latex code for Table2:</span>
+<span id="cb3-308"><a href="#cb3-308" aria-hidden="true" tabindex="-1"></a><span class="fu">set_flextable_defaults</span>(<span class="at">fonts_ignore =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-309"><a href="#cb3-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-310"><a href="#cb3-310" aria-hidden="true" tabindex="-1"></a>table2 <span class="sc">%&gt;%</span> </span>
+<span id="cb3-311"><a href="#cb3-311" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_flex_table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-312"><a href="#cb3-312" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fontsize</span>(<span class="at">size =</span> <span class="dv">8</span>)</span>
+<span id="cb3-313"><a href="#cb3-313" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-314"><a href="#cb3-314" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-315"><a href="#cb3-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-316"><a href="#cb3-316" aria-hidden="true" tabindex="-1"></a><span class="in">```{r "table2_latex"}</span></span>
+<span id="cb3-317"><a href="#cb3-317" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "table2_latex"</span></span>
+<span id="cb3-318"><a href="#cb3-318" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb3-319"><a href="#cb3-319" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xtable)</span>
+<span id="cb3-320"><a href="#cb3-320" aria-hidden="true" tabindex="-1"></a><span class="fu">xtable</span>(<span class="fu">as.data.frame</span>(table2), <span class="at">type =</span> <span class="st">"latex"</span>,</span>
+<span id="cb3-321"><a href="#cb3-321" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="fu">paste0</span>(<span class="st">"figure/swan_amh_09_publish_table2_"</span>, <span class="fu">Sys.Date</span>(), <span class="st">".tex"</span>))</span>
+<span id="cb3-322"><a href="#cb3-322" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb3-323"><a href="#cb3-323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-324"><a href="#cb3-324" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-325"><a href="#cb3-325" aria-hidden="true" tabindex="-1"></a><span class="in">% latex table generated in R 4.2.2 by xtable 1.8-4 package</span></span>
-<span id="cb3-326"><a href="#cb3-326" aria-hidden="true" tabindex="-1"></a><span class="in">% Wed Apr 10 21:00:42 2024</span></span>
-<span id="cb3-327"><a href="#cb3-327" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{table}[ht]</span></span>
-<span id="cb3-328"><a href="#cb3-328" aria-hidden="true" tabindex="-1"></a><span class="in">\centering</span></span>
-<span id="cb3-329"><a href="#cb3-329" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{tabular}{rll}</span></span>
-<span id="cb3-330"><a href="#cb3-330" aria-hidden="true" tabindex="-1"></a><span class="in">  \hline</span></span>
-<span id="cb3-331"><a href="#cb3-331" aria-hidden="true" tabindex="-1"></a><span class="in"> &amp; **Characteristics** &amp; **N = 600** \\ </span></span>
+<span id="cb3-324"><a href="#cb3-324" aria-hidden="true" tabindex="-1"></a>Here is the latex code for Table2:</span>
+<span id="cb3-325"><a href="#cb3-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-326"><a href="#cb3-326" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
+<span id="cb3-327"><a href="#cb3-327" aria-hidden="true" tabindex="-1"></a><span class="in">% latex table generated in R 4.2.2 by xtable 1.8-4 package</span></span>
+<span id="cb3-328"><a href="#cb3-328" aria-hidden="true" tabindex="-1"></a><span class="in">% Wed Apr 10 21:00:42 2024</span></span>
+<span id="cb3-329"><a href="#cb3-329" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{table}[ht]</span></span>
+<span id="cb3-330"><a href="#cb3-330" aria-hidden="true" tabindex="-1"></a><span class="in">\centering</span></span>
+<span id="cb3-331"><a href="#cb3-331" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{tabular}{rll}</span></span>
 <span id="cb3-332"><a href="#cb3-332" aria-hidden="true" tabindex="-1"></a><span class="in">  \hline</span></span>
-<span id="cb3-333"><a href="#cb3-333" aria-hidden="true" tabindex="-1"></a><span class="in">  1 &amp; \_\_\_Time of FMP (years)\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-334"><a href="#cb3-334" aria-hidden="true" tabindex="-1"></a><span class="in">  2 &amp; Mean (SD) &amp; 10.98 (2.51) \\ </span></span>
-<span id="cb3-335"><a href="#cb3-335" aria-hidden="true" tabindex="-1"></a><span class="in">  3 &amp; Median [IQR] &amp; 11.05 [9.33, 12.61] \\ </span></span>
-<span id="cb3-336"><a href="#cb3-336" aria-hidden="true" tabindex="-1"></a><span class="in">  4 &amp; Median [5\%, 95\%] &amp; 11.05 [6.83, 15.10] \\ </span></span>
-<span id="cb3-337"><a href="#cb3-337" aria-hidden="true" tabindex="-1"></a><span class="in">  5 &amp; Median [Range] &amp; 11.05 [3.59, 20.10] \\ </span></span>
-<span id="cb3-338"><a href="#cb3-338" aria-hidden="true" tabindex="-1"></a><span class="in">  6 &amp; \_\_\_Age of FMP (years)\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-339"><a href="#cb3-339" aria-hidden="true" tabindex="-1"></a><span class="in">  7 &amp; Mean (SD) &amp; 52.98 (2.51) \\ </span></span>
-<span id="cb3-340"><a href="#cb3-340" aria-hidden="true" tabindex="-1"></a><span class="in">  8 &amp; Median [IQR] &amp; 53.05 [51.33, 54.61] \\ </span></span>
-<span id="cb3-341"><a href="#cb3-341" aria-hidden="true" tabindex="-1"></a><span class="in">  9 &amp; Median [5\%, 95\%] &amp; 53.05 [48.83, 57.10] \\ </span></span>
-<span id="cb3-342"><a href="#cb3-342" aria-hidden="true" tabindex="-1"></a><span class="in">  10 &amp; Median [Range] &amp; 53.05 [45.59, 62.10] \\ </span></span>
-<span id="cb3-343"><a href="#cb3-343" aria-hidden="true" tabindex="-1"></a><span class="in">  11 &amp; \_\_\_Baseline AMH\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-344"><a href="#cb3-344" aria-hidden="true" tabindex="-1"></a><span class="in">  12 &amp; Mean (SD) &amp; 540 (702) \\ </span></span>
-<span id="cb3-345"><a href="#cb3-345" aria-hidden="true" tabindex="-1"></a><span class="in">  13 &amp; Median [IQR] &amp; 273 [71, 672] \\ </span></span>
-<span id="cb3-346"><a href="#cb3-346" aria-hidden="true" tabindex="-1"></a><span class="in">  14 &amp; Median [5\%, 95\%] &amp; 273 [1, 2,095] \\ </span></span>
-<span id="cb3-347"><a href="#cb3-347" aria-hidden="true" tabindex="-1"></a><span class="in">  15 &amp; Median [Range] &amp; 273 [1, 4,652] \\ </span></span>
-<span id="cb3-348"><a href="#cb3-348" aria-hidden="true" tabindex="-1"></a><span class="in">  16 &amp; \_\_\_Minimum AMH\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-349"><a href="#cb3-349" aria-hidden="true" tabindex="-1"></a><span class="in">  17 &amp; Mean (SD) &amp; 28 (78) \\ </span></span>
-<span id="cb3-350"><a href="#cb3-350" aria-hidden="true" tabindex="-1"></a><span class="in">  18 &amp; Median [IQR] &amp; 2 [1, 18] \\ </span></span>
-<span id="cb3-351"><a href="#cb3-351" aria-hidden="true" tabindex="-1"></a><span class="in">  19 &amp; Median [5\%, 95\%] &amp; 2 [1, 133] \\ </span></span>
-<span id="cb3-352"><a href="#cb3-352" aria-hidden="true" tabindex="-1"></a><span class="in">  20 &amp; Median [Range] &amp; 2 [1, 772] \\ </span></span>
-<span id="cb3-353"><a href="#cb3-353" aria-hidden="true" tabindex="-1"></a><span class="in">  21 &amp; \_\_\_Maximum AMH\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-354"><a href="#cb3-354" aria-hidden="true" tabindex="-1"></a><span class="in">  22 &amp; Mean (SD) &amp; 628 (730) \\ </span></span>
-<span id="cb3-355"><a href="#cb3-355" aria-hidden="true" tabindex="-1"></a><span class="in">  23 &amp; Median [IQR] &amp; 341 [132, 836] \\ </span></span>
-<span id="cb3-356"><a href="#cb3-356" aria-hidden="true" tabindex="-1"></a><span class="in">  24 &amp; Median [5\%, 95\%] &amp; 341 [23, 2,174] \\ </span></span>
-<span id="cb3-357"><a href="#cb3-357" aria-hidden="true" tabindex="-1"></a><span class="in">  25 &amp; Median [Range] &amp; 341 [1, 4,681] \\ </span></span>
-<span id="cb3-358"><a href="#cb3-358" aria-hidden="true" tabindex="-1"></a><span class="in">  26 &amp; \_\_\_Number of Visits\_\_\_ &amp;  \\ </span></span>
-<span id="cb3-359"><a href="#cb3-359" aria-hidden="true" tabindex="-1"></a><span class="in">  27 &amp; Mean (SD) &amp; 5.54 (2.14) \\ </span></span>
-<span id="cb3-360"><a href="#cb3-360" aria-hidden="true" tabindex="-1"></a><span class="in">  28 &amp; Median [IQR] &amp; 5.00 [4.00, 7.00] \\ </span></span>
-<span id="cb3-361"><a href="#cb3-361" aria-hidden="true" tabindex="-1"></a><span class="in">  29 &amp; Median [5\%, 95\%] &amp; 5.00 [3.00, 10.00] \\ </span></span>
-<span id="cb3-362"><a href="#cb3-362" aria-hidden="true" tabindex="-1"></a><span class="in">  30 &amp; Median [Range] &amp; 5.00 [3.00, 11.00] \\ </span></span>
-<span id="cb3-363"><a href="#cb3-363" aria-hidden="true" tabindex="-1"></a><span class="in">   \hline</span></span>
-<span id="cb3-364"><a href="#cb3-364" aria-hidden="true" tabindex="-1"></a><span class="in">\end{tabular}</span></span>
-<span id="cb3-365"><a href="#cb3-365" aria-hidden="true" tabindex="-1"></a><span class="in">\end{table}</span></span>
-<span id="cb3-366"><a href="#cb3-366" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-333"><a href="#cb3-333" aria-hidden="true" tabindex="-1"></a><span class="in"> &amp; **Characteristics** &amp; **N = 600** \\ </span></span>
+<span id="cb3-334"><a href="#cb3-334" aria-hidden="true" tabindex="-1"></a><span class="in">  \hline</span></span>
+<span id="cb3-335"><a href="#cb3-335" aria-hidden="true" tabindex="-1"></a><span class="in">  1 &amp; \_\_\_Time of FMP (years)\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-336"><a href="#cb3-336" aria-hidden="true" tabindex="-1"></a><span class="in">  2 &amp; Mean (SD) &amp; 10.98 (2.51) \\ </span></span>
+<span id="cb3-337"><a href="#cb3-337" aria-hidden="true" tabindex="-1"></a><span class="in">  3 &amp; Median [IQR] &amp; 11.05 [9.33, 12.61] \\ </span></span>
+<span id="cb3-338"><a href="#cb3-338" aria-hidden="true" tabindex="-1"></a><span class="in">  4 &amp; Median [5\%, 95\%] &amp; 11.05 [6.83, 15.10] \\ </span></span>
+<span id="cb3-339"><a href="#cb3-339" aria-hidden="true" tabindex="-1"></a><span class="in">  5 &amp; Median [Range] &amp; 11.05 [3.59, 20.10] \\ </span></span>
+<span id="cb3-340"><a href="#cb3-340" aria-hidden="true" tabindex="-1"></a><span class="in">  6 &amp; \_\_\_Age of FMP (years)\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-341"><a href="#cb3-341" aria-hidden="true" tabindex="-1"></a><span class="in">  7 &amp; Mean (SD) &amp; 52.98 (2.51) \\ </span></span>
+<span id="cb3-342"><a href="#cb3-342" aria-hidden="true" tabindex="-1"></a><span class="in">  8 &amp; Median [IQR] &amp; 53.05 [51.33, 54.61] \\ </span></span>
+<span id="cb3-343"><a href="#cb3-343" aria-hidden="true" tabindex="-1"></a><span class="in">  9 &amp; Median [5\%, 95\%] &amp; 53.05 [48.83, 57.10] \\ </span></span>
+<span id="cb3-344"><a href="#cb3-344" aria-hidden="true" tabindex="-1"></a><span class="in">  10 &amp; Median [Range] &amp; 53.05 [45.59, 62.10] \\ </span></span>
+<span id="cb3-345"><a href="#cb3-345" aria-hidden="true" tabindex="-1"></a><span class="in">  11 &amp; \_\_\_Baseline AMH\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-346"><a href="#cb3-346" aria-hidden="true" tabindex="-1"></a><span class="in">  12 &amp; Mean (SD) &amp; 540 (702) \\ </span></span>
+<span id="cb3-347"><a href="#cb3-347" aria-hidden="true" tabindex="-1"></a><span class="in">  13 &amp; Median [IQR] &amp; 273 [71, 672] \\ </span></span>
+<span id="cb3-348"><a href="#cb3-348" aria-hidden="true" tabindex="-1"></a><span class="in">  14 &amp; Median [5\%, 95\%] &amp; 273 [1, 2,095] \\ </span></span>
+<span id="cb3-349"><a href="#cb3-349" aria-hidden="true" tabindex="-1"></a><span class="in">  15 &amp; Median [Range] &amp; 273 [1, 4,652] \\ </span></span>
+<span id="cb3-350"><a href="#cb3-350" aria-hidden="true" tabindex="-1"></a><span class="in">  16 &amp; \_\_\_Minimum AMH\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-351"><a href="#cb3-351" aria-hidden="true" tabindex="-1"></a><span class="in">  17 &amp; Mean (SD) &amp; 28 (78) \\ </span></span>
+<span id="cb3-352"><a href="#cb3-352" aria-hidden="true" tabindex="-1"></a><span class="in">  18 &amp; Median [IQR] &amp; 2 [1, 18] \\ </span></span>
+<span id="cb3-353"><a href="#cb3-353" aria-hidden="true" tabindex="-1"></a><span class="in">  19 &amp; Median [5\%, 95\%] &amp; 2 [1, 133] \\ </span></span>
+<span id="cb3-354"><a href="#cb3-354" aria-hidden="true" tabindex="-1"></a><span class="in">  20 &amp; Median [Range] &amp; 2 [1, 772] \\ </span></span>
+<span id="cb3-355"><a href="#cb3-355" aria-hidden="true" tabindex="-1"></a><span class="in">  21 &amp; \_\_\_Maximum AMH\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-356"><a href="#cb3-356" aria-hidden="true" tabindex="-1"></a><span class="in">  22 &amp; Mean (SD) &amp; 628 (730) \\ </span></span>
+<span id="cb3-357"><a href="#cb3-357" aria-hidden="true" tabindex="-1"></a><span class="in">  23 &amp; Median [IQR] &amp; 341 [132, 836] \\ </span></span>
+<span id="cb3-358"><a href="#cb3-358" aria-hidden="true" tabindex="-1"></a><span class="in">  24 &amp; Median [5\%, 95\%] &amp; 341 [23, 2,174] \\ </span></span>
+<span id="cb3-359"><a href="#cb3-359" aria-hidden="true" tabindex="-1"></a><span class="in">  25 &amp; Median [Range] &amp; 341 [1, 4,681] \\ </span></span>
+<span id="cb3-360"><a href="#cb3-360" aria-hidden="true" tabindex="-1"></a><span class="in">  26 &amp; \_\_\_Number of Visits\_\_\_ &amp;  \\ </span></span>
+<span id="cb3-361"><a href="#cb3-361" aria-hidden="true" tabindex="-1"></a><span class="in">  27 &amp; Mean (SD) &amp; 5.54 (2.14) \\ </span></span>
+<span id="cb3-362"><a href="#cb3-362" aria-hidden="true" tabindex="-1"></a><span class="in">  28 &amp; Median [IQR] &amp; 5.00 [4.00, 7.00] \\ </span></span>
+<span id="cb3-363"><a href="#cb3-363" aria-hidden="true" tabindex="-1"></a><span class="in">  29 &amp; Median [5\%, 95\%] &amp; 5.00 [3.00, 10.00] \\ </span></span>
+<span id="cb3-364"><a href="#cb3-364" aria-hidden="true" tabindex="-1"></a><span class="in">  30 &amp; Median [Range] &amp; 5.00 [3.00, 11.00] \\ </span></span>
+<span id="cb3-365"><a href="#cb3-365" aria-hidden="true" tabindex="-1"></a><span class="in">   \hline</span></span>
+<span id="cb3-366"><a href="#cb3-366" aria-hidden="true" tabindex="-1"></a><span class="in">\end{tabular}</span></span>
+<span id="cb3-367"><a href="#cb3-367" aria-hidden="true" tabindex="-1"></a><span class="in">\end{table}</span></span>
+<span id="cb3-368"><a href="#cb3-368" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-369"><a href="#cb3-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-370"><a href="#cb3-370" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

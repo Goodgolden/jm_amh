@@ -53,6 +53,8 @@ here::set_here()
 
 -   [x] Calculate the AUC and ROC for the joint model
 
+-   [x] `r praise::praise()`
+
 ## Fit the joint model
 
 Here is the joint model with `JMbayes2`, the name of the model is set up as `package` + \[fit\] + `lme_number` + `surv_number`
@@ -519,3 +521,5 @@ dpplot_t8 <- map(1:600,
                        jmfit = jmbayes2.fit116)))
 dev.off()
 ```
+
+-   [x] `r praise::praise()`

@@ -50,8 +50,8 @@ here::set_here()
     -   [x] also include the min and max of AMH
 
     -   [x] How many repeated measures per woman
-    
-    - [x] fmp_age and fmp_time sumamry
+
+    -   [x] fmp_age and fmp_time sumamry
 
 -   [x] all the survival parameters summary
 
@@ -62,6 +62,8 @@ here::set_here()
     -   [x] with rate
 
     -   [x] without rate
+
+-   [x] `r praise::praise()`
 
 \newpage
 
@@ -169,7 +171,7 @@ xtable(as.data.frame(table1), type = "latex",
       file = paste0("figure/swan_amh_09_publish_table1_", Sys.Date(), ".tex"))
 ```
 
-```
+```         
 % latex table generated in R 4.2.2 by xtable 1.8-4 package
 % Wed Apr 10 20:57:15 2024
 \begin{table}[ht]
@@ -313,7 +315,7 @@ xtable(as.data.frame(table2), type = "latex",
 
 Here is the latex code for Table2:
 
-```
+```         
 % latex table generated in R 4.2.2 by xtable 1.8-4 package
 % Wed Apr 10 21:00:42 2024
 \begin{table}[ht]
@@ -357,3 +359,4 @@ Here is the latex code for Table2:
 \end{table}
 ```
 
+-   [x] `r praise::praise()`

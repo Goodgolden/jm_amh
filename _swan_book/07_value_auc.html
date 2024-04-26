@@ -308,6 +308,8 @@ Fit the joint model with <code>JMbayes2</code> based on model selection results<
 Dynamic prediction for the joint model with plots</p></li>
 <li><p><input type="checkbox" disabled="" checked="">
 Calculate the AUC and ROC for the joint model</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+You are super-duper!</p></li>
 </ul></section><section id="fit-the-joint-model" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="fit-the-joint-model">
 <span class="header-section-number">7.2</span> Fit the joint model</h2>
 <p>Here is the joint model with <code>JMbayes2</code>, the name of the model is set up as <code>package</code> + [fit] + <code>lme_number</code> + <code>surv_number</code></p>
@@ -811,6 +813,11 @@ Calculate the AUC and ROC for the joint model</p></li>
 </div>
 </div>
 </div>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" checked="">
+You are super-duper!</li>
+</ul>
 
 
 <!-- -->
@@ -1028,472 +1035,476 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Calculate the AUC and ROC for the joint model</span>
 <span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fit the joint model</span></span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 <span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>Here is the joint model with <span class="in">`JMbayes2`</span>, the name of the model is set up as <span class="in">`package`</span> + <span class="sc">\[</span>fit<span class="sc">\]</span> + <span class="in">`lme_number`</span> + <span class="in">`surv_number`</span></span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fit the joint model</span></span>
 <span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>$lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$</span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>Here is the joint model with <span class="in">`JMbayes2`</span>, the name of the model is set up as <span class="in">`package`</span> + <span class="sc">\[</span>fit<span class="sc">\]</span> + <span class="in">`lme_number`</span> + <span class="in">`surv_number`</span></span>
 <span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>$surv.fit16 \sim coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>$lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$</span>
 <span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>The <span class="in">`predict.jm()`</span> function cannot take the factor variables, so we need to convert them to numeric variables.</span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>$surv.fit16 \sim coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
 <span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>So here is the dummy variables for the factor variables <span class="in">`site_ethnic`</span> and <span class="in">`smoke`</span>. It is weird, just like including the interaction terms without the main effects for the <span class="in">`site`</span> and <span class="in">`ethnicity`</span>; **talk with EJC to see whether we change the main factor effects back.**</span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>The <span class="in">`predict.jm()`</span> function cannot take the factor variables, so we need to convert them to numeric variables.</span>
 <span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dummy_variables"</span></span>
-<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a>swan_amh12 <span class="ot">&lt;-</span> swan_amh11 <span class="sc">%&gt;%</span></span>
-<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> site_ethnic <span class="sc">+</span> smoke, </span>
-<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
-<span id="cb20-75"><a href="#cb20-75" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb20-76"><a href="#cb20-76" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">order</span>(<span class="fu">colnames</span>(.)))</span>
-<span id="cb20-77"><a href="#cb20-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-78"><a href="#cb20-78" aria-hidden="true" tabindex="-1"></a>swan_amh02 <span class="ot">&lt;-</span> swan_amh00 <span class="sc">%&gt;%</span></span>
-<span id="cb20-79"><a href="#cb20-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">smoke =</span> <span class="fu">case_when</span>(smoke <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Past Only"</span>,</span>
-<span id="cb20-80"><a href="#cb20-80" aria-hidden="true" tabindex="-1"></a>                           smoke <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Current Smoker"</span>,</span>
-<span id="cb20-81"><a href="#cb20-81" aria-hidden="true" tabindex="-1"></a>                           smoke <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Never Smoked"</span>),</span>
-<span id="cb20-82"><a href="#cb20-82" aria-hidden="true" tabindex="-1"></a>         <span class="at">smoke =</span> <span class="fu">factor</span>(smoke, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Never Smoked"</span> , <span class="st">"Past Only"</span>, <span class="st">"Current Smoker"</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb20-83"><a href="#cb20-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> site_ethnic <span class="sc">+</span> smoke, </span>
-<span id="cb20-84"><a href="#cb20-84" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
-<span id="cb20-85"><a href="#cb20-85" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb20-86"><a href="#cb20-86" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">order</span>(<span class="fu">colnames</span>(.)))</span>
-<span id="cb20-87"><a href="#cb20-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-88"><a href="#cb20-88" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(swan_amh12)</span>
-<span id="cb20-89"><a href="#cb20-89" aria-hidden="true" tabindex="-1"></a><span class="co"># names(swan_amh02)</span></span>
-<span id="cb20-90"><a href="#cb20-90" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_b_black"    "site_ethnic_b_cauca"</span></span>
-<span id="cb20-91"><a href="#cb20-91" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_c_black"    "site_ethnic_c_cauca"    "site_ethnic_m_black"</span></span>
-<span id="cb20-92"><a href="#cb20-92" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_m_cauca"    "site_ethnic_nj_cauca"   "site_ethnic_nj_hispa"</span></span>
-<span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_p_black"    "site_ethnic_p_cauca"    "site_ethnic_ucd_cauca"</span></span>
-<span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_ucd_chine"  "site_ethnic_ucla_cauca" "site_ethnic_ucla_japan"</span></span>
-<span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a><span class="co"># "smoke_past_only"        "smoke_current_smoker"</span></span>
-<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-100"><a href="#cb20-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-101"><a href="#cb20-101" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "fit_joint_model"</span></span>
-<span id="cb20-102"><a href="#cb20-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-103"><a href="#cb20-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-104"><a href="#cb20-104" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
-<span id="cb20-105"><a href="#cb20-105" aria-hidden="true" tabindex="-1"></a>lme.fit1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
-<span id="cb20-106"><a href="#cb20-106" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh00,</span>
-<span id="cb20-107"><a href="#cb20-107" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
-<span id="cb20-108"><a href="#cb20-108" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
-<span id="cb20-109"><a href="#cb20-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-110"><a href="#cb20-110" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for health</span></span>
-<span id="cb20-111"><a href="#cb20-111" aria-hidden="true" tabindex="-1"></a><span class="do">## site_ethnic_b_cauca as the reference group </span></span>
-<span id="cb20-112"><a href="#cb20-112" aria-hidden="true" tabindex="-1"></a>surv.fit16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb20-113"><a href="#cb20-113" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_b_black <span class="sc">+</span> <span class="co"># site_ethnic_b_cauca + </span></span>
-<span id="cb20-114"><a href="#cb20-114" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_c_black <span class="sc">+</span> site_ethnic_c_cauca <span class="sc">+</span> </span>
-<span id="cb20-115"><a href="#cb20-115" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_m_black <span class="sc">+</span> site_ethnic_m_cauca <span class="sc">+</span></span>
-<span id="cb20-116"><a href="#cb20-116" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_nj_cauca <span class="sc">+</span> site_ethnic_nj_hispa <span class="sc">+</span></span>
-<span id="cb20-117"><a href="#cb20-117" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_p_black <span class="sc">+</span> site_ethnic_p_cauca <span class="sc">+</span> </span>
-<span id="cb20-118"><a href="#cb20-118" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_ucd_cauca <span class="sc">+</span> site_ethnic_ucd_chine <span class="sc">+</span></span>
-<span id="cb20-119"><a href="#cb20-119" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_ucla_cauca <span class="sc">+</span> site_ethnic_ucla_japan <span class="sc">+</span></span>
-<span id="cb20-120"><a href="#cb20-120" aria-hidden="true" tabindex="-1"></a>                      smoke_past_only <span class="sc">+</span> smoke_current_smoker,</span>
-<span id="cb20-121"><a href="#cb20-121" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh12, </span>
-<span id="cb20-122"><a href="#cb20-122" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb20-123"><a href="#cb20-123" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-124"><a href="#cb20-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-125"><a href="#cb20-125" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
-<span id="cb20-126"><a href="#cb20-126" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
-<span id="cb20-127"><a href="#cb20-127" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">1</span>,</span>
-<span id="cb20-128"><a href="#cb20-128" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
-<span id="cb20-129"><a href="#cb20-129" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">1</span>)</span>
-<span id="cb20-130"><a href="#cb20-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-131"><a href="#cb20-131" aria-hidden="true" tabindex="-1"></a>jmbayes2.fit116 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv.fit16,</span>
-<span id="cb20-132"><a href="#cb20-132" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme.fit1, </span>
-<span id="cb20-133"><a href="#cb20-133" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb20-134"><a href="#cb20-134" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb20-135"><a href="#cb20-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-136"><a href="#cb20-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-139"><a href="#cb20-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-140"><a href="#cb20-140" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "save_datasets"</span></span>
-<span id="cb20-141"><a href="#cb20-141" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb20-142"><a href="#cb20-142" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(swan_amh02, swan_amh12, </span>
-<span id="cb20-143"><a href="#cb20-143" aria-hidden="true" tabindex="-1"></a>     lme.fit1, surv.fit16, </span>
-<span id="cb20-144"><a href="#cb20-144" aria-hidden="true" tabindex="-1"></a>     jmbayes2.fit116,</span>
-<span id="cb20-145"><a href="#cb20-145" aria-hidden="true" tabindex="-1"></a>     <span class="at">file =</span> <span class="st">"data-raw/swan_amh_jmbayes2_fit116.RData"</span>)</span>
-<span id="cb20-146"><a href="#cb20-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-147"><a href="#cb20-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-148"><a href="#cb20-148" aria-hidden="true" tabindex="-1"></a><span class="fu">### Summary for the `jmbayes.fit116`</span></span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>So here is the dummy variables for the factor variables <span class="in">`site_ethnic`</span> and <span class="in">`smoke`</span>. It is weird, just like including the interaction terms without the main effects for the <span class="in">`site`</span> and <span class="in">`ethnicity`</span>; **talk with EJC to see whether we change the main factor effects back.**</span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dummy_variables"</span></span>
+<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a>swan_amh12 <span class="ot">&lt;-</span> swan_amh11 <span class="sc">%&gt;%</span></span>
+<span id="cb20-75"><a href="#cb20-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> site_ethnic <span class="sc">+</span> smoke, </span>
+<span id="cb20-76"><a href="#cb20-76" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-77"><a href="#cb20-77" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb20-78"><a href="#cb20-78" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">order</span>(<span class="fu">colnames</span>(.)))</span>
+<span id="cb20-79"><a href="#cb20-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-80"><a href="#cb20-80" aria-hidden="true" tabindex="-1"></a>swan_amh02 <span class="ot">&lt;-</span> swan_amh00 <span class="sc">%&gt;%</span></span>
+<span id="cb20-81"><a href="#cb20-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">smoke =</span> <span class="fu">case_when</span>(smoke <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Past Only"</span>,</span>
+<span id="cb20-82"><a href="#cb20-82" aria-hidden="true" tabindex="-1"></a>                           smoke <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"Current Smoker"</span>,</span>
+<span id="cb20-83"><a href="#cb20-83" aria-hidden="true" tabindex="-1"></a>                           smoke <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Never Smoked"</span>),</span>
+<span id="cb20-84"><a href="#cb20-84" aria-hidden="true" tabindex="-1"></a>         <span class="at">smoke =</span> <span class="fu">factor</span>(smoke, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Never Smoked"</span> , <span class="st">"Past Only"</span>, <span class="st">"Current Smoker"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb20-85"><a href="#cb20-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> site_ethnic <span class="sc">+</span> smoke, </span>
+<span id="cb20-86"><a href="#cb20-86" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data =</span> .)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-87"><a href="#cb20-87" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb20-88"><a href="#cb20-88" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">order</span>(<span class="fu">colnames</span>(.)))</span>
+<span id="cb20-89"><a href="#cb20-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-90"><a href="#cb20-90" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(swan_amh12)</span>
+<span id="cb20-91"><a href="#cb20-91" aria-hidden="true" tabindex="-1"></a><span class="co"># names(swan_amh02)</span></span>
+<span id="cb20-92"><a href="#cb20-92" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_b_black"    "site_ethnic_b_cauca"</span></span>
+<span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_c_black"    "site_ethnic_c_cauca"    "site_ethnic_m_black"</span></span>
+<span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_m_cauca"    "site_ethnic_nj_cauca"   "site_ethnic_nj_hispa"</span></span>
+<span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_p_black"    "site_ethnic_p_cauca"    "site_ethnic_ucd_cauca"</span></span>
+<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a><span class="co"># "site_ethnic_ucd_chine"  "site_ethnic_ucla_cauca" "site_ethnic_ucla_japan"</span></span>
+<span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a><span class="co"># "smoke_past_only"        "smoke_current_smoker"</span></span>
+<span id="cb20-98"><a href="#cb20-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-99"><a href="#cb20-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-102"><a href="#cb20-102" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-103"><a href="#cb20-103" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "fit_joint_model"</span></span>
+<span id="cb20-104"><a href="#cb20-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-105"><a href="#cb20-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-106"><a href="#cb20-106" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
+<span id="cb20-107"><a href="#cb20-107" aria-hidden="true" tabindex="-1"></a>lme.fit1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
+<span id="cb20-108"><a href="#cb20-108" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh00,</span>
+<span id="cb20-109"><a href="#cb20-109" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
+<span id="cb20-110"><a href="#cb20-110" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
+<span id="cb20-111"><a href="#cb20-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-112"><a href="#cb20-112" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for health</span></span>
+<span id="cb20-113"><a href="#cb20-113" aria-hidden="true" tabindex="-1"></a><span class="do">## site_ethnic_b_cauca as the reference group </span></span>
+<span id="cb20-114"><a href="#cb20-114" aria-hidden="true" tabindex="-1"></a>surv.fit16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb20-115"><a href="#cb20-115" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_b_black <span class="sc">+</span> <span class="co"># site_ethnic_b_cauca + </span></span>
+<span id="cb20-116"><a href="#cb20-116" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_c_black <span class="sc">+</span> site_ethnic_c_cauca <span class="sc">+</span> </span>
+<span id="cb20-117"><a href="#cb20-117" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_m_black <span class="sc">+</span> site_ethnic_m_cauca <span class="sc">+</span></span>
+<span id="cb20-118"><a href="#cb20-118" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_nj_cauca <span class="sc">+</span> site_ethnic_nj_hispa <span class="sc">+</span></span>
+<span id="cb20-119"><a href="#cb20-119" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_p_black <span class="sc">+</span> site_ethnic_p_cauca <span class="sc">+</span> </span>
+<span id="cb20-120"><a href="#cb20-120" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_ucd_cauca <span class="sc">+</span> site_ethnic_ucd_chine <span class="sc">+</span></span>
+<span id="cb20-121"><a href="#cb20-121" aria-hidden="true" tabindex="-1"></a>                      site_ethnic_ucla_cauca <span class="sc">+</span> site_ethnic_ucla_japan <span class="sc">+</span></span>
+<span id="cb20-122"><a href="#cb20-122" aria-hidden="true" tabindex="-1"></a>                      smoke_past_only <span class="sc">+</span> smoke_current_smoker,</span>
+<span id="cb20-123"><a href="#cb20-123" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh12, </span>
+<span id="cb20-124"><a href="#cb20-124" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb20-125"><a href="#cb20-125" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-126"><a href="#cb20-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-127"><a href="#cb20-127" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
+<span id="cb20-128"><a href="#cb20-128" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
+<span id="cb20-129"><a href="#cb20-129" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">1</span>,</span>
+<span id="cb20-130"><a href="#cb20-130" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
+<span id="cb20-131"><a href="#cb20-131" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">1</span>)</span>
+<span id="cb20-132"><a href="#cb20-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-133"><a href="#cb20-133" aria-hidden="true" tabindex="-1"></a>jmbayes2.fit116 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv.fit16,</span>
+<span id="cb20-134"><a href="#cb20-134" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme.fit1, </span>
+<span id="cb20-135"><a href="#cb20-135" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb20-136"><a href="#cb20-136" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb20-137"><a href="#cb20-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-138"><a href="#cb20-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-141"><a href="#cb20-141" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-142"><a href="#cb20-142" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "save_datasets"</span></span>
+<span id="cb20-143"><a href="#cb20-143" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb20-144"><a href="#cb20-144" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(swan_amh02, swan_amh12, </span>
+<span id="cb20-145"><a href="#cb20-145" aria-hidden="true" tabindex="-1"></a>     lme.fit1, surv.fit16, </span>
+<span id="cb20-146"><a href="#cb20-146" aria-hidden="true" tabindex="-1"></a>     jmbayes2.fit116,</span>
+<span id="cb20-147"><a href="#cb20-147" aria-hidden="true" tabindex="-1"></a>     <span class="at">file =</span> <span class="st">"data-raw/swan_amh_jmbayes2_fit116.RData"</span>)</span>
+<span id="cb20-148"><a href="#cb20-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-149"><a href="#cb20-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-150"><a href="#cb20-150" aria-hidden="true" tabindex="-1"></a>For the <span class="in">`lme`</span> model:</span>
+<span id="cb20-150"><a href="#cb20-150" aria-hidden="true" tabindex="-1"></a><span class="fu">### Summary for the `jmbayes.fit116`</span></span>
 <span id="cb20-151"><a href="#cb20-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-152"><a href="#cb20-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r output.class = "scroll-100"}</span></span>
-<span id="cb20-153"><a href="#cb20-153" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)<span class="sc">$</span>Outcome1 </span>
-<span id="cb20-154"><a href="#cb20-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-155"><a href="#cb20-155" aria-hidden="true" tabindex="-1"></a><span class="co">#             Mean        StDev       2.5%        97.5%.      P</span></span>
-<span id="cb20-156"><a href="#cb20-156" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept)   7.9174517     0.1088784   7.6937029   8.1155217   0</span></span>
-<span id="cb20-157"><a href="#cb20-157" aria-hidden="true" tabindex="-1"></a><span class="co"># time        -0.5961157    0.0129068     -0.6186083    -0.5691261  0</span></span>
-<span id="cb20-158"><a href="#cb20-158" aria-hidden="true" tabindex="-1"></a><span class="co"># sigma       1.3059261   0.0186472   1.2692610   1.3428203     0</span></span>
-<span id="cb20-159"><a href="#cb20-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-160"><a href="#cb20-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-161"><a href="#cb20-161" aria-hidden="true" tabindex="-1"></a>For the <span class="in">`surv`</span> model:</span>
+<span id="cb20-152"><a href="#cb20-152" aria-hidden="true" tabindex="-1"></a>For the <span class="in">`lme`</span> model:</span>
+<span id="cb20-153"><a href="#cb20-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-154"><a href="#cb20-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{r output.class = "scroll-100"}</span></span>
+<span id="cb20-155"><a href="#cb20-155" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)<span class="sc">$</span>Outcome1 </span>
+<span id="cb20-156"><a href="#cb20-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-157"><a href="#cb20-157" aria-hidden="true" tabindex="-1"></a><span class="co">#             Mean        StDev       2.5%        97.5%.      P</span></span>
+<span id="cb20-158"><a href="#cb20-158" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept)   7.9174517     0.1088784   7.6937029   8.1155217   0</span></span>
+<span id="cb20-159"><a href="#cb20-159" aria-hidden="true" tabindex="-1"></a><span class="co"># time        -0.5961157    0.0129068     -0.6186083    -0.5691261  0</span></span>
+<span id="cb20-160"><a href="#cb20-160" aria-hidden="true" tabindex="-1"></a><span class="co"># sigma       1.3059261   0.0186472   1.2692610   1.3428203     0</span></span>
+<span id="cb20-161"><a href="#cb20-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-162"><a href="#cb20-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-163"><a href="#cb20-163" aria-hidden="true" tabindex="-1"></a><span class="in">```{r output.class = "scroll-100"}</span></span>
-<span id="cb20-164"><a href="#cb20-164" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)<span class="sc">$</span>Survival</span>
-<span id="cb20-165"><a href="#cb20-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-166"><a href="#cb20-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-167"><a href="#cb20-167" aria-hidden="true" tabindex="-1"></a><span class="fu">### Traceplots</span></span>
+<span id="cb20-163"><a href="#cb20-163" aria-hidden="true" tabindex="-1"></a>For the <span class="in">`surv`</span> model:</span>
+<span id="cb20-164"><a href="#cb20-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-165"><a href="#cb20-165" aria-hidden="true" tabindex="-1"></a><span class="in">```{r output.class = "scroll-100"}</span></span>
+<span id="cb20-166"><a href="#cb20-166" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmbayes2.fit116)<span class="sc">$</span>Survival</span>
+<span id="cb20-167"><a href="#cb20-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-168"><a href="#cb20-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-169"><a href="#cb20-169" aria-hidden="true" tabindex="-1"></a>Longer chains and more number of chains are better for convergence in real analysis</span>
+<span id="cb20-169"><a href="#cb20-169" aria-hidden="true" tabindex="-1"></a><span class="fu">### Traceplots</span></span>
 <span id="cb20-170"><a href="#cb20-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-173"><a href="#cb20-173" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-174"><a href="#cb20-174" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "trace_joint_model"</span></span>
-<span id="cb20-175"><a href="#cb20-175" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
-<span id="cb20-176"><a href="#cb20-176" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb20-177"><a href="#cb20-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-178"><a href="#cb20-178" aria-hidden="true" tabindex="-1"></a>JMbayes2<span class="sc">::</span><span class="fu">traceplot</span>(jmbayes2.fit116)</span>
+<span id="cb20-171"><a href="#cb20-171" aria-hidden="true" tabindex="-1"></a>Longer chains and more number of chains are better for convergence in real analysis</span>
+<span id="cb20-172"><a href="#cb20-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-175"><a href="#cb20-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-176"><a href="#cb20-176" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "trace_joint_model"</span></span>
+<span id="cb20-177"><a href="#cb20-177" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb20-178"><a href="#cb20-178" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
 <span id="cb20-179"><a href="#cb20-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-180"><a href="#cb20-180" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-180"><a href="#cb20-180" aria-hidden="true" tabindex="-1"></a>JMbayes2<span class="sc">::</span><span class="fu">traceplot</span>(jmbayes2.fit116)</span>
 <span id="cb20-181"><a href="#cb20-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-182"><a href="#cb20-182" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dynamic prediction</span></span>
+<span id="cb20-182"><a href="#cb20-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-183"><a href="#cb20-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-184"><a href="#cb20-184" aria-hidden="true" tabindex="-1"></a>Individualized predictions of survival probabilities are computed by function <span class="in">`predict()`</span>, this is different from <span class="in">`JMbayes`</span> and <span class="in">`JM`</span>.</span>
+<span id="cb20-184"><a href="#cb20-184" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dynamic prediction</span></span>
 <span id="cb20-185"><a href="#cb20-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-186"><a href="#cb20-186" aria-hidden="true" tabindex="-1"></a><span class="fu">### Individual dynamic prediction with plot</span></span>
+<span id="cb20-186"><a href="#cb20-186" aria-hidden="true" tabindex="-1"></a>Individualized predictions of survival probabilities are computed by function <span class="in">`predict()`</span>, this is different from <span class="in">`JMbayes`</span> and <span class="in">`JM`</span>.</span>
 <span id="cb20-187"><a href="#cb20-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-188"><a href="#cb20-188" aria-hidden="true" tabindex="-1"></a>Here are some exploratory plots for the dynamic prediction for the joint model.</span>
+<span id="cb20-188"><a href="#cb20-188" aria-hidden="true" tabindex="-1"></a><span class="fu">### Individual dynamic prediction with plot</span></span>
 <span id="cb20-189"><a href="#cb20-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-190"><a href="#cb20-190" aria-hidden="true" tabindex="-1"></a>The left part of the plot is the longitudinal outcome, and the right part is the cumulative risk function. With the decrease of the longitudinal outcome <span class="in">`log(amh)`</span>, the cumulative risk function increases, the probability of event increases too.</span>
+<span id="cb20-190"><a href="#cb20-190" aria-hidden="true" tabindex="-1"></a>Here are some exploratory plots for the dynamic prediction for the joint model.</span>
 <span id="cb20-191"><a href="#cb20-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-192"><a href="#cb20-192" aria-hidden="true" tabindex="-1"></a>The hazard function is the derivative of the cumulative risk function, the steepness (slope) of the cumulative risk function is the hazard function.</span>
+<span id="cb20-192"><a href="#cb20-192" aria-hidden="true" tabindex="-1"></a>The left part of the plot is the longitudinal outcome, and the right part is the cumulative risk function. With the decrease of the longitudinal outcome <span class="in">`log(amh)`</span>, the cumulative risk function increases, the probability of event increases too.</span>
 <span id="cb20-193"><a href="#cb20-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-196"><a href="#cb20-196" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-197"><a href="#cb20-197" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "predict_joint_model"</span></span>
-<span id="cb20-198"><a href="#cb20-198" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb20-199"><a href="#cb20-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-200"><a href="#cb20-200" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> <span class="dv">6</span></span>
-<span id="cb20-201"><a href="#cb20-201" aria-hidden="true" tabindex="-1"></a>ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(swan_amh02<span class="sc">$</span>id)</span>
-<span id="cb20-202"><a href="#cb20-202" aria-hidden="true" tabindex="-1"></a><span class="do">## length(ids)</span></span>
-<span id="cb20-203"><a href="#cb20-203" aria-hidden="true" tabindex="-1"></a><span class="do">## Prediction for the survival outcomes</span></span>
-<span id="cb20-204"><a href="#cb20-204" aria-hidden="true" tabindex="-1"></a><span class="do">## This is the dataset with longitudinal outcomes</span></span>
-<span id="cb20-205"><a href="#cb20-205" aria-hidden="true" tabindex="-1"></a>nid <span class="ot">&lt;-</span> swan_amh02[swan_amh02<span class="sc">$</span>id <span class="sc">==</span> ids[<span class="dv">8</span>], ]</span>
-<span id="cb20-206"><a href="#cb20-206" aria-hidden="true" tabindex="-1"></a>nid <span class="ot">&lt;-</span> nid[nid<span class="sc">$</span>time <span class="sc">&lt;</span> t0, ]</span>
-<span id="cb20-207"><a href="#cb20-207" aria-hidden="true" tabindex="-1"></a>nid<span class="sc">$</span>event <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-208"><a href="#cb20-208" aria-hidden="true" tabindex="-1"></a>nid<span class="sc">$</span>etime <span class="ot">&lt;-</span> t0</span>
-<span id="cb20-209"><a href="#cb20-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-210"><a href="#cb20-210" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions for the longitudinal outcomes using newdata</span></span>
-<span id="cb20-211"><a href="#cb20-211" aria-hidden="true" tabindex="-1"></a>Lpred1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmbayes2.fit116, </span>
-<span id="cb20-212"><a href="#cb20-212" aria-hidden="true" tabindex="-1"></a>                    <span class="at">newdata =</span> nid,</span>
-<span id="cb20-213"><a href="#cb20-213" aria-hidden="true" tabindex="-1"></a>                    <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-214"><a href="#cb20-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-215"><a href="#cb20-215" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions for the longitudinal outcomes at future time points</span></span>
-<span id="cb20-216"><a href="#cb20-216" aria-hidden="true" tabindex="-1"></a><span class="co"># from year 6 to 10</span></span>
-<span id="cb20-217"><a href="#cb20-217" aria-hidden="true" tabindex="-1"></a>Lpred2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmbayes2.fit116, </span>
-<span id="cb20-218"><a href="#cb20-218" aria-hidden="true" tabindex="-1"></a>                    <span class="at">newdata =</span> nid,</span>
-<span id="cb20-219"><a href="#cb20-219" aria-hidden="true" tabindex="-1"></a>                   <span class="at">times =</span> <span class="fu">seq</span>(t0, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">51</span>),</span>
-<span id="cb20-220"><a href="#cb20-220" aria-hidden="true" tabindex="-1"></a>                    <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-221"><a href="#cb20-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-222"><a href="#cb20-222" aria-hidden="true" tabindex="-1"></a>Spred <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmbayes2.fit116, </span>
-<span id="cb20-223"><a href="#cb20-223" aria-hidden="true" tabindex="-1"></a>                 <span class="at">newdata =</span> nid,</span>
-<span id="cb20-224"><a href="#cb20-224" aria-hidden="true" tabindex="-1"></a>                 <span class="at">times =</span> <span class="fu">seq</span>(t0, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">11</span>),</span>
-<span id="cb20-225"><a href="#cb20-225" aria-hidden="true" tabindex="-1"></a>                 <span class="at">process =</span> <span class="st">"event"</span>,</span>
-<span id="cb20-226"><a href="#cb20-226" aria-hidden="true" tabindex="-1"></a>                 <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-227"><a href="#cb20-227" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-228"><a href="#cb20-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-231"><a href="#cb20-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-232"><a href="#cb20-232" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "plot_function"</span></span>
-<span id="cb20-233"><a href="#cb20-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-234"><a href="#cb20-234" aria-hidden="true" tabindex="-1"></a><span class="co">#' Title Dynamic prediction plot for individual</span></span>
-<span id="cb20-235"><a href="#cb20-235" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb20-236"><a href="#cb20-236" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param id_num individual id number in the list</span></span>
-<span id="cb20-237"><a href="#cb20-237" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param tmin the start time</span></span>
-<span id="cb20-238"><a href="#cb20-238" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param tmax the end time</span></span>
-<span id="cb20-239"><a href="#cb20-239" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param jmfit the joint model objects</span></span>
-<span id="cb20-240"><a href="#cb20-240" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param ... </span></span>
-<span id="cb20-241"><a href="#cb20-241" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
-<span id="cb20-242"><a href="#cb20-242" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return a list of lme and surv predicts</span></span>
-<span id="cb20-243"><a href="#cb20-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-244"><a href="#cb20-244" aria-hidden="true" tabindex="-1"></a>dpplot <span class="ot">&lt;-</span> <span class="cf">function</span>(id_num,</span>
-<span id="cb20-245"><a href="#cb20-245" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tmin =</span> <span class="dv">0</span>,</span>
-<span id="cb20-246"><a href="#cb20-246" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tmax =</span> <span class="dv">12</span>,</span>
-<span id="cb20-247"><a href="#cb20-247" aria-hidden="true" tabindex="-1"></a>                   <span class="at">jmfit =</span> jmbayes2.fit116,</span>
-<span id="cb20-248"><a href="#cb20-248" aria-hidden="true" tabindex="-1"></a>                   ...){</span>
-<span id="cb20-249"><a href="#cb20-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-250"><a href="#cb20-250" aria-hidden="true" tabindex="-1"></a>  <span class="co"># browser()</span></span>
-<span id="cb20-251"><a href="#cb20-251" aria-hidden="true" tabindex="-1"></a>  nid0 <span class="ot">&lt;-</span> swan_amh02[swan_amh02<span class="sc">$</span>id <span class="sc">==</span> ids[id_num], ]</span>
-<span id="cb20-252"><a href="#cb20-252" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb20-253"><a href="#cb20-253" aria-hidden="true" tabindex="-1"></a>  nid <span class="ot">&lt;-</span> nid0</span>
-<span id="cb20-254"><a href="#cb20-254" aria-hidden="true" tabindex="-1"></a>  nid <span class="ot">&lt;-</span> nid[nid<span class="sc">$</span>time <span class="sc">&lt;</span> tmin, ]</span>
-<span id="cb20-255"><a href="#cb20-255" aria-hidden="true" tabindex="-1"></a>  nid<span class="sc">$</span>event <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb20-256"><a href="#cb20-256" aria-hidden="true" tabindex="-1"></a>  nid<span class="sc">$</span>etime <span class="ot">&lt;-</span> tmin</span>
-<span id="cb20-257"><a href="#cb20-257" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb20-258"><a href="#cb20-258" aria-hidden="true" tabindex="-1"></a>  Lpred <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmfit, </span>
-<span id="cb20-259"><a href="#cb20-259" aria-hidden="true" tabindex="-1"></a>                    <span class="at">newdata =</span> nid,</span>
-<span id="cb20-260"><a href="#cb20-260" aria-hidden="true" tabindex="-1"></a>                   <span class="at">times =</span> <span class="fu">seq</span>(tmin, tmax, <span class="at">length.out =</span> <span class="dv">11</span>),</span>
-<span id="cb20-261"><a href="#cb20-261" aria-hidden="true" tabindex="-1"></a>                    <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-262"><a href="#cb20-262" aria-hidden="true" tabindex="-1"></a>  Spred <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmfit, </span>
-<span id="cb20-263"><a href="#cb20-263" aria-hidden="true" tabindex="-1"></a>                 <span class="at">newdata =</span> nid,</span>
-<span id="cb20-264"><a href="#cb20-264" aria-hidden="true" tabindex="-1"></a>                 <span class="at">times =</span> <span class="fu">seq</span>(tmin, tmax, <span class="at">length.out =</span> <span class="dv">11</span>),</span>
-<span id="cb20-265"><a href="#cb20-265" aria-hidden="true" tabindex="-1"></a>                 <span class="at">process =</span> <span class="st">"event"</span>,</span>
-<span id="cb20-266"><a href="#cb20-266" aria-hidden="true" tabindex="-1"></a>                 <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-267"><a href="#cb20-267" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb20-268"><a href="#cb20-268" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tAUC &lt;- try(JMbayes2::tvAUC(jmfit, </span></span>
-<span id="cb20-269"><a href="#cb20-269" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         nid0, </span></span>
-<span id="cb20-270"><a href="#cb20-270" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         Tstart = tmin,</span></span>
-<span id="cb20-271"><a href="#cb20-271" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         Dt = 10))</span></span>
-<span id="cb20-272"><a href="#cb20-272" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
-<span id="cb20-273"><a href="#cb20-273" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tROC &lt;- try(JMbayes2::tvROC(jmfit, </span></span>
-<span id="cb20-274"><a href="#cb20-274" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         nid0, </span></span>
-<span id="cb20-275"><a href="#cb20-275" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         Tstart = tmin,</span></span>
-<span id="cb20-276"><a href="#cb20-276" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         Dt = 10))</span></span>
-<span id="cb20-277"><a href="#cb20-277" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
-<span id="cb20-278"><a href="#cb20-278" aria-hidden="true" tabindex="-1"></a>  <span class="co"># brier &lt;- try(JMbayes2::tvBrier(jmfit, </span></span>
-<span id="cb20-279"><a href="#cb20-279" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                            nid0, </span></span>
-<span id="cb20-280"><a href="#cb20-280" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                            Tstart = tmin,</span></span>
-<span id="cb20-281"><a href="#cb20-281" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                            Dt = 10))</span></span>
-<span id="cb20-282"><a href="#cb20-282" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb20-283"><a href="#cb20-283" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(Lpred, Spred, <span class="at">ylab_long =</span> <span class="fu">paste0</span>(<span class="st">"ID_"</span>, id_num, <span class="st">"  log(amh)"</span>))</span>
+<span id="cb20-194"><a href="#cb20-194" aria-hidden="true" tabindex="-1"></a>The hazard function is the derivative of the cumulative risk function, the steepness (slope) of the cumulative risk function is the hazard function.</span>
+<span id="cb20-195"><a href="#cb20-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-198"><a href="#cb20-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-199"><a href="#cb20-199" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "predict_joint_model"</span></span>
+<span id="cb20-200"><a href="#cb20-200" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb20-201"><a href="#cb20-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-202"><a href="#cb20-202" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb20-203"><a href="#cb20-203" aria-hidden="true" tabindex="-1"></a>ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(swan_amh02<span class="sc">$</span>id)</span>
+<span id="cb20-204"><a href="#cb20-204" aria-hidden="true" tabindex="-1"></a><span class="do">## length(ids)</span></span>
+<span id="cb20-205"><a href="#cb20-205" aria-hidden="true" tabindex="-1"></a><span class="do">## Prediction for the survival outcomes</span></span>
+<span id="cb20-206"><a href="#cb20-206" aria-hidden="true" tabindex="-1"></a><span class="do">## This is the dataset with longitudinal outcomes</span></span>
+<span id="cb20-207"><a href="#cb20-207" aria-hidden="true" tabindex="-1"></a>nid <span class="ot">&lt;-</span> swan_amh02[swan_amh02<span class="sc">$</span>id <span class="sc">==</span> ids[<span class="dv">8</span>], ]</span>
+<span id="cb20-208"><a href="#cb20-208" aria-hidden="true" tabindex="-1"></a>nid <span class="ot">&lt;-</span> nid[nid<span class="sc">$</span>time <span class="sc">&lt;</span> t0, ]</span>
+<span id="cb20-209"><a href="#cb20-209" aria-hidden="true" tabindex="-1"></a>nid<span class="sc">$</span>event <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-210"><a href="#cb20-210" aria-hidden="true" tabindex="-1"></a>nid<span class="sc">$</span>etime <span class="ot">&lt;-</span> t0</span>
+<span id="cb20-211"><a href="#cb20-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-212"><a href="#cb20-212" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions for the longitudinal outcomes using newdata</span></span>
+<span id="cb20-213"><a href="#cb20-213" aria-hidden="true" tabindex="-1"></a>Lpred1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmbayes2.fit116, </span>
+<span id="cb20-214"><a href="#cb20-214" aria-hidden="true" tabindex="-1"></a>                    <span class="at">newdata =</span> nid,</span>
+<span id="cb20-215"><a href="#cb20-215" aria-hidden="true" tabindex="-1"></a>                    <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-216"><a href="#cb20-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-217"><a href="#cb20-217" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions for the longitudinal outcomes at future time points</span></span>
+<span id="cb20-218"><a href="#cb20-218" aria-hidden="true" tabindex="-1"></a><span class="co"># from year 6 to 10</span></span>
+<span id="cb20-219"><a href="#cb20-219" aria-hidden="true" tabindex="-1"></a>Lpred2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmbayes2.fit116, </span>
+<span id="cb20-220"><a href="#cb20-220" aria-hidden="true" tabindex="-1"></a>                    <span class="at">newdata =</span> nid,</span>
+<span id="cb20-221"><a href="#cb20-221" aria-hidden="true" tabindex="-1"></a>                   <span class="at">times =</span> <span class="fu">seq</span>(t0, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">51</span>),</span>
+<span id="cb20-222"><a href="#cb20-222" aria-hidden="true" tabindex="-1"></a>                    <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-223"><a href="#cb20-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-224"><a href="#cb20-224" aria-hidden="true" tabindex="-1"></a>Spred <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmbayes2.fit116, </span>
+<span id="cb20-225"><a href="#cb20-225" aria-hidden="true" tabindex="-1"></a>                 <span class="at">newdata =</span> nid,</span>
+<span id="cb20-226"><a href="#cb20-226" aria-hidden="true" tabindex="-1"></a>                 <span class="at">times =</span> <span class="fu">seq</span>(t0, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">11</span>),</span>
+<span id="cb20-227"><a href="#cb20-227" aria-hidden="true" tabindex="-1"></a>                 <span class="at">process =</span> <span class="st">"event"</span>,</span>
+<span id="cb20-228"><a href="#cb20-228" aria-hidden="true" tabindex="-1"></a>                 <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-229"><a href="#cb20-229" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-230"><a href="#cb20-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-233"><a href="#cb20-233" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-234"><a href="#cb20-234" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "plot_function"</span></span>
+<span id="cb20-235"><a href="#cb20-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-236"><a href="#cb20-236" aria-hidden="true" tabindex="-1"></a><span class="co">#' Title Dynamic prediction plot for individual</span></span>
+<span id="cb20-237"><a href="#cb20-237" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb20-238"><a href="#cb20-238" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param id_num individual id number in the list</span></span>
+<span id="cb20-239"><a href="#cb20-239" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param tmin the start time</span></span>
+<span id="cb20-240"><a href="#cb20-240" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param tmax the end time</span></span>
+<span id="cb20-241"><a href="#cb20-241" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param jmfit the joint model objects</span></span>
+<span id="cb20-242"><a href="#cb20-242" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param ... </span></span>
+<span id="cb20-243"><a href="#cb20-243" aria-hidden="true" tabindex="-1"></a><span class="co">#'</span></span>
+<span id="cb20-244"><a href="#cb20-244" aria-hidden="true" tabindex="-1"></a><span class="co">#' @return a list of lme and surv predicts</span></span>
+<span id="cb20-245"><a href="#cb20-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-246"><a href="#cb20-246" aria-hidden="true" tabindex="-1"></a>dpplot <span class="ot">&lt;-</span> <span class="cf">function</span>(id_num,</span>
+<span id="cb20-247"><a href="#cb20-247" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tmin =</span> <span class="dv">0</span>,</span>
+<span id="cb20-248"><a href="#cb20-248" aria-hidden="true" tabindex="-1"></a>                   <span class="at">tmax =</span> <span class="dv">12</span>,</span>
+<span id="cb20-249"><a href="#cb20-249" aria-hidden="true" tabindex="-1"></a>                   <span class="at">jmfit =</span> jmbayes2.fit116,</span>
+<span id="cb20-250"><a href="#cb20-250" aria-hidden="true" tabindex="-1"></a>                   ...){</span>
+<span id="cb20-251"><a href="#cb20-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-252"><a href="#cb20-252" aria-hidden="true" tabindex="-1"></a>  <span class="co"># browser()</span></span>
+<span id="cb20-253"><a href="#cb20-253" aria-hidden="true" tabindex="-1"></a>  nid0 <span class="ot">&lt;-</span> swan_amh02[swan_amh02<span class="sc">$</span>id <span class="sc">==</span> ids[id_num], ]</span>
+<span id="cb20-254"><a href="#cb20-254" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-255"><a href="#cb20-255" aria-hidden="true" tabindex="-1"></a>  nid <span class="ot">&lt;-</span> nid0</span>
+<span id="cb20-256"><a href="#cb20-256" aria-hidden="true" tabindex="-1"></a>  nid <span class="ot">&lt;-</span> nid[nid<span class="sc">$</span>time <span class="sc">&lt;</span> tmin, ]</span>
+<span id="cb20-257"><a href="#cb20-257" aria-hidden="true" tabindex="-1"></a>  nid<span class="sc">$</span>event <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-258"><a href="#cb20-258" aria-hidden="true" tabindex="-1"></a>  nid<span class="sc">$</span>etime <span class="ot">&lt;-</span> tmin</span>
+<span id="cb20-259"><a href="#cb20-259" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-260"><a href="#cb20-260" aria-hidden="true" tabindex="-1"></a>  Lpred <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmfit, </span>
+<span id="cb20-261"><a href="#cb20-261" aria-hidden="true" tabindex="-1"></a>                    <span class="at">newdata =</span> nid,</span>
+<span id="cb20-262"><a href="#cb20-262" aria-hidden="true" tabindex="-1"></a>                   <span class="at">times =</span> <span class="fu">seq</span>(tmin, tmax, <span class="at">length.out =</span> <span class="dv">11</span>),</span>
+<span id="cb20-263"><a href="#cb20-263" aria-hidden="true" tabindex="-1"></a>                    <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-264"><a href="#cb20-264" aria-hidden="true" tabindex="-1"></a>  Spred <span class="ot">&lt;-</span> <span class="fu">predict</span>(jmfit, </span>
+<span id="cb20-265"><a href="#cb20-265" aria-hidden="true" tabindex="-1"></a>                 <span class="at">newdata =</span> nid,</span>
+<span id="cb20-266"><a href="#cb20-266" aria-hidden="true" tabindex="-1"></a>                 <span class="at">times =</span> <span class="fu">seq</span>(tmin, tmax, <span class="at">length.out =</span> <span class="dv">11</span>),</span>
+<span id="cb20-267"><a href="#cb20-267" aria-hidden="true" tabindex="-1"></a>                 <span class="at">process =</span> <span class="st">"event"</span>,</span>
+<span id="cb20-268"><a href="#cb20-268" aria-hidden="true" tabindex="-1"></a>                 <span class="at">return_newdata =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-269"><a href="#cb20-269" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-270"><a href="#cb20-270" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tAUC &lt;- try(JMbayes2::tvAUC(jmfit, </span></span>
+<span id="cb20-271"><a href="#cb20-271" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         nid0, </span></span>
+<span id="cb20-272"><a href="#cb20-272" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         Tstart = tmin,</span></span>
+<span id="cb20-273"><a href="#cb20-273" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         Dt = 10))</span></span>
+<span id="cb20-274"><a href="#cb20-274" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb20-275"><a href="#cb20-275" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tROC &lt;- try(JMbayes2::tvROC(jmfit, </span></span>
+<span id="cb20-276"><a href="#cb20-276" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         nid0, </span></span>
+<span id="cb20-277"><a href="#cb20-277" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         Tstart = tmin,</span></span>
+<span id="cb20-278"><a href="#cb20-278" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                         Dt = 10))</span></span>
+<span id="cb20-279"><a href="#cb20-279" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb20-280"><a href="#cb20-280" aria-hidden="true" tabindex="-1"></a>  <span class="co"># brier &lt;- try(JMbayes2::tvBrier(jmfit, </span></span>
+<span id="cb20-281"><a href="#cb20-281" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                            nid0, </span></span>
+<span id="cb20-282"><a href="#cb20-282" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                            Tstart = tmin,</span></span>
+<span id="cb20-283"><a href="#cb20-283" aria-hidden="true" tabindex="-1"></a>  <span class="co">#                            Dt = 10))</span></span>
 <span id="cb20-284"><a href="#cb20-284" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb20-285"><a href="#cb20-285" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">Lpred =</span> Lpred,</span>
-<span id="cb20-286"><a href="#cb20-286" aria-hidden="true" tabindex="-1"></a>              <span class="at">Spred =</span> Spred,</span>
-<span id="cb20-287"><a href="#cb20-287" aria-hidden="true" tabindex="-1"></a>              <span class="at">nid0 =</span> nid0,</span>
-<span id="cb20-288"><a href="#cb20-288" aria-hidden="true" tabindex="-1"></a>              <span class="at">nid =</span> nid))</span>
-<span id="cb20-289"><a href="#cb20-289" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb20-290"><a href="#cb20-290" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-291"><a href="#cb20-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-292"><a href="#cb20-292" aria-hidden="true" tabindex="-1"></a>Some of the very steep trajectory for the risk function: <span class="in">`id5`</span>, <span class="in">`id26`</span>, <span class="in">`id56`</span>, <span class="in">`id333`</span>, <span class="in">`id342`</span>;</span>
+<span id="cb20-285"><a href="#cb20-285" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(Lpred, Spred, <span class="at">ylab_long =</span> <span class="fu">paste0</span>(<span class="st">"ID_"</span>, id_num, <span class="st">"  log(amh)"</span>))</span>
+<span id="cb20-286"><a href="#cb20-286" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-287"><a href="#cb20-287" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">Lpred =</span> Lpred,</span>
+<span id="cb20-288"><a href="#cb20-288" aria-hidden="true" tabindex="-1"></a>              <span class="at">Spred =</span> Spred,</span>
+<span id="cb20-289"><a href="#cb20-289" aria-hidden="true" tabindex="-1"></a>              <span class="at">nid0 =</span> nid0,</span>
+<span id="cb20-290"><a href="#cb20-290" aria-hidden="true" tabindex="-1"></a>              <span class="at">nid =</span> nid))</span>
+<span id="cb20-291"><a href="#cb20-291" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-292"><a href="#cb20-292" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-293"><a href="#cb20-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-296"><a href="#cb20-296" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-297"><a href="#cb20-297" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "high_risk"</span></span>
-<span id="cb20-298"><a href="#cb20-298" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "The dynamic prediction for high risk individuals"</span></span>
-<span id="cb20-299"><a href="#cb20-299" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
-<span id="cb20-300"><a href="#cb20-300" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb20-301"><a href="#cb20-301" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id5_t4"</span></span>
-<span id="cb20-302"><a href="#cb20-302" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id5_t8"</span></span>
-<span id="cb20-303"><a href="#cb20-303" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id26_t4"</span></span>
-<span id="cb20-304"><a href="#cb20-304" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id26_t8"</span></span>
-<span id="cb20-305"><a href="#cb20-305" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id333_t4"</span></span>
-<span id="cb20-306"><a href="#cb20-306" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id333_t8"</span></span>
-<span id="cb20-307"><a href="#cb20-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-308"><a href="#cb20-308" aria-hidden="true" tabindex="-1"></a>dpplot_id5 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), </span>
-<span id="cb20-309"><a href="#cb20-309" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">5</span>,</span>
-<span id="cb20-310"><a href="#cb20-310" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x, </span>
-<span id="cb20-311"><a href="#cb20-311" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
-<span id="cb20-312"><a href="#cb20-312" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
-<span id="cb20-313"><a href="#cb20-313" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-314"><a href="#cb20-314" aria-hidden="true" tabindex="-1"></a>dpplot_id26 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), </span>
-<span id="cb20-315"><a href="#cb20-315" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">26</span>,</span>
-<span id="cb20-316"><a href="#cb20-316" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x, </span>
-<span id="cb20-317"><a href="#cb20-317" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
-<span id="cb20-318"><a href="#cb20-318" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
-<span id="cb20-319"><a href="#cb20-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-320"><a href="#cb20-320" aria-hidden="true" tabindex="-1"></a>dpplot_id333 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>),</span>
-<span id="cb20-321"><a href="#cb20-321" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">333</span>,</span>
-<span id="cb20-322"><a href="#cb20-322" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x,</span>
-<span id="cb20-323"><a href="#cb20-323" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>,</span>
-<span id="cb20-324"><a href="#cb20-324" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
-<span id="cb20-325"><a href="#cb20-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-326"><a href="#cb20-326" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(Lpred1)</span></span>
-<span id="cb20-327"><a href="#cb20-327" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb20-328"><a href="#cb20-328" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(Lpred2)</span></span>
+<span id="cb20-294"><a href="#cb20-294" aria-hidden="true" tabindex="-1"></a>Some of the very steep trajectory for the risk function: <span class="in">`id5`</span>, <span class="in">`id26`</span>, <span class="in">`id56`</span>, <span class="in">`id333`</span>, <span class="in">`id342`</span>;</span>
+<span id="cb20-295"><a href="#cb20-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-298"><a href="#cb20-298" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-299"><a href="#cb20-299" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "high_risk"</span></span>
+<span id="cb20-300"><a href="#cb20-300" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "The dynamic prediction for high risk individuals"</span></span>
+<span id="cb20-301"><a href="#cb20-301" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb20-302"><a href="#cb20-302" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb20-303"><a href="#cb20-303" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id5_t4"</span></span>
+<span id="cb20-304"><a href="#cb20-304" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id5_t8"</span></span>
+<span id="cb20-305"><a href="#cb20-305" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id26_t4"</span></span>
+<span id="cb20-306"><a href="#cb20-306" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id26_t8"</span></span>
+<span id="cb20-307"><a href="#cb20-307" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id333_t4"</span></span>
+<span id="cb20-308"><a href="#cb20-308" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id333_t8"</span></span>
+<span id="cb20-309"><a href="#cb20-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-310"><a href="#cb20-310" aria-hidden="true" tabindex="-1"></a>dpplot_id5 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), </span>
+<span id="cb20-311"><a href="#cb20-311" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">5</span>,</span>
+<span id="cb20-312"><a href="#cb20-312" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x, </span>
+<span id="cb20-313"><a href="#cb20-313" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
+<span id="cb20-314"><a href="#cb20-314" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
+<span id="cb20-315"><a href="#cb20-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-316"><a href="#cb20-316" aria-hidden="true" tabindex="-1"></a>dpplot_id26 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), </span>
+<span id="cb20-317"><a href="#cb20-317" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">26</span>,</span>
+<span id="cb20-318"><a href="#cb20-318" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x, </span>
+<span id="cb20-319"><a href="#cb20-319" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
+<span id="cb20-320"><a href="#cb20-320" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
+<span id="cb20-321"><a href="#cb20-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-322"><a href="#cb20-322" aria-hidden="true" tabindex="-1"></a>dpplot_id333 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>),</span>
+<span id="cb20-323"><a href="#cb20-323" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">333</span>,</span>
+<span id="cb20-324"><a href="#cb20-324" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x,</span>
+<span id="cb20-325"><a href="#cb20-325" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>,</span>
+<span id="cb20-326"><a href="#cb20-326" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
+<span id="cb20-327"><a href="#cb20-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-328"><a href="#cb20-328" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(Lpred1)</span></span>
 <span id="cb20-329"><a href="#cb20-329" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb20-330"><a href="#cb20-330" aria-hidden="true" tabindex="-1"></a><span class="co"># # prediction for the event outcome</span></span>
-<span id="cb20-331"><a href="#cb20-331" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(Spred)</span></span>
-<span id="cb20-332"><a href="#cb20-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-333"><a href="#cb20-333" aria-hidden="true" tabindex="-1"></a><span class="co"># combined into one plot, </span></span>
-<span id="cb20-334"><a href="#cb20-334" aria-hidden="true" tabindex="-1"></a><span class="co"># the first longitudinal outcome and cumulative risk</span></span>
-<span id="cb20-335"><a href="#cb20-335" aria-hidden="true" tabindex="-1"></a><span class="co"># the first two longitudinal outcomes</span></span>
-<span id="cb20-336"><a href="#cb20-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-337"><a href="#cb20-337" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-330"><a href="#cb20-330" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(Lpred2)</span></span>
+<span id="cb20-331"><a href="#cb20-331" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb20-332"><a href="#cb20-332" aria-hidden="true" tabindex="-1"></a><span class="co"># # prediction for the event outcome</span></span>
+<span id="cb20-333"><a href="#cb20-333" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(Spred)</span></span>
+<span id="cb20-334"><a href="#cb20-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-335"><a href="#cb20-335" aria-hidden="true" tabindex="-1"></a><span class="co"># combined into one plot, </span></span>
+<span id="cb20-336"><a href="#cb20-336" aria-hidden="true" tabindex="-1"></a><span class="co"># the first longitudinal outcome and cumulative risk</span></span>
+<span id="cb20-337"><a href="#cb20-337" aria-hidden="true" tabindex="-1"></a><span class="co"># the first two longitudinal outcomes</span></span>
 <span id="cb20-338"><a href="#cb20-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-339"><a href="#cb20-339" aria-hidden="true" tabindex="-1"></a>Some of the smooth trajectory for the risk function: <span class="in">`id32`</span>, <span class="in">`id57`</span>, <span class="in">`id89`</span>, <span class="in">`id222`</span>,<span class="in">`id44`</span>, <span class="in">`id371`</span>;</span>
+<span id="cb20-339"><a href="#cb20-339" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-340"><a href="#cb20-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-343"><a href="#cb20-343" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-344"><a href="#cb20-344" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "low_risk"</span></span>
-<span id="cb20-345"><a href="#cb20-345" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "The dynamic prediction for low risk individuals"</span></span>
-<span id="cb20-346"><a href="#cb20-346" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
-<span id="cb20-347"><a href="#cb20-347" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb20-348"><a href="#cb20-348" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id32_t4"</span></span>
-<span id="cb20-349"><a href="#cb20-349" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id32_t8"</span></span>
-<span id="cb20-350"><a href="#cb20-350" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id371_t4"</span></span>
-<span id="cb20-351"><a href="#cb20-351" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id371_t8"</span></span>
-<span id="cb20-352"><a href="#cb20-352" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id44_t4"</span></span>
-<span id="cb20-353"><a href="#cb20-353" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id44_t8"</span></span>
-<span id="cb20-354"><a href="#cb20-354" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-355"><a href="#cb20-355" aria-hidden="true" tabindex="-1"></a>dpplot_id32 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), </span>
-<span id="cb20-356"><a href="#cb20-356" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">57</span>,</span>
-<span id="cb20-357"><a href="#cb20-357" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x, </span>
-<span id="cb20-358"><a href="#cb20-358" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
-<span id="cb20-359"><a href="#cb20-359" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
-<span id="cb20-360"><a href="#cb20-360" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-361"><a href="#cb20-361" aria-hidden="true" tabindex="-1"></a>dpplot_id371 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), </span>
-<span id="cb20-362"><a href="#cb20-362" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">371</span>,</span>
-<span id="cb20-363"><a href="#cb20-363" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x, </span>
-<span id="cb20-364"><a href="#cb20-364" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
-<span id="cb20-365"><a href="#cb20-365" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
-<span id="cb20-366"><a href="#cb20-366" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-367"><a href="#cb20-367" aria-hidden="true" tabindex="-1"></a>dpplot_id44 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>),</span>
-<span id="cb20-368"><a href="#cb20-368" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">44</span>,</span>
-<span id="cb20-369"><a href="#cb20-369" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x,</span>
-<span id="cb20-370"><a href="#cb20-370" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>,</span>
-<span id="cb20-371"><a href="#cb20-371" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
-<span id="cb20-372"><a href="#cb20-372" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-373"><a href="#cb20-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-374"><a href="#cb20-374" aria-hidden="true" tabindex="-1"></a><span class="fu">### Predictive accuracy measures</span></span>
+<span id="cb20-341"><a href="#cb20-341" aria-hidden="true" tabindex="-1"></a>Some of the smooth trajectory for the risk function: <span class="in">`id32`</span>, <span class="in">`id57`</span>, <span class="in">`id89`</span>, <span class="in">`id222`</span>,<span class="in">`id44`</span>, <span class="in">`id371`</span>;</span>
+<span id="cb20-342"><a href="#cb20-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-345"><a href="#cb20-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-346"><a href="#cb20-346" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "low_risk"</span></span>
+<span id="cb20-347"><a href="#cb20-347" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "The dynamic prediction for low risk individuals"</span></span>
+<span id="cb20-348"><a href="#cb20-348" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb20-349"><a href="#cb20-349" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb20-350"><a href="#cb20-350" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id32_t4"</span></span>
+<span id="cb20-351"><a href="#cb20-351" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id32_t8"</span></span>
+<span id="cb20-352"><a href="#cb20-352" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id371_t4"</span></span>
+<span id="cb20-353"><a href="#cb20-353" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id371_t8"</span></span>
+<span id="cb20-354"><a href="#cb20-354" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id44_t4"</span></span>
+<span id="cb20-355"><a href="#cb20-355" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "id44_t8"</span></span>
+<span id="cb20-356"><a href="#cb20-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-357"><a href="#cb20-357" aria-hidden="true" tabindex="-1"></a>dpplot_id32 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), </span>
+<span id="cb20-358"><a href="#cb20-358" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">57</span>,</span>
+<span id="cb20-359"><a href="#cb20-359" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x, </span>
+<span id="cb20-360"><a href="#cb20-360" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
+<span id="cb20-361"><a href="#cb20-361" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
+<span id="cb20-362"><a href="#cb20-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-363"><a href="#cb20-363" aria-hidden="true" tabindex="-1"></a>dpplot_id371 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), </span>
+<span id="cb20-364"><a href="#cb20-364" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">371</span>,</span>
+<span id="cb20-365"><a href="#cb20-365" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x, </span>
+<span id="cb20-366"><a href="#cb20-366" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
+<span id="cb20-367"><a href="#cb20-367" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
+<span id="cb20-368"><a href="#cb20-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-369"><a href="#cb20-369" aria-hidden="true" tabindex="-1"></a>dpplot_id44 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">8</span>),</span>
+<span id="cb20-370"><a href="#cb20-370" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">dpplot</span>(<span class="at">id_num =</span> <span class="dv">44</span>,</span>
+<span id="cb20-371"><a href="#cb20-371" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> .x,</span>
+<span id="cb20-372"><a href="#cb20-372" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>,</span>
+<span id="cb20-373"><a href="#cb20-373" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116))</span>
+<span id="cb20-374"><a href="#cb20-374" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-375"><a href="#cb20-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-376"><a href="#cb20-376" aria-hidden="true" tabindex="-1"></a>The materials are directly from **Dimitris Rizopoulos &amp; Grigorios Papageorg** (details seen JMwithR notes 6.3)</span>
+<span id="cb20-376"><a href="#cb20-376" aria-hidden="true" tabindex="-1"></a><span class="fu">### Predictive accuracy measures</span></span>
 <span id="cb20-377"><a href="#cb20-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-378"><a href="#cb20-378" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Discrimination: sensitivity, specificity, ROC and AUC</span>
-<span id="cb20-379"><a href="#cb20-379" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Calibration: comparison between predicted and observed probabilities</span>
-<span id="cb20-380"><a href="#cb20-380" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Overall: combination of discrimination and calibration</span>
-<span id="cb20-381"><a href="#cb20-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-382"><a href="#cb20-382" aria-hidden="true" tabindex="-1"></a>Sidenotes: we do not have right censor (possessively considering the left censor)</span>
+<span id="cb20-378"><a href="#cb20-378" aria-hidden="true" tabindex="-1"></a>The materials are directly from **Dimitris Rizopoulos &amp; Grigorios Papageorg** (details seen JMwithR notes 6.3)</span>
+<span id="cb20-379"><a href="#cb20-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-380"><a href="#cb20-380" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Discrimination: sensitivity, specificity, ROC and AUC</span>
+<span id="cb20-381"><a href="#cb20-381" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Calibration: comparison between predicted and observed probabilities</span>
+<span id="cb20-382"><a href="#cb20-382" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Overall: combination of discrimination and calibration</span>
 <span id="cb20-383"><a href="#cb20-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-384"><a href="#cb20-384" aria-hidden="true" tabindex="-1"></a>To estimate the sensitivity, specificity and the AUC, we need to account for censoring. Two main approaches:</span>
+<span id="cb20-384"><a href="#cb20-384" aria-hidden="true" tabindex="-1"></a>Sidenotes: we do not have right censor (possessively considering the left censor)</span>
 <span id="cb20-385"><a href="#cb20-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-386"><a href="#cb20-386" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>model-based weights</span>
+<span id="cb20-386"><a href="#cb20-386" aria-hidden="true" tabindex="-1"></a>To estimate the sensitivity, specificity and the AUC, we need to account for censoring. Two main approaches:</span>
 <span id="cb20-387"><a href="#cb20-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-388"><a href="#cb20-388" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Advantage: it allows censoring to depend on the longitudinal history (in any possible manner)</span>
-<span id="cb20-389"><a href="#cb20-389" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Disadvantage: it requires that the model is well calibrated</span>
-<span id="cb20-390"><a href="#cb20-390" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-391"><a href="#cb20-391" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>inverse probability of censoring weighting (IPCW) (using Kaplan-Meier or other non-parametric estimators)</span>
+<span id="cb20-388"><a href="#cb20-388" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>model-based weights</span>
+<span id="cb20-389"><a href="#cb20-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-390"><a href="#cb20-390" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Advantage: it allows censoring to depend on the longitudinal history (in any possible manner)</span>
+<span id="cb20-391"><a href="#cb20-391" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Disadvantage: it requires that the model is well calibrated</span>
 <span id="cb20-392"><a href="#cb20-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-393"><a href="#cb20-393" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Advantage: it provides unbiased estimates even when the model is misspecified</span>
-<span id="cb20-394"><a href="#cb20-394" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Disadvantage: it requires that the model for the weights is correct</span>
-<span id="cb20-395"><a href="#cb20-395" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**in settings where joint models are used, challenging because censoring may depend on the longitudinal outcomes in a complex manner**</span>
-<span id="cb20-396"><a href="#cb20-396" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-397"><a href="#cb20-397" aria-hidden="true" tabindex="-1"></a><span class="fu">### AUC</span></span>
+<span id="cb20-393"><a href="#cb20-393" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>inverse probability of censoring weighting (IPCW) (using Kaplan-Meier or other non-parametric estimators)</span>
+<span id="cb20-394"><a href="#cb20-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-395"><a href="#cb20-395" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Advantage: it provides unbiased estimates even when the model is misspecified</span>
+<span id="cb20-396"><a href="#cb20-396" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>Disadvantage: it requires that the model for the weights is correct</span>
+<span id="cb20-397"><a href="#cb20-397" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**in settings where joint models are used, challenging because censoring may depend on the longitudinal outcomes in a complex manner**</span>
 <span id="cb20-398"><a href="#cb20-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-399"><a href="#cb20-399" aria-hidden="true" tabindex="-1"></a>For <span class="in">`JMbayes2`</span>, the function <span class="in">`tvAUC()`</span> is used to estimate the time-dependent AUC only for all the subjects (there is no function for individual AUC).</span>
+<span id="cb20-399"><a href="#cb20-399" aria-hidden="true" tabindex="-1"></a><span class="fu">### AUC</span></span>
 <span id="cb20-400"><a href="#cb20-400" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-403"><a href="#cb20-403" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-404"><a href="#cb20-404" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_summary"</span></span>
-<span id="cb20-405"><a href="#cb20-405" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-406"><a href="#cb20-406" aria-hidden="true" tabindex="-1"></a>AUC2  <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmbayes2.fit116,</span>
-<span id="cb20-407"><a href="#cb20-407" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
-<span id="cb20-408"><a href="#cb20-408" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-409"><a href="#cb20-409" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">1</span>))</span>
-<span id="cb20-410"><a href="#cb20-410" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-411"><a href="#cb20-411" aria-hidden="true" tabindex="-1"></a>AUC4  <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmbayes2.fit116,</span>
-<span id="cb20-412"><a href="#cb20-412" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
-<span id="cb20-413"><a href="#cb20-413" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-414"><a href="#cb20-414" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">2</span>))</span>
-<span id="cb20-415"><a href="#cb20-415" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-416"><a href="#cb20-416" aria-hidden="true" tabindex="-1"></a>AUC6  <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmbayes2.fit116,</span>
-<span id="cb20-417"><a href="#cb20-417" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
-<span id="cb20-418"><a href="#cb20-418" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-419"><a href="#cb20-419" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">3</span>))</span>
-<span id="cb20-420"><a href="#cb20-420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-421"><a href="#cb20-421" aria-hidden="true" tabindex="-1"></a>AUC8  <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmbayes2.fit116,</span>
-<span id="cb20-422"><a href="#cb20-422" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
-<span id="cb20-423"><a href="#cb20-423" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-424"><a href="#cb20-424" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">4</span>))</span>
-<span id="cb20-425"><a href="#cb20-425" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-426"><a href="#cb20-426" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-427"><a href="#cb20-427" aria-hidden="true" tabindex="-1"></a>Here is the table for the AUC result, using the same joint model for the dynamic prediction. Each AUC for a different time point and time window as 2.</span>
+<span id="cb20-401"><a href="#cb20-401" aria-hidden="true" tabindex="-1"></a>For <span class="in">`JMbayes2`</span>, the function <span class="in">`tvAUC()`</span> is used to estimate the time-dependent AUC only for all the subjects (there is no function for individual AUC).</span>
+<span id="cb20-402"><a href="#cb20-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-405"><a href="#cb20-405" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-406"><a href="#cb20-406" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_summary"</span></span>
+<span id="cb20-407"><a href="#cb20-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-408"><a href="#cb20-408" aria-hidden="true" tabindex="-1"></a>AUC2  <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmbayes2.fit116,</span>
+<span id="cb20-409"><a href="#cb20-409" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
+<span id="cb20-410"><a href="#cb20-410" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-411"><a href="#cb20-411" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">1</span>))</span>
+<span id="cb20-412"><a href="#cb20-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-413"><a href="#cb20-413" aria-hidden="true" tabindex="-1"></a>AUC4  <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmbayes2.fit116,</span>
+<span id="cb20-414"><a href="#cb20-414" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
+<span id="cb20-415"><a href="#cb20-415" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-416"><a href="#cb20-416" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">2</span>))</span>
+<span id="cb20-417"><a href="#cb20-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-418"><a href="#cb20-418" aria-hidden="true" tabindex="-1"></a>AUC6  <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmbayes2.fit116,</span>
+<span id="cb20-419"><a href="#cb20-419" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
+<span id="cb20-420"><a href="#cb20-420" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-421"><a href="#cb20-421" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">3</span>))</span>
+<span id="cb20-422"><a href="#cb20-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-423"><a href="#cb20-423" aria-hidden="true" tabindex="-1"></a>AUC8  <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmbayes2.fit116,</span>
+<span id="cb20-424"><a href="#cb20-424" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
+<span id="cb20-425"><a href="#cb20-425" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-426"><a href="#cb20-426" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">4</span>))</span>
+<span id="cb20-427"><a href="#cb20-427" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-428"><a href="#cb20-428" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-429"><a href="#cb20-429" aria-hidden="true" tabindex="-1"></a>The AUC score are calculated for the time points 2, 4, 6, and 8. It seems the best AUC score is at time 4, and the AUC score decreases as the time window increases. Based on the plots for individuals, some of the plot are missing, because there is no longitudinal data before the <span class="in">`Tstart`</span>.</span>
+<span id="cb20-429"><a href="#cb20-429" aria-hidden="true" tabindex="-1"></a>Here is the table for the AUC result, using the same joint model for the dynamic prediction. Each AUC for a different time point and time window as 2.</span>
 <span id="cb20-430"><a href="#cb20-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-431"><a href="#cb20-431" aria-hidden="true" tabindex="-1"></a><span class="in">```{r output.class = "scroll-100"}</span></span>
-<span id="cb20-432"><a href="#cb20-432" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_result"</span></span>
-<span id="cb20-433"><a href="#cb20-433" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-434"><a href="#cb20-434" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">Tstart =</span> <span class="fu">map</span>(<span class="fu">list</span>(AUC2, AUC4, AUC6, AUC8), <span class="st">"Tstart"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>(),</span>
-<span id="cb20-435"><a href="#cb20-435" aria-hidden="true" tabindex="-1"></a>      <span class="at">Tend =</span> <span class="fu">map</span>(<span class="fu">list</span>(AUC2, AUC4, AUC6, AUC8), <span class="st">"Thoriz"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">0</span>),</span>
-<span id="cb20-436"><a href="#cb20-436" aria-hidden="true" tabindex="-1"></a>      <span class="at">AUC =</span> <span class="fu">map</span>(<span class="fu">list</span>(AUC2, AUC4, AUC6, AUC8), <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-437"><a href="#cb20-437" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
-<span id="cb20-438"><a href="#cb20-438" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-439"><a href="#cb20-439" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-440"><a href="#cb20-440" aria-hidden="true" tabindex="-1"></a><span class="fu">### ROC</span></span>
+<span id="cb20-431"><a href="#cb20-431" aria-hidden="true" tabindex="-1"></a>The AUC score are calculated for the time points 2, 4, 6, and 8. It seems the best AUC score is at time 4, and the AUC score decreases as the time window increases. Based on the plots for individuals, some of the plot are missing, because there is no longitudinal data before the <span class="in">`Tstart`</span>.</span>
+<span id="cb20-432"><a href="#cb20-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-433"><a href="#cb20-433" aria-hidden="true" tabindex="-1"></a><span class="in">```{r output.class = "scroll-100"}</span></span>
+<span id="cb20-434"><a href="#cb20-434" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_result"</span></span>
+<span id="cb20-435"><a href="#cb20-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-436"><a href="#cb20-436" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">Tstart =</span> <span class="fu">map</span>(<span class="fu">list</span>(AUC2, AUC4, AUC6, AUC8), <span class="st">"Tstart"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>(),</span>
+<span id="cb20-437"><a href="#cb20-437" aria-hidden="true" tabindex="-1"></a>      <span class="at">Tend =</span> <span class="fu">map</span>(<span class="fu">list</span>(AUC2, AUC4, AUC6, AUC8), <span class="st">"Thoriz"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">0</span>),</span>
+<span id="cb20-438"><a href="#cb20-438" aria-hidden="true" tabindex="-1"></a>      <span class="at">AUC =</span> <span class="fu">map</span>(<span class="fu">list</span>(AUC2, AUC4, AUC6, AUC8), <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-439"><a href="#cb20-439" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb20-440"><a href="#cb20-440" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-441"><a href="#cb20-441" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-442"><a href="#cb20-442" aria-hidden="true" tabindex="-1"></a>ROC can be calculated based on both individual or all subjects. Here are the results for the ROC for all subject predictions.</span>
+<span id="cb20-442"><a href="#cb20-442" aria-hidden="true" tabindex="-1"></a><span class="fu">### ROC</span></span>
 <span id="cb20-443"><a href="#cb20-443" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-444"><a href="#cb20-444" aria-hidden="true" tabindex="-1"></a>The ROC results is consistent with the AUC results, the best ROC is at time 4, and the ROC score decreases as the <span class="in">`Tstart`</span> increases.</span>
+<span id="cb20-444"><a href="#cb20-444" aria-hidden="true" tabindex="-1"></a>ROC can be calculated based on both individual or all subjects. Here are the results for the ROC for all subject predictions.</span>
 <span id="cb20-445"><a href="#cb20-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-448"><a href="#cb20-448" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-449"><a href="#cb20-449" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "roc_summary"</span></span>
-<span id="cb20-450"><a href="#cb20-450" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-451"><a href="#cb20-451" aria-hidden="true" tabindex="-1"></a>ROC2 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvROC</span>(jmbayes2.fit116,</span>
-<span id="cb20-452"><a href="#cb20-452" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
-<span id="cb20-453"><a href="#cb20-453" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-454"><a href="#cb20-454" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">2</span>))</span>
-<span id="cb20-455"><a href="#cb20-455" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-456"><a href="#cb20-456" aria-hidden="true" tabindex="-1"></a>ROC4 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvROC</span>(jmbayes2.fit116,</span>
-<span id="cb20-457"><a href="#cb20-457" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
-<span id="cb20-458"><a href="#cb20-458" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-459"><a href="#cb20-459" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">3</span>))</span>
-<span id="cb20-460"><a href="#cb20-460" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-461"><a href="#cb20-461" aria-hidden="true" tabindex="-1"></a>ROC6 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvROC</span>(jmbayes2.fit116,</span>
-<span id="cb20-462"><a href="#cb20-462" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
-<span id="cb20-463"><a href="#cb20-463" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-464"><a href="#cb20-464" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">4</span>))</span>
-<span id="cb20-465"><a href="#cb20-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-466"><a href="#cb20-466" aria-hidden="true" tabindex="-1"></a>ROC8 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvROC</span>(jmbayes2.fit116,</span>
-<span id="cb20-467"><a href="#cb20-467" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
-<span id="cb20-468"><a href="#cb20-468" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-469"><a href="#cb20-469" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">5</span>))</span>
-<span id="cb20-470"><a href="#cb20-470" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-471"><a href="#cb20-471" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ROC2, <span class="at">ylab =</span> <span class="st">"Tstart_2 Sensitivity"</span>)</span>
-<span id="cb20-472"><a href="#cb20-472" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ROC4, <span class="at">ylab =</span> <span class="st">"Tstart_4 Sensitivity"</span>)</span>
-<span id="cb20-473"><a href="#cb20-473" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ROC6, <span class="at">ylab =</span> <span class="st">"Tstart_6 Sensitivity"</span>)</span>
-<span id="cb20-474"><a href="#cb20-474" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ROC8, <span class="at">ylab =</span> <span class="st">"Tstart_8 Sensitivity"</span>)</span>
-<span id="cb20-475"><a href="#cb20-475" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-476"><a href="#cb20-476" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-477"><a href="#cb20-477" aria-hidden="true" tabindex="-1"></a><span class="fu">## Brier Score</span></span>
+<span id="cb20-446"><a href="#cb20-446" aria-hidden="true" tabindex="-1"></a>The ROC results is consistent with the AUC results, the best ROC is at time 4, and the ROC score decreases as the <span class="in">`Tstart`</span> increases.</span>
+<span id="cb20-447"><a href="#cb20-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-450"><a href="#cb20-450" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-451"><a href="#cb20-451" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "roc_summary"</span></span>
+<span id="cb20-452"><a href="#cb20-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-453"><a href="#cb20-453" aria-hidden="true" tabindex="-1"></a>ROC2 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvROC</span>(jmbayes2.fit116,</span>
+<span id="cb20-454"><a href="#cb20-454" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
+<span id="cb20-455"><a href="#cb20-455" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-456"><a href="#cb20-456" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">2</span>))</span>
+<span id="cb20-457"><a href="#cb20-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-458"><a href="#cb20-458" aria-hidden="true" tabindex="-1"></a>ROC4 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvROC</span>(jmbayes2.fit116,</span>
+<span id="cb20-459"><a href="#cb20-459" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
+<span id="cb20-460"><a href="#cb20-460" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-461"><a href="#cb20-461" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">3</span>))</span>
+<span id="cb20-462"><a href="#cb20-462" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-463"><a href="#cb20-463" aria-hidden="true" tabindex="-1"></a>ROC6 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvROC</span>(jmbayes2.fit116,</span>
+<span id="cb20-464"><a href="#cb20-464" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
+<span id="cb20-465"><a href="#cb20-465" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-466"><a href="#cb20-466" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">4</span>))</span>
+<span id="cb20-467"><a href="#cb20-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-468"><a href="#cb20-468" aria-hidden="true" tabindex="-1"></a>ROC8 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvROC</span>(jmbayes2.fit116,</span>
+<span id="cb20-469"><a href="#cb20-469" aria-hidden="true" tabindex="-1"></a>                          swan_amh02,</span>
+<span id="cb20-470"><a href="#cb20-470" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-471"><a href="#cb20-471" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">5</span>))</span>
+<span id="cb20-472"><a href="#cb20-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-473"><a href="#cb20-473" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ROC2, <span class="at">ylab =</span> <span class="st">"Tstart_2 Sensitivity"</span>)</span>
+<span id="cb20-474"><a href="#cb20-474" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ROC4, <span class="at">ylab =</span> <span class="st">"Tstart_4 Sensitivity"</span>)</span>
+<span id="cb20-475"><a href="#cb20-475" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ROC6, <span class="at">ylab =</span> <span class="st">"Tstart_6 Sensitivity"</span>)</span>
+<span id="cb20-476"><a href="#cb20-476" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ROC8, <span class="at">ylab =</span> <span class="st">"Tstart_8 Sensitivity"</span>)</span>
+<span id="cb20-477"><a href="#cb20-477" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb20-478"><a href="#cb20-478" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-481"><a href="#cb20-481" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-482"><a href="#cb20-482" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_summary"</span></span>
-<span id="cb20-483"><a href="#cb20-483" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-484"><a href="#cb20-484" aria-hidden="true" tabindex="-1"></a>BS2 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmbayes2.fit116,</span>
-<span id="cb20-485"><a href="#cb20-485" aria-hidden="true" tabindex="-1"></a>                          <span class="at">newdata =</span> swan_amh02,</span>
-<span id="cb20-486"><a href="#cb20-486" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-487"><a href="#cb20-487" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">2</span>))</span>
-<span id="cb20-488"><a href="#cb20-488" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-489"><a href="#cb20-489" aria-hidden="true" tabindex="-1"></a>BS4 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmbayes2.fit116,</span>
-<span id="cb20-490"><a href="#cb20-490" aria-hidden="true" tabindex="-1"></a>                          <span class="at">newdata =</span> swan_amh02,</span>
-<span id="cb20-491"><a href="#cb20-491" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-492"><a href="#cb20-492" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">3</span>))</span>
-<span id="cb20-493"><a href="#cb20-493" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-494"><a href="#cb20-494" aria-hidden="true" tabindex="-1"></a>BS6 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmbayes2.fit116,</span>
-<span id="cb20-495"><a href="#cb20-495" aria-hidden="true" tabindex="-1"></a>                          <span class="at">newdata =</span> swan_amh02,</span>
-<span id="cb20-496"><a href="#cb20-496" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-497"><a href="#cb20-497" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">4</span>))</span>
-<span id="cb20-498"><a href="#cb20-498" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-499"><a href="#cb20-499" aria-hidden="true" tabindex="-1"></a>BS8 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmbayes2.fit116,</span>
-<span id="cb20-500"><a href="#cb20-500" aria-hidden="true" tabindex="-1"></a>                          <span class="at">newdata =</span> swan_amh02,</span>
-<span id="cb20-501"><a href="#cb20-501" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb20-502"><a href="#cb20-502" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">5</span>))</span>
-<span id="cb20-503"><a href="#cb20-503" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-504"><a href="#cb20-504" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-505"><a href="#cb20-505" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-479"><a href="#cb20-479" aria-hidden="true" tabindex="-1"></a><span class="fu">## Brier Score</span></span>
+<span id="cb20-480"><a href="#cb20-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-483"><a href="#cb20-483" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-484"><a href="#cb20-484" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_summary"</span></span>
+<span id="cb20-485"><a href="#cb20-485" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-486"><a href="#cb20-486" aria-hidden="true" tabindex="-1"></a>BS2 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmbayes2.fit116,</span>
+<span id="cb20-487"><a href="#cb20-487" aria-hidden="true" tabindex="-1"></a>                          <span class="at">newdata =</span> swan_amh02,</span>
+<span id="cb20-488"><a href="#cb20-488" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-489"><a href="#cb20-489" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">2</span>))</span>
+<span id="cb20-490"><a href="#cb20-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-491"><a href="#cb20-491" aria-hidden="true" tabindex="-1"></a>BS4 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmbayes2.fit116,</span>
+<span id="cb20-492"><a href="#cb20-492" aria-hidden="true" tabindex="-1"></a>                          <span class="at">newdata =</span> swan_amh02,</span>
+<span id="cb20-493"><a href="#cb20-493" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-494"><a href="#cb20-494" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">3</span>))</span>
+<span id="cb20-495"><a href="#cb20-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-496"><a href="#cb20-496" aria-hidden="true" tabindex="-1"></a>BS6 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmbayes2.fit116,</span>
+<span id="cb20-497"><a href="#cb20-497" aria-hidden="true" tabindex="-1"></a>                          <span class="at">newdata =</span> swan_amh02,</span>
+<span id="cb20-498"><a href="#cb20-498" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-499"><a href="#cb20-499" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">4</span>))</span>
+<span id="cb20-500"><a href="#cb20-500" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-501"><a href="#cb20-501" aria-hidden="true" tabindex="-1"></a>BS8 <span class="ot">&lt;-</span> <span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmbayes2.fit116,</span>
+<span id="cb20-502"><a href="#cb20-502" aria-hidden="true" tabindex="-1"></a>                          <span class="at">newdata =</span> swan_amh02,</span>
+<span id="cb20-503"><a href="#cb20-503" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb20-504"><a href="#cb20-504" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dt =</span> <span class="dv">5</span>))</span>
+<span id="cb20-505"><a href="#cb20-505" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-506"><a href="#cb20-506" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-507"><a href="#cb20-507" aria-hidden="true" tabindex="-1"></a><span class="in">```{r output.class = "scroll-100"}</span></span>
-<span id="cb20-508"><a href="#cb20-508" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_result"</span></span>
-<span id="cb20-509"><a href="#cb20-509" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-510"><a href="#cb20-510" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">Tstart =</span> <span class="fu">map</span>(<span class="fu">list</span>(BS2, BS4, BS6, BS8),</span>
-<span id="cb20-511"><a href="#cb20-511" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"Tstart"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">0</span>),</span>
-<span id="cb20-512"><a href="#cb20-512" aria-hidden="true" tabindex="-1"></a>      <span class="at">Tend =</span> <span class="fu">map</span>(<span class="fu">list</span>(BS2, BS4, BS6, BS8), </span>
-<span id="cb20-513"><a href="#cb20-513" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Thoriz"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">0</span>),</span>
-<span id="cb20-514"><a href="#cb20-514" aria-hidden="true" tabindex="-1"></a>      <span class="at">BS =</span> <span class="fu">map</span>(<span class="fu">list</span>(BS2, BS4, BS6, BS8), </span>
-<span id="cb20-515"><a href="#cb20-515" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-516"><a href="#cb20-516" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
-<span id="cb20-517"><a href="#cb20-517" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb20-518"><a href="#cb20-518" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-521"><a href="#cb20-521" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb20-522"><a href="#cb20-522" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "pdf"</span></span>
-<span id="cb20-523"><a href="#cb20-523" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb20-524"><a href="#cb20-524" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb20-525"><a href="#cb20-525" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-526"><a href="#cb20-526" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"swan_amh_dynamic_prediction_tmin4_20240408.pdf"</span>)</span>
-<span id="cb20-527"><a href="#cb20-527" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb20-528"><a href="#cb20-528" aria-hidden="true" tabindex="-1"></a>dpplot_t4 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">600</span>, </span>
-<span id="cb20-529"><a href="#cb20-529" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">try</span>(<span class="fu">dpplot</span>(<span class="at">id_num =</span> .x,</span>
-<span id="cb20-530"><a href="#cb20-530" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> <span class="dv">4</span>, </span>
-<span id="cb20-531"><a href="#cb20-531" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
-<span id="cb20-532"><a href="#cb20-532" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116)))</span>
-<span id="cb20-533"><a href="#cb20-533" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
-<span id="cb20-534"><a href="#cb20-534" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-535"><a href="#cb20-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-507"><a href="#cb20-507" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-508"><a href="#cb20-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-509"><a href="#cb20-509" aria-hidden="true" tabindex="-1"></a><span class="in">```{r output.class = "scroll-100"}</span></span>
+<span id="cb20-510"><a href="#cb20-510" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_result"</span></span>
+<span id="cb20-511"><a href="#cb20-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-512"><a href="#cb20-512" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">Tstart =</span> <span class="fu">map</span>(<span class="fu">list</span>(BS2, BS4, BS6, BS8),</span>
+<span id="cb20-513"><a href="#cb20-513" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"Tstart"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">0</span>),</span>
+<span id="cb20-514"><a href="#cb20-514" aria-hidden="true" tabindex="-1"></a>      <span class="at">Tend =</span> <span class="fu">map</span>(<span class="fu">list</span>(BS2, BS4, BS6, BS8), </span>
+<span id="cb20-515"><a href="#cb20-515" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Thoriz"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">0</span>),</span>
+<span id="cb20-516"><a href="#cb20-516" aria-hidden="true" tabindex="-1"></a>      <span class="at">BS =</span> <span class="fu">map</span>(<span class="fu">list</span>(BS2, BS4, BS6, BS8), </span>
+<span id="cb20-517"><a href="#cb20-517" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-518"><a href="#cb20-518" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb20-519"><a href="#cb20-519" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-520"><a href="#cb20-520" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-523"><a href="#cb20-523" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb20-524"><a href="#cb20-524" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "pdf"</span></span>
+<span id="cb20-525"><a href="#cb20-525" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb20-526"><a href="#cb20-526" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb20-527"><a href="#cb20-527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-528"><a href="#cb20-528" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"swan_amh_dynamic_prediction_tmin4_20240408.pdf"</span>)</span>
+<span id="cb20-529"><a href="#cb20-529" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb20-530"><a href="#cb20-530" aria-hidden="true" tabindex="-1"></a>dpplot_t4 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">600</span>, </span>
+<span id="cb20-531"><a href="#cb20-531" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">try</span>(<span class="fu">dpplot</span>(<span class="at">id_num =</span> .x,</span>
+<span id="cb20-532"><a href="#cb20-532" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> <span class="dv">4</span>, </span>
+<span id="cb20-533"><a href="#cb20-533" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
+<span id="cb20-534"><a href="#cb20-534" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116)))</span>
+<span id="cb20-535"><a href="#cb20-535" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
 <span id="cb20-536"><a href="#cb20-536" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-537"><a href="#cb20-537" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"swan_amh_dynamic_prediction_tmin8_20240408.pdf"</span>)</span>
-<span id="cb20-538"><a href="#cb20-538" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
-<span id="cb20-539"><a href="#cb20-539" aria-hidden="true" tabindex="-1"></a>dpplot_t8 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">600</span>, </span>
-<span id="cb20-540"><a href="#cb20-540" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">try</span>(<span class="fu">dpplot</span>(<span class="at">id_num =</span> .x,</span>
-<span id="cb20-541"><a href="#cb20-541" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> <span class="dv">8</span>, </span>
-<span id="cb20-542"><a href="#cb20-542" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
-<span id="cb20-543"><a href="#cb20-543" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116)))</span>
-<span id="cb20-544"><a href="#cb20-544" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
-<span id="cb20-545"><a href="#cb20-545" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-537"><a href="#cb20-537" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-538"><a href="#cb20-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-539"><a href="#cb20-539" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"swan_amh_dynamic_prediction_tmin8_20240408.pdf"</span>)</span>
+<span id="cb20-540"><a href="#cb20-540" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb20-541"><a href="#cb20-541" aria-hidden="true" tabindex="-1"></a>dpplot_t8 <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">600</span>, </span>
+<span id="cb20-542"><a href="#cb20-542" aria-hidden="true" tabindex="-1"></a>               <span class="sc">~</span><span class="fu">try</span>(<span class="fu">dpplot</span>(<span class="at">id_num =</span> .x,</span>
+<span id="cb20-543"><a href="#cb20-543" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmin =</span> <span class="dv">8</span>, </span>
+<span id="cb20-544"><a href="#cb20-544" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tmax =</span> <span class="dv">12</span>, </span>
+<span id="cb20-545"><a href="#cb20-545" aria-hidden="true" tabindex="-1"></a>                       <span class="at">jmfit =</span> jmbayes2.fit116)))</span>
+<span id="cb20-546"><a href="#cb20-546" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb20-547"><a href="#cb20-547" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb20-548"><a href="#cb20-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-549"><a href="#cb20-549" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

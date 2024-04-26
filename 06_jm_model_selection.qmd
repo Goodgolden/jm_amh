@@ -51,6 +51,8 @@ here::set_here()
 
 -   [x] Model comparison similar to the earlier results, suggesting removing `bc_pills`
 
+-   [x] `r praise::praise()`
+
 ## Merge site and ethnicity variables
 
 Changing the Site:Ethnicity into a 14-level factor variable.
@@ -237,3 +239,5 @@ anova(jmbayes.fit111,
       jmbayes.fit116,
       jmbayes.fit117)
 ```
+
+-   [x] `r praise::praise()`

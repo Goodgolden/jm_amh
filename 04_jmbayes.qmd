@@ -52,6 +52,8 @@ here::set_here()
 
 -   [x] `JMbayes` cannot calculate the Brier Score
 
+-   [x] `r praise::praise()`
+
 ## Setting up for linear mixed model
 
 Because we are gonna use the `JMbayes` package and include the slope terms for the joint model, we need to fit the linear mixed model with the non-linear terms terms: including both the fixed and random terms.
@@ -318,3 +320,5 @@ JMbayes2::tvAUC(jmbayes.fit11,
 <!-- JMbayes::runDynPred() -->
 
 <!-- ``` -->
+
+-   [x] `r praise::praise()`

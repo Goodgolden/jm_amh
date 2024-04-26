@@ -2,7 +2,6 @@
 title: "Model Selection I - Dummy"
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       warnings = FALSE,
@@ -42,11 +41,13 @@ here::set_here()
 
 ## Goal of the analysis
 
--   [x] Backward model selection joint model (without rate) with `JMbayes2` 
+-   [x] Backward model selection joint model (without rate) with `JMbayes2`
 
 -   [x] Rate model, Baseline Rate model, Value model comparison
 
 -   [x] Tables for the models
+
+-   [x] `r praise::praise()`
 
 ## Dummy variables for `site` and `ethnicity`
 
@@ -99,7 +100,7 @@ jmb2.111 <- JMbayes2::jm(Surv_object = surv11,
 summary(jmb2.111)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
 
-### Dropping `alcohol < 1/wk`  variable
+### Dropping `alcohol < 1/wk` variable
 
 ```{r}
 levels(swan_amh13$alcohol)
@@ -130,9 +131,7 @@ jmb2.112 <- JMbayes2::jm(Surv_object = surv12,
 summary(jmb2.112)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
 
-
-
-### Dropping The `edu College degree or higher`  variable
+### Dropping The `edu College degree or higher` variable
 
 ```{r}
 levels(swan_amh13.12$edu)
@@ -163,8 +162,7 @@ jmb2.113 <- JMbayes2::jm(Surv_object = surv13,
 summary(jmb2.113)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
 
-
-### Dropping `health Good`  variable
+### Dropping `health Good` variable
 
 ```{r}
 levels(swan_amh13.13$health)
@@ -197,7 +195,6 @@ summary(jmb2.114)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 
 ### Dropping `health Fair/Poor` variable
 
-
 ```{r}
 levels(swan_amh13.14$health)
 swan_amh13.15 <- swan_amh13.14 %>%
@@ -227,9 +224,7 @@ jmb2.115 <- JMbayes2::jm(Surv_object = surv15,
 summary(jmb2.115)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
 
-
 ### Dropping `alcohol >7/wk` variable
-
 
 ```{r}
 levels(swan_amh13.15$alcohol)
@@ -259,7 +254,6 @@ jmb2.116 <- JMbayes2::jm(Surv_object = surv16,
 
 summary(jmb2.116)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
-
 
 ### Dropping `bc_pills Ever use BC pills` variable
 
@@ -296,9 +290,7 @@ jmb2.117 <- JMbayes2::jm(Surv_object = surv17,
 summary(jmb2.117)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
 
-
 ### Dropping `health Very Good` variable
-
 
 ```{r}
 levels(swan_amh13.17$health)
@@ -327,9 +319,6 @@ jmb2.118 <- JMbayes2::jm(Surv_object = surv18,
 
 summary(jmb2.118)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
-
-
-
 
 ### Dropping `employed Employed` variable
 
@@ -362,7 +351,6 @@ jmb2.119 <- JMbayes2::jm(Surv_object = surv19,
 summary(jmb2.119)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
 
-
 ### Dropping `children` variable
 
 ```{r}
@@ -392,8 +380,6 @@ jmb2.120 <- JMbayes2::jm(Surv_object = surv20,
 
 summary(jmb2.120)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
-
-
 
 ### Dropping `married Married/Partnered` variable
 
@@ -455,7 +441,6 @@ jmb2.122 <- JMbayes2::jm(Surv_object = surv22,
 summary(jmb2.122)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
 
-
 ### Dropping `edu Some College` variable
 
 ```{r}
@@ -486,7 +471,7 @@ jmb2.123 <- JMbayes2::jm(Surv_object = surv23,
 summary(jmb2.123)$Survival %>% dplyr::arrange(desc(P)) %>% knitr::kable()
 ```
 
-## Comparison 
+## Comparison
 
 ```{r}
 #| label: "compare_models"
@@ -511,10 +496,9 @@ how to merge `alcohol` and `edu` levels.
 
 `children` variable also need to be changed.
 
-
 ## Final model
 
-```
+```         
 surv20 <- coxph(Surv(etime, event) ~ 
                   0 + alcohol +
                   bmi + 
@@ -531,6 +515,6 @@ jmb2.120 <- JMbayes2::jm(Surv_object = surv20,
                                Mixed_objects = lme1, 
                                time_var = "time",
                                control = jmcontrol) 
-
 ```
 
+-   [x] `r praise::praise()`

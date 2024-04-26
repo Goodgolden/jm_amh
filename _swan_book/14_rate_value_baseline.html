@@ -306,6 +306,8 @@ Value Rate model</p></li>
 Rate Baseline model</p></li>
 <li><p><input type="checkbox" disabled="" checked="">
 AUCs and Brier Scores</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+You are peachy!</p></li>
 </ul></section><section id="loading-data-and-merge-variables" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="loading-data-and-merge-variables">
 <span class="header-section-number">14.2</span> Loading data and merge variables</h2>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/unnamed-chunk-1_0ec1c21b22009bbd7cea5ec82302689c">
@@ -1913,6 +1915,11 @@ AUCs and Brier Scores</p></li>
 </table>
 </div>
 </div>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" checked="">
+You are peachy!</li>
+</ul>
 
 
 <!-- -->
@@ -2130,571 +2137,575 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb35-53"><a href="#cb35-53" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-54"><a href="#cb35-54" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> AUCs and Brier Scores</span>
 <span id="cb35-55"><a href="#cb35-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-56"><a href="#cb35-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## Loading data and merge variables</span></span>
+<span id="cb35-56"><a href="#cb35-56" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 <span id="cb35-57"><a href="#cb35-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-60"><a href="#cb35-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-61"><a href="#cb35-61" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh03.rda"</span>)</span>
-<span id="cb35-62"><a href="#cb35-62" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh13.rda"</span>)</span>
-<span id="cb35-63"><a href="#cb35-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-64"><a href="#cb35-64" aria-hidden="true" tabindex="-1"></a>swan_amh04 <span class="ot">&lt;-</span> swan_amh03 <span class="sc">%&gt;%</span></span>
-<span id="cb35-65"><a href="#cb35-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
-<span id="cb35-66"><a href="#cb35-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(time) <span class="sc">%&gt;%</span></span>
-<span id="cb35-67"><a href="#cb35-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(1L) <span class="sc">%&gt;%</span></span>
-<span id="cb35-68"><a href="#cb35-68" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(id, <span class="at">lamh0 =</span> lamh) <span class="sc">%&gt;%</span></span>
-<span id="cb35-69"><a href="#cb35-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id))</span>
-<span id="cb35-70"><a href="#cb35-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-71"><a href="#cb35-71" aria-hidden="true" tabindex="-1"></a>swan_amh03 <span class="ot">&lt;-</span> swan_amh03 <span class="sc">%&gt;%</span></span>
-<span id="cb35-72"><a href="#cb35-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id)) <span class="sc">%&gt;%</span></span>
-<span id="cb35-73"><a href="#cb35-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(swan_amh04, <span class="at">by =</span> <span class="st">"id"</span>)</span>
-<span id="cb35-74"><a href="#cb35-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-75"><a href="#cb35-75" aria-hidden="true" tabindex="-1"></a>swan_amh13 <span class="ot">&lt;-</span> swan_amh13 <span class="sc">%&gt;%</span></span>
-<span id="cb35-76"><a href="#cb35-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(swan_amh04, <span class="at">by =</span> <span class="st">"id"</span>)</span>
-<span id="cb35-77"><a href="#cb35-77" aria-hidden="true" tabindex="-1"></a><span class="co">#   transform(alcohol = revalue(alcohol,</span></span>
-<span id="cb35-78"><a href="#cb35-78" aria-hidden="true" tabindex="-1"></a><span class="co">#                               c("&lt;1/wk" = "None",</span></span>
-<span id="cb35-79"><a href="#cb35-79" aria-hidden="true" tabindex="-1"></a><span class="co">#                                 "1-7/wk" = "&gt; 1/wk",</span></span>
-<span id="cb35-80"><a href="#cb35-80" aria-hidden="true" tabindex="-1"></a><span class="co">#                                 "&gt;7/wk" = "&gt; 1/wk")),</span></span>
-<span id="cb35-81"><a href="#cb35-81" aria-hidden="true" tabindex="-1"></a><span class="co">#             edu = revalue(edu,</span></span>
-<span id="cb35-82"><a href="#cb35-82" aria-hidden="true" tabindex="-1"></a><span class="co">#                           c("Some College" = "College Degree or Higher",</span></span>
-<span id="cb35-83"><a href="#cb35-83" aria-hidden="true" tabindex="-1"></a><span class="co">#                             "College degree or higher" = "College Degree or Higher")))</span></span>
-<span id="cb35-84"><a href="#cb35-84" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb35-85"><a href="#cb35-85" aria-hidden="true" tabindex="-1"></a><span class="co"># levels(swan_amh13$alcohol)</span></span>
-<span id="cb35-86"><a href="#cb35-86" aria-hidden="true" tabindex="-1"></a><span class="co"># levels(swan_amh13$edu)</span></span>
-<span id="cb35-87"><a href="#cb35-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-88"><a href="#cb35-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-58"><a href="#cb35-58" aria-hidden="true" tabindex="-1"></a><span class="fu">## Loading data and merge variables</span></span>
+<span id="cb35-59"><a href="#cb35-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-62"><a href="#cb35-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-63"><a href="#cb35-63" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh03.rda"</span>)</span>
+<span id="cb35-64"><a href="#cb35-64" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh13.rda"</span>)</span>
+<span id="cb35-65"><a href="#cb35-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-66"><a href="#cb35-66" aria-hidden="true" tabindex="-1"></a>swan_amh04 <span class="ot">&lt;-</span> swan_amh03 <span class="sc">%&gt;%</span></span>
+<span id="cb35-67"><a href="#cb35-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
+<span id="cb35-68"><a href="#cb35-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(time) <span class="sc">%&gt;%</span></span>
+<span id="cb35-69"><a href="#cb35-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(1L) <span class="sc">%&gt;%</span></span>
+<span id="cb35-70"><a href="#cb35-70" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(id, <span class="at">lamh0 =</span> lamh) <span class="sc">%&gt;%</span></span>
+<span id="cb35-71"><a href="#cb35-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id))</span>
+<span id="cb35-72"><a href="#cb35-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-73"><a href="#cb35-73" aria-hidden="true" tabindex="-1"></a>swan_amh03 <span class="ot">&lt;-</span> swan_amh03 <span class="sc">%&gt;%</span></span>
+<span id="cb35-74"><a href="#cb35-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id)) <span class="sc">%&gt;%</span></span>
+<span id="cb35-75"><a href="#cb35-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(swan_amh04, <span class="at">by =</span> <span class="st">"id"</span>)</span>
+<span id="cb35-76"><a href="#cb35-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-77"><a href="#cb35-77" aria-hidden="true" tabindex="-1"></a>swan_amh13 <span class="ot">&lt;-</span> swan_amh13 <span class="sc">%&gt;%</span></span>
+<span id="cb35-78"><a href="#cb35-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(swan_amh04, <span class="at">by =</span> <span class="st">"id"</span>)</span>
+<span id="cb35-79"><a href="#cb35-79" aria-hidden="true" tabindex="-1"></a><span class="co">#   transform(alcohol = revalue(alcohol,</span></span>
+<span id="cb35-80"><a href="#cb35-80" aria-hidden="true" tabindex="-1"></a><span class="co">#                               c("&lt;1/wk" = "None",</span></span>
+<span id="cb35-81"><a href="#cb35-81" aria-hidden="true" tabindex="-1"></a><span class="co">#                                 "1-7/wk" = "&gt; 1/wk",</span></span>
+<span id="cb35-82"><a href="#cb35-82" aria-hidden="true" tabindex="-1"></a><span class="co">#                                 "&gt;7/wk" = "&gt; 1/wk")),</span></span>
+<span id="cb35-83"><a href="#cb35-83" aria-hidden="true" tabindex="-1"></a><span class="co">#             edu = revalue(edu,</span></span>
+<span id="cb35-84"><a href="#cb35-84" aria-hidden="true" tabindex="-1"></a><span class="co">#                           c("Some College" = "College Degree or Higher",</span></span>
+<span id="cb35-85"><a href="#cb35-85" aria-hidden="true" tabindex="-1"></a><span class="co">#                             "College degree or higher" = "College Degree or Higher")))</span></span>
+<span id="cb35-86"><a href="#cb35-86" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb35-87"><a href="#cb35-87" aria-hidden="true" tabindex="-1"></a><span class="co"># levels(swan_amh13$alcohol)</span></span>
+<span id="cb35-88"><a href="#cb35-88" aria-hidden="true" tabindex="-1"></a><span class="co"># levels(swan_amh13$edu)</span></span>
 <span id="cb35-89"><a href="#cb35-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-92"><a href="#cb35-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-93"><a href="#cb35-93" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
-<span id="cb35-94"><a href="#cb35-94" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
-<span id="cb35-95"><a href="#cb35-95" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
-<span id="cb35-96"><a href="#cb35-96" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">2</span>,</span>
-<span id="cb35-97"><a href="#cb35-97" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
-<span id="cb35-98"><a href="#cb35-98" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">2</span>)</span>
-<span id="cb35-99"><a href="#cb35-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-100"><a href="#cb35-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-90"><a href="#cb35-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-91"><a href="#cb35-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-94"><a href="#cb35-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-95"><a href="#cb35-95" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
+<span id="cb35-96"><a href="#cb35-96" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
+<span id="cb35-97"><a href="#cb35-97" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
+<span id="cb35-98"><a href="#cb35-98" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">2</span>,</span>
+<span id="cb35-99"><a href="#cb35-99" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
+<span id="cb35-100"><a href="#cb35-100" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">2</span>)</span>
 <span id="cb35-101"><a href="#cb35-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-102"><a href="#cb35-102" aria-hidden="true" tabindex="-1"></a><span class="fu">## Value only model</span></span>
+<span id="cb35-102"><a href="#cb35-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-103"><a href="#cb35-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-104"><a href="#cb35-104" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb35-105"><a href="#cb35-105" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
-<span id="cb35-106"><a href="#cb35-106" aria-hidden="true" tabindex="-1"></a>  jmb2.117: &amp; <span class="sc">\\</span> </span>
-<span id="cb35-107"><a href="#cb35-107" aria-hidden="true" tabindex="-1"></a>  lme1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
-<span id="cb35-108"><a href="#cb35-108" aria-hidden="true" tabindex="-1"></a>  surv17: \ \ \ &amp; Surv(etime, event) \sim phys.act + bmi + site + <span class="sc">\\</span></span>
-<span id="cb35-109"><a href="#cb35-109" aria-hidden="true" tabindex="-1"></a>  &amp; ethnic + smoke + \pmb m(time)</span>
-<span id="cb35-110"><a href="#cb35-110" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
-<span id="cb35-111"><a href="#cb35-111" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb35-112"><a href="#cb35-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-115"><a href="#cb35-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-116"><a href="#cb35-116" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
-<span id="cb35-117"><a href="#cb35-117" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh03,</span>
-<span id="cb35-118"><a href="#cb35-118" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
-<span id="cb35-119"><a href="#cb35-119" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
-<span id="cb35-120"><a href="#cb35-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-121"><a href="#cb35-121" aria-hidden="true" tabindex="-1"></a>surv17 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb35-122"><a href="#cb35-122" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb35-123"><a href="#cb35-123" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
-<span id="cb35-124"><a href="#cb35-124" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children +</span></span>
-<span id="cb35-125"><a href="#cb35-125" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
-<span id="cb35-126"><a href="#cb35-126" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb35-127"><a href="#cb35-127" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb35-128"><a href="#cb35-128" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
-<span id="cb35-129"><a href="#cb35-129" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb35-130"><a href="#cb35-130" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb35-131"><a href="#cb35-131" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb35-132"><a href="#cb35-132" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb35-133"><a href="#cb35-133" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb35-134"><a href="#cb35-134" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb35-135"><a href="#cb35-135" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb35-136"><a href="#cb35-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-137"><a href="#cb35-137" aria-hidden="true" tabindex="-1"></a>jmb2.<span class="fl">117.</span>value <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv17,</span>
-<span id="cb35-138"><a href="#cb35-138" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb35-139"><a href="#cb35-139" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb35-140"><a href="#cb35-140" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb35-141"><a href="#cb35-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-142"><a href="#cb35-142" aria-hidden="true" tabindex="-1"></a>summary117.value <span class="ot">&lt;-</span> <span class="fu">summary</span>(jmb2.<span class="fl">117.</span>value)<span class="sc">$</span>Survival </span>
+<span id="cb35-104"><a href="#cb35-104" aria-hidden="true" tabindex="-1"></a><span class="fu">## Value only model</span></span>
+<span id="cb35-105"><a href="#cb35-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-106"><a href="#cb35-106" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb35-107"><a href="#cb35-107" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb35-108"><a href="#cb35-108" aria-hidden="true" tabindex="-1"></a>  jmb2.117: &amp; <span class="sc">\\</span> </span>
+<span id="cb35-109"><a href="#cb35-109" aria-hidden="true" tabindex="-1"></a>  lme1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
+<span id="cb35-110"><a href="#cb35-110" aria-hidden="true" tabindex="-1"></a>  surv17: \ \ \ &amp; Surv(etime, event) \sim phys.act + bmi + site + <span class="sc">\\</span></span>
+<span id="cb35-111"><a href="#cb35-111" aria-hidden="true" tabindex="-1"></a>  &amp; ethnic + smoke + \pmb m(time)</span>
+<span id="cb35-112"><a href="#cb35-112" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb35-113"><a href="#cb35-113" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb35-114"><a href="#cb35-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-117"><a href="#cb35-117" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-118"><a href="#cb35-118" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
+<span id="cb35-119"><a href="#cb35-119" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh03,</span>
+<span id="cb35-120"><a href="#cb35-120" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
+<span id="cb35-121"><a href="#cb35-121" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
+<span id="cb35-122"><a href="#cb35-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-123"><a href="#cb35-123" aria-hidden="true" tabindex="-1"></a>surv17 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb35-124"><a href="#cb35-124" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb35-125"><a href="#cb35-125" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
+<span id="cb35-126"><a href="#cb35-126" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children +</span></span>
+<span id="cb35-127"><a href="#cb35-127" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
+<span id="cb35-128"><a href="#cb35-128" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb35-129"><a href="#cb35-129" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb35-130"><a href="#cb35-130" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
+<span id="cb35-131"><a href="#cb35-131" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb35-132"><a href="#cb35-132" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb35-133"><a href="#cb35-133" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb35-134"><a href="#cb35-134" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb35-135"><a href="#cb35-135" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb35-136"><a href="#cb35-136" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb35-137"><a href="#cb35-137" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-138"><a href="#cb35-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-139"><a href="#cb35-139" aria-hidden="true" tabindex="-1"></a>jmb2.<span class="fl">117.</span>value <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv17,</span>
+<span id="cb35-140"><a href="#cb35-140" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb35-141"><a href="#cb35-141" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb35-142"><a href="#cb35-142" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
 <span id="cb35-143"><a href="#cb35-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-144"><a href="#cb35-144" aria-hidden="true" tabindex="-1"></a>summary117.value <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb35-145"><a href="#cb35-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-146"><a href="#cb35-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-147"><a href="#cb35-147" aria-hidden="true" tabindex="-1"></a><span class="fu">## Value + Rate model</span></span>
+<span id="cb35-144"><a href="#cb35-144" aria-hidden="true" tabindex="-1"></a>summary117.value <span class="ot">&lt;-</span> <span class="fu">summary</span>(jmb2.<span class="fl">117.</span>value)<span class="sc">$</span>Survival </span>
+<span id="cb35-145"><a href="#cb35-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-146"><a href="#cb35-146" aria-hidden="true" tabindex="-1"></a>summary117.value <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb35-147"><a href="#cb35-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-148"><a href="#cb35-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-149"><a href="#cb35-149" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb35-150"><a href="#cb35-150" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
-<span id="cb35-151"><a href="#cb35-151" aria-hidden="true" tabindex="-1"></a>  jmb2.117.value.rate: &amp; <span class="sc">\\</span> </span>
-<span id="cb35-152"><a href="#cb35-152" aria-hidden="true" tabindex="-1"></a>  lme1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
-<span id="cb35-153"><a href="#cb35-153" aria-hidden="true" tabindex="-1"></a>  surv17: \ \ \ &amp; Surv(etime, event) \sim phys.act + bmi + site + <span class="sc">\\</span></span>
-<span id="cb35-154"><a href="#cb35-154" aria-hidden="true" tabindex="-1"></a>  &amp; ethnic + smoke + \pmb m(time) + \pmb m'(time) </span>
-<span id="cb35-155"><a href="#cb35-155" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
-<span id="cb35-156"><a href="#cb35-156" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb35-157"><a href="#cb35-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-160"><a href="#cb35-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-161"><a href="#cb35-161" aria-hidden="true" tabindex="-1"></a>jmb2.<span class="fl">117.</span>value.rate <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv17,</span>
-<span id="cb35-162"><a href="#cb35-162" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb35-163"><a href="#cb35-163" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">functional_forms =</span> <span class="fu">list</span>(<span class="st">"lamh"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">value</span>(lamh) <span class="sc">+</span> <span class="fu">slope</span>(lamh)),</span>
-<span id="cb35-164"><a href="#cb35-164" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb35-165"><a href="#cb35-165" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">control =</span> jmcontrol) </span>
-<span id="cb35-166"><a href="#cb35-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-167"><a href="#cb35-167" aria-hidden="true" tabindex="-1"></a>summary117.value.rate <span class="ot">&lt;-</span> <span class="fu">summary</span>(jmb2.<span class="fl">117.</span>value.rate)<span class="sc">$</span>Survival </span>
+<span id="cb35-149"><a href="#cb35-149" aria-hidden="true" tabindex="-1"></a><span class="fu">## Value + Rate model</span></span>
+<span id="cb35-150"><a href="#cb35-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-151"><a href="#cb35-151" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb35-152"><a href="#cb35-152" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb35-153"><a href="#cb35-153" aria-hidden="true" tabindex="-1"></a>  jmb2.117.value.rate: &amp; <span class="sc">\\</span> </span>
+<span id="cb35-154"><a href="#cb35-154" aria-hidden="true" tabindex="-1"></a>  lme1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
+<span id="cb35-155"><a href="#cb35-155" aria-hidden="true" tabindex="-1"></a>  surv17: \ \ \ &amp; Surv(etime, event) \sim phys.act + bmi + site + <span class="sc">\\</span></span>
+<span id="cb35-156"><a href="#cb35-156" aria-hidden="true" tabindex="-1"></a>  &amp; ethnic + smoke + \pmb m(time) + \pmb m'(time) </span>
+<span id="cb35-157"><a href="#cb35-157" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb35-158"><a href="#cb35-158" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb35-159"><a href="#cb35-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-162"><a href="#cb35-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-163"><a href="#cb35-163" aria-hidden="true" tabindex="-1"></a>jmb2.<span class="fl">117.</span>value.rate <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv17,</span>
+<span id="cb35-164"><a href="#cb35-164" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb35-165"><a href="#cb35-165" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">functional_forms =</span> <span class="fu">list</span>(<span class="st">"lamh"</span> <span class="ot">=</span> <span class="er">~</span> <span class="fu">value</span>(lamh) <span class="sc">+</span> <span class="fu">slope</span>(lamh)),</span>
+<span id="cb35-166"><a href="#cb35-166" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb35-167"><a href="#cb35-167" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">control =</span> jmcontrol) </span>
 <span id="cb35-168"><a href="#cb35-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-169"><a href="#cb35-169" aria-hidden="true" tabindex="-1"></a>summary117.value.rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb35-169"><a href="#cb35-169" aria-hidden="true" tabindex="-1"></a>summary117.value.rate <span class="ot">&lt;-</span> <span class="fu">summary</span>(jmb2.<span class="fl">117.</span>value.rate)<span class="sc">$</span>Survival </span>
 <span id="cb35-170"><a href="#cb35-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-171"><a href="#cb35-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-171"><a href="#cb35-171" aria-hidden="true" tabindex="-1"></a>summary117.value.rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
 <span id="cb35-172"><a href="#cb35-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-173"><a href="#cb35-173" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rate + Baseline model</span></span>
+<span id="cb35-173"><a href="#cb35-173" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-174"><a href="#cb35-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-175"><a href="#cb35-175" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb35-176"><a href="#cb35-176" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
-<span id="cb35-177"><a href="#cb35-177" aria-hidden="true" tabindex="-1"></a>  jmb2.117.base.rate: &amp; <span class="sc">\\</span> </span>
-<span id="cb35-178"><a href="#cb35-178" aria-hidden="true" tabindex="-1"></a>  lme1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
-<span id="cb35-179"><a href="#cb35-179" aria-hidden="true" tabindex="-1"></a>  surv17.base: \ \ \ &amp; Surv(etime, event) \sim phys.act + bmi + site + <span class="sc">\\</span></span>
-<span id="cb35-180"><a href="#cb35-180" aria-hidden="true" tabindex="-1"></a>  &amp; ethnic + smoke + \pmb {lamh_{baseline}} + \pmb m'(time) </span>
-<span id="cb35-181"><a href="#cb35-181" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
-<span id="cb35-182"><a href="#cb35-182" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb35-183"><a href="#cb35-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-186"><a href="#cb35-186" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-187"><a href="#cb35-187" aria-hidden="true" tabindex="-1"></a>surv17.base <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb35-188"><a href="#cb35-188" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb35-189"><a href="#cb35-189" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
-<span id="cb35-190"><a href="#cb35-190" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children +</span></span>
-<span id="cb35-191"><a href="#cb35-191" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
-<span id="cb35-192"><a href="#cb35-192" aria-hidden="true" tabindex="-1"></a>                  lamh0 <span class="sc">+</span></span>
-<span id="cb35-193"><a href="#cb35-193" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb35-194"><a href="#cb35-194" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb35-195"><a href="#cb35-195" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
-<span id="cb35-196"><a href="#cb35-196" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span></span>
-<span id="cb35-197"><a href="#cb35-197" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb35-198"><a href="#cb35-198" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb35-199"><a href="#cb35-199" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb35-200"><a href="#cb35-200" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb35-201"><a href="#cb35-201" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb35-202"><a href="#cb35-202" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb35-203"><a href="#cb35-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-204"><a href="#cb35-204" aria-hidden="true" tabindex="-1"></a>jmb2.<span class="fl">117.</span>base.rate <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv17.base,</span>
-<span id="cb35-205"><a href="#cb35-205" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb35-206"><a href="#cb35-206" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">functional_forms =</span> <span class="fu">list</span>(<span class="st">"lamh"</span> <span class="ot">=</span> <span class="er">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">slope</span>(lamh)),</span>
-<span id="cb35-207"><a href="#cb35-207" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb35-208"><a href="#cb35-208" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">control =</span> jmcontrol) </span>
-<span id="cb35-209"><a href="#cb35-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-210"><a href="#cb35-210" aria-hidden="true" tabindex="-1"></a>summary117.base.rate <span class="ot">&lt;-</span> <span class="fu">summary</span>(jmb2.<span class="fl">117.</span>base.rate)<span class="sc">$</span>Survival </span>
+<span id="cb35-175"><a href="#cb35-175" aria-hidden="true" tabindex="-1"></a><span class="fu">## Rate + Baseline model</span></span>
+<span id="cb35-176"><a href="#cb35-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-177"><a href="#cb35-177" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb35-178"><a href="#cb35-178" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb35-179"><a href="#cb35-179" aria-hidden="true" tabindex="-1"></a>  jmb2.117.base.rate: &amp; <span class="sc">\\</span> </span>
+<span id="cb35-180"><a href="#cb35-180" aria-hidden="true" tabindex="-1"></a>  lme1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
+<span id="cb35-181"><a href="#cb35-181" aria-hidden="true" tabindex="-1"></a>  surv17.base: \ \ \ &amp; Surv(etime, event) \sim phys.act + bmi + site + <span class="sc">\\</span></span>
+<span id="cb35-182"><a href="#cb35-182" aria-hidden="true" tabindex="-1"></a>  &amp; ethnic + smoke + \pmb {lamh_{baseline}} + \pmb m'(time) </span>
+<span id="cb35-183"><a href="#cb35-183" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb35-184"><a href="#cb35-184" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb35-185"><a href="#cb35-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-188"><a href="#cb35-188" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-189"><a href="#cb35-189" aria-hidden="true" tabindex="-1"></a>surv17.base <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb35-190"><a href="#cb35-190" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb35-191"><a href="#cb35-191" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> <span class="co"># bc_pills + </span></span>
+<span id="cb35-192"><a href="#cb35-192" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children +</span></span>
+<span id="cb35-193"><a href="#cb35-193" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
+<span id="cb35-194"><a href="#cb35-194" aria-hidden="true" tabindex="-1"></a>                  lamh0 <span class="sc">+</span></span>
+<span id="cb35-195"><a href="#cb35-195" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb35-196"><a href="#cb35-196" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb35-197"><a href="#cb35-197" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
+<span id="cb35-198"><a href="#cb35-198" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span></span>
+<span id="cb35-199"><a href="#cb35-199" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb35-200"><a href="#cb35-200" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb35-201"><a href="#cb35-201" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb35-202"><a href="#cb35-202" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb35-203"><a href="#cb35-203" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb35-204"><a href="#cb35-204" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-205"><a href="#cb35-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-206"><a href="#cb35-206" aria-hidden="true" tabindex="-1"></a>jmb2.<span class="fl">117.</span>base.rate <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> surv17.base,</span>
+<span id="cb35-207"><a href="#cb35-207" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb35-208"><a href="#cb35-208" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">functional_forms =</span> <span class="fu">list</span>(<span class="st">"lamh"</span> <span class="ot">=</span> <span class="er">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">slope</span>(lamh)),</span>
+<span id="cb35-209"><a href="#cb35-209" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb35-210"><a href="#cb35-210" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">control =</span> jmcontrol) </span>
 <span id="cb35-211"><a href="#cb35-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-212"><a href="#cb35-212" aria-hidden="true" tabindex="-1"></a>summary117.base.rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb35-213"><a href="#cb35-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-214"><a href="#cb35-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-215"><a href="#cb35-215" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparison of the models</span></span>
+<span id="cb35-212"><a href="#cb35-212" aria-hidden="true" tabindex="-1"></a>summary117.base.rate <span class="ot">&lt;-</span> <span class="fu">summary</span>(jmb2.<span class="fl">117.</span>base.rate)<span class="sc">$</span>Survival </span>
+<span id="cb35-213"><a href="#cb35-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-214"><a href="#cb35-214" aria-hidden="true" tabindex="-1"></a>summary117.base.rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb35-215"><a href="#cb35-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-216"><a href="#cb35-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-219"><a href="#cb35-219" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-220"><a href="#cb35-220" aria-hidden="true" tabindex="-1"></a>mod_sum <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(summary117.value[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),</span>
-<span id="cb35-221"><a href="#cb35-221" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.data.frame</span>(summary117.value.rate[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]), </span>
-<span id="cb35-222"><a href="#cb35-222" aria-hidden="true" tabindex="-1"></a>      <span class="at">by =</span> <span class="st">"row.names"</span>, <span class="at">all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb35-223"><a href="#cb35-223" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"Row.names"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb35-224"><a href="#cb35-224" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(summary117.base.rate[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]), </span>
-<span id="cb35-225"><a href="#cb35-225" aria-hidden="true" tabindex="-1"></a>        <span class="at">by =</span> <span class="st">"row.names"</span>, <span class="at">all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb35-226"><a href="#cb35-226" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"Row.names"</span>)</span>
-<span id="cb35-227"><a href="#cb35-227" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(mod_sum)</span>
-<span id="cb35-228"><a href="#cb35-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-229"><a href="#cb35-229" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(mod_sum) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"bmi"</span>, </span>
-<span id="cb35-230"><a href="#cb35-230" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'ethnic_black'</span>, <span class="st">'ethnic_chine'</span>, <span class="st">'ethnic_hispa'</span>, <span class="st">'ethnic_japan'</span>, </span>
-<span id="cb35-231"><a href="#cb35-231" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'lamh_baseline'</span>, </span>
-<span id="cb35-232"><a href="#cb35-232" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># 'married Married/Partnered', </span></span>
-<span id="cb35-233"><a href="#cb35-233" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"phys_act"</span>,</span>
-<span id="cb35-234"><a href="#cb35-234" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'site_c'</span>, <span class="st">'site_m'</span>, <span class="st">'site_nj'</span>, <span class="st">'site_p'</span>, <span class="st">'site_ucd'</span>, <span class="st">'site_ucla'</span>, </span>
-<span id="cb35-235"><a href="#cb35-235" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'lamh_slope'</span>, </span>
-<span id="cb35-236"><a href="#cb35-236" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'smoke_current_smoker'</span>, <span class="st">'smoke_past_only'</span>, </span>
-<span id="cb35-237"><a href="#cb35-237" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'lamh_value'</span>)</span>
-<span id="cb35-238"><a href="#cb35-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-239"><a href="#cb35-239" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mod_sum) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Value'</span>, <span class="st">"sd(Value)"</span>,</span>
-<span id="cb35-240"><a href="#cb35-240" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'Value + Rate'</span>, <span class="st">"sd(Value + Rate)"</span>,  </span>
-<span id="cb35-241"><a href="#cb35-241" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'Value + Baseline'</span>, <span class="st">"sd(Value + Baseline)"</span>)</span>
-<span id="cb35-242"><a href="#cb35-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-243"><a href="#cb35-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-244"><a href="#cb35-244" aria-hidden="true" tabindex="-1"></a>mod_sum[<span class="fu">order</span>(<span class="fu">row.names</span>(mod_sum)), ] <span class="sc">%&gt;%</span></span>
-<span id="cb35-245"><a href="#cb35-245" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb35-246"><a href="#cb35-246" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-247"><a href="#cb35-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-248"><a href="#cb35-248" aria-hidden="true" tabindex="-1"></a><span class="fu">## Model Comparison</span></span>
+<span id="cb35-217"><a href="#cb35-217" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparison of the models</span></span>
+<span id="cb35-218"><a href="#cb35-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-221"><a href="#cb35-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-222"><a href="#cb35-222" aria-hidden="true" tabindex="-1"></a>mod_sum <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(summary117.value[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),</span>
+<span id="cb35-223"><a href="#cb35-223" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.data.frame</span>(summary117.value.rate[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]), </span>
+<span id="cb35-224"><a href="#cb35-224" aria-hidden="true" tabindex="-1"></a>      <span class="at">by =</span> <span class="st">"row.names"</span>, <span class="at">all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-225"><a href="#cb35-225" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"Row.names"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-226"><a href="#cb35-226" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(<span class="fu">as.data.frame</span>(summary117.base.rate[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]), </span>
+<span id="cb35-227"><a href="#cb35-227" aria-hidden="true" tabindex="-1"></a>        <span class="at">by =</span> <span class="st">"row.names"</span>, <span class="at">all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-228"><a href="#cb35-228" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"Row.names"</span>)</span>
+<span id="cb35-229"><a href="#cb35-229" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(mod_sum)</span>
+<span id="cb35-230"><a href="#cb35-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-231"><a href="#cb35-231" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(mod_sum) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"bmi"</span>, </span>
+<span id="cb35-232"><a href="#cb35-232" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'ethnic_black'</span>, <span class="st">'ethnic_chine'</span>, <span class="st">'ethnic_hispa'</span>, <span class="st">'ethnic_japan'</span>, </span>
+<span id="cb35-233"><a href="#cb35-233" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'lamh_baseline'</span>, </span>
+<span id="cb35-234"><a href="#cb35-234" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># 'married Married/Partnered', </span></span>
+<span id="cb35-235"><a href="#cb35-235" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"phys_act"</span>,</span>
+<span id="cb35-236"><a href="#cb35-236" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'site_c'</span>, <span class="st">'site_m'</span>, <span class="st">'site_nj'</span>, <span class="st">'site_p'</span>, <span class="st">'site_ucd'</span>, <span class="st">'site_ucla'</span>, </span>
+<span id="cb35-237"><a href="#cb35-237" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'lamh_slope'</span>, </span>
+<span id="cb35-238"><a href="#cb35-238" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'smoke_current_smoker'</span>, <span class="st">'smoke_past_only'</span>, </span>
+<span id="cb35-239"><a href="#cb35-239" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'lamh_value'</span>)</span>
+<span id="cb35-240"><a href="#cb35-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-241"><a href="#cb35-241" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mod_sum) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Value'</span>, <span class="st">"sd(Value)"</span>,</span>
+<span id="cb35-242"><a href="#cb35-242" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'Value + Rate'</span>, <span class="st">"sd(Value + Rate)"</span>,  </span>
+<span id="cb35-243"><a href="#cb35-243" aria-hidden="true" tabindex="-1"></a>                       <span class="st">'Value + Baseline'</span>, <span class="st">"sd(Value + Baseline)"</span>)</span>
+<span id="cb35-244"><a href="#cb35-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-245"><a href="#cb35-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-246"><a href="#cb35-246" aria-hidden="true" tabindex="-1"></a>mod_sum[<span class="fu">order</span>(<span class="fu">row.names</span>(mod_sum)), ] <span class="sc">%&gt;%</span></span>
+<span id="cb35-247"><a href="#cb35-247" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb35-248"><a href="#cb35-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-249"><a href="#cb35-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-250"><a href="#cb35-250" aria-hidden="true" tabindex="-1"></a><span class="fu">### DIC and WAIC</span></span>
+<span id="cb35-250"><a href="#cb35-250" aria-hidden="true" tabindex="-1"></a><span class="fu">## Model Comparison</span></span>
 <span id="cb35-251"><a href="#cb35-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-254"><a href="#cb35-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-255"><a href="#cb35-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "compare_jm"</span></span>
-<span id="cb35-256"><a href="#cb35-256" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb2.<span class="fl">117.</span>value, jmb2.<span class="fl">117.</span>value.rate, jmb2.<span class="fl">117.</span>base.rate)</span>
-<span id="cb35-257"><a href="#cb35-257" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-258"><a href="#cb35-258" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-252"><a href="#cb35-252" aria-hidden="true" tabindex="-1"></a><span class="fu">### DIC and WAIC</span></span>
+<span id="cb35-253"><a href="#cb35-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-256"><a href="#cb35-256" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-257"><a href="#cb35-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "compare_jm"</span></span>
+<span id="cb35-258"><a href="#cb35-258" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb2.<span class="fl">117.</span>value, jmb2.<span class="fl">117.</span>value.rate, jmb2.<span class="fl">117.</span>base.rate)</span>
 <span id="cb35-259"><a href="#cb35-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-260"><a href="#cb35-260" aria-hidden="true" tabindex="-1"></a><span class="fu">### AUC</span></span>
+<span id="cb35-260"><a href="#cb35-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-261"><a href="#cb35-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-262"><a href="#cb35-262" aria-hidden="true" tabindex="-1"></a><span class="fu">#### AUC for Value model</span></span>
+<span id="cb35-262"><a href="#cb35-262" aria-hidden="true" tabindex="-1"></a><span class="fu">### AUC</span></span>
 <span id="cb35-263"><a href="#cb35-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-266"><a href="#cb35-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-267"><a href="#cb35-267" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_value"</span></span>
-<span id="cb35-268"><a href="#cb35-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb35-269"><a href="#cb35-269" aria-hidden="true" tabindex="-1"></a>AUC2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-270"><a href="#cb35-270" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-271"><a href="#cb35-271" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-272"><a href="#cb35-272" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
-<span id="cb35-273"><a href="#cb35-273" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-274"><a href="#cb35-274" aria-hidden="true" tabindex="-1"></a>AUC3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-275"><a href="#cb35-275" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-276"><a href="#cb35-276" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-277"><a href="#cb35-277" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb35-278"><a href="#cb35-278" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-279"><a href="#cb35-279" aria-hidden="true" tabindex="-1"></a>AUC4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-280"><a href="#cb35-280" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-281"><a href="#cb35-281" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-282"><a href="#cb35-282" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
-<span id="cb35-283"><a href="#cb35-283" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-284"><a href="#cb35-284" aria-hidden="true" tabindex="-1"></a>AUC5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-285"><a href="#cb35-285" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-286"><a href="#cb35-286" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-287"><a href="#cb35-287" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb35-288"><a href="#cb35-288" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-289"><a href="#cb35-289" aria-hidden="true" tabindex="-1"></a>AUC6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-290"><a href="#cb35-290" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-291"><a href="#cb35-291" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-292"><a href="#cb35-292" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
-<span id="cb35-293"><a href="#cb35-293" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-294"><a href="#cb35-294" aria-hidden="true" tabindex="-1"></a>AUC8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-295"><a href="#cb35-295" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-296"><a href="#cb35-296" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-297"><a href="#cb35-297" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
-<span id="cb35-298"><a href="#cb35-298" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-299"><a href="#cb35-299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-300"><a href="#cb35-300" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(AUC2, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-301"><a href="#cb35-301" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(AUC3, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-302"><a href="#cb35-302" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(AUC4, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-303"><a href="#cb35-303" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(AUC5, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-304"><a href="#cb35-304" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(AUC6, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-305"><a href="#cb35-305" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(AUC8, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-306"><a href="#cb35-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-307"><a href="#cb35-307" aria-hidden="true" tabindex="-1"></a>tbl_auc_value <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2, </span>
-<span id="cb35-308"><a href="#cb35-308" aria-hidden="true" tabindex="-1"></a>                       Tstart3,</span>
-<span id="cb35-309"><a href="#cb35-309" aria-hidden="true" tabindex="-1"></a>                       Tstart4,</span>
-<span id="cb35-310"><a href="#cb35-310" aria-hidden="true" tabindex="-1"></a>                       Tstart5,</span>
-<span id="cb35-311"><a href="#cb35-311" aria-hidden="true" tabindex="-1"></a>                       Tstart6, </span>
-<span id="cb35-312"><a href="#cb35-312" aria-hidden="true" tabindex="-1"></a>                       Tstart8) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-313"><a href="#cb35-313" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb35-314"><a href="#cb35-314" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
-<span id="cb35-315"><a href="#cb35-315" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
-<span id="cb35-316"><a href="#cb35-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-317"><a href="#cb35-317" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_auc_value) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
-<span id="cb35-318"><a href="#cb35-318" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-319"><a href="#cb35-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-322"><a href="#cb35-322" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-323"><a href="#cb35-323" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "tbl_auc_table_value"</span></span>
-<span id="cb35-324"><a href="#cb35-324" aria-hidden="true" tabindex="-1"></a>tbl_auc_value <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb35-325"><a href="#cb35-325" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-326"><a href="#cb35-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-327"><a href="#cb35-327" aria-hidden="true" tabindex="-1"></a><span class="fu">#### AUC for Value Rate model</span></span>
+<span id="cb35-264"><a href="#cb35-264" aria-hidden="true" tabindex="-1"></a><span class="fu">#### AUC for Value model</span></span>
+<span id="cb35-265"><a href="#cb35-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-268"><a href="#cb35-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-269"><a href="#cb35-269" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_value"</span></span>
+<span id="cb35-270"><a href="#cb35-270" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb35-271"><a href="#cb35-271" aria-hidden="true" tabindex="-1"></a>AUC2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-272"><a href="#cb35-272" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-273"><a href="#cb35-273" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-274"><a href="#cb35-274" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
+<span id="cb35-275"><a href="#cb35-275" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-276"><a href="#cb35-276" aria-hidden="true" tabindex="-1"></a>AUC3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-277"><a href="#cb35-277" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-278"><a href="#cb35-278" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-279"><a href="#cb35-279" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb35-280"><a href="#cb35-280" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-281"><a href="#cb35-281" aria-hidden="true" tabindex="-1"></a>AUC4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-282"><a href="#cb35-282" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-283"><a href="#cb35-283" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-284"><a href="#cb35-284" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
+<span id="cb35-285"><a href="#cb35-285" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-286"><a href="#cb35-286" aria-hidden="true" tabindex="-1"></a>AUC5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-287"><a href="#cb35-287" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-288"><a href="#cb35-288" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-289"><a href="#cb35-289" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb35-290"><a href="#cb35-290" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-291"><a href="#cb35-291" aria-hidden="true" tabindex="-1"></a>AUC6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-292"><a href="#cb35-292" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-293"><a href="#cb35-293" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-294"><a href="#cb35-294" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
+<span id="cb35-295"><a href="#cb35-295" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-296"><a href="#cb35-296" aria-hidden="true" tabindex="-1"></a>AUC8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-297"><a href="#cb35-297" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-298"><a href="#cb35-298" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-299"><a href="#cb35-299" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
+<span id="cb35-300"><a href="#cb35-300" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-301"><a href="#cb35-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-302"><a href="#cb35-302" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(AUC2, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-303"><a href="#cb35-303" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(AUC3, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-304"><a href="#cb35-304" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(AUC4, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-305"><a href="#cb35-305" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(AUC5, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-306"><a href="#cb35-306" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(AUC6, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-307"><a href="#cb35-307" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(AUC8, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-308"><a href="#cb35-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-309"><a href="#cb35-309" aria-hidden="true" tabindex="-1"></a>tbl_auc_value <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2, </span>
+<span id="cb35-310"><a href="#cb35-310" aria-hidden="true" tabindex="-1"></a>                       Tstart3,</span>
+<span id="cb35-311"><a href="#cb35-311" aria-hidden="true" tabindex="-1"></a>                       Tstart4,</span>
+<span id="cb35-312"><a href="#cb35-312" aria-hidden="true" tabindex="-1"></a>                       Tstart5,</span>
+<span id="cb35-313"><a href="#cb35-313" aria-hidden="true" tabindex="-1"></a>                       Tstart6, </span>
+<span id="cb35-314"><a href="#cb35-314" aria-hidden="true" tabindex="-1"></a>                       Tstart8) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-315"><a href="#cb35-315" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-316"><a href="#cb35-316" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
+<span id="cb35-317"><a href="#cb35-317" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
+<span id="cb35-318"><a href="#cb35-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-319"><a href="#cb35-319" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_auc_value) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
+<span id="cb35-320"><a href="#cb35-320" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-321"><a href="#cb35-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-324"><a href="#cb35-324" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-325"><a href="#cb35-325" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "tbl_auc_table_value"</span></span>
+<span id="cb35-326"><a href="#cb35-326" aria-hidden="true" tabindex="-1"></a>tbl_auc_value <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb35-327"><a href="#cb35-327" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-328"><a href="#cb35-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-331"><a href="#cb35-331" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-332"><a href="#cb35-332" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_value_rate"</span></span>
-<span id="cb35-333"><a href="#cb35-333" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb35-334"><a href="#cb35-334" aria-hidden="true" tabindex="-1"></a>AUC2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-335"><a href="#cb35-335" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-336"><a href="#cb35-336" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-337"><a href="#cb35-337" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
-<span id="cb35-338"><a href="#cb35-338" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-339"><a href="#cb35-339" aria-hidden="true" tabindex="-1"></a>AUC3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-340"><a href="#cb35-340" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-341"><a href="#cb35-341" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-342"><a href="#cb35-342" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb35-343"><a href="#cb35-343" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-344"><a href="#cb35-344" aria-hidden="true" tabindex="-1"></a>AUC4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-345"><a href="#cb35-345" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-346"><a href="#cb35-346" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-347"><a href="#cb35-347" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
-<span id="cb35-348"><a href="#cb35-348" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-349"><a href="#cb35-349" aria-hidden="true" tabindex="-1"></a>AUC5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-350"><a href="#cb35-350" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-351"><a href="#cb35-351" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-352"><a href="#cb35-352" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb35-353"><a href="#cb35-353" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-354"><a href="#cb35-354" aria-hidden="true" tabindex="-1"></a>AUC6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-355"><a href="#cb35-355" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-356"><a href="#cb35-356" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-357"><a href="#cb35-357" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
-<span id="cb35-358"><a href="#cb35-358" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-359"><a href="#cb35-359" aria-hidden="true" tabindex="-1"></a>AUC8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-360"><a href="#cb35-360" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-361"><a href="#cb35-361" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-362"><a href="#cb35-362" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
-<span id="cb35-363"><a href="#cb35-363" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-364"><a href="#cb35-364" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-365"><a href="#cb35-365" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(AUC2, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-366"><a href="#cb35-366" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(AUC3, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-367"><a href="#cb35-367" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(AUC4, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-368"><a href="#cb35-368" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(AUC5, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-369"><a href="#cb35-369" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(AUC6, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-370"><a href="#cb35-370" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(AUC8, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-371"><a href="#cb35-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-372"><a href="#cb35-372" aria-hidden="true" tabindex="-1"></a>tbl_auc_value_rate <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2, </span>
-<span id="cb35-373"><a href="#cb35-373" aria-hidden="true" tabindex="-1"></a>                            Tstart3,</span>
-<span id="cb35-374"><a href="#cb35-374" aria-hidden="true" tabindex="-1"></a>                            Tstart4,</span>
-<span id="cb35-375"><a href="#cb35-375" aria-hidden="true" tabindex="-1"></a>                            Tstart5,</span>
-<span id="cb35-376"><a href="#cb35-376" aria-hidden="true" tabindex="-1"></a>                            Tstart6, </span>
-<span id="cb35-377"><a href="#cb35-377" aria-hidden="true" tabindex="-1"></a>                            Tstart8) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-378"><a href="#cb35-378" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb35-379"><a href="#cb35-379" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
-<span id="cb35-380"><a href="#cb35-380" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
-<span id="cb35-381"><a href="#cb35-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-382"><a href="#cb35-382" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_auc_value_rate) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
-<span id="cb35-383"><a href="#cb35-383" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-384"><a href="#cb35-384" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-387"><a href="#cb35-387" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-388"><a href="#cb35-388" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_table_value_rate"</span></span>
-<span id="cb35-389"><a href="#cb35-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-390"><a href="#cb35-390" aria-hidden="true" tabindex="-1"></a>tbl_auc_value_rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb35-329"><a href="#cb35-329" aria-hidden="true" tabindex="-1"></a><span class="fu">#### AUC for Value Rate model</span></span>
+<span id="cb35-330"><a href="#cb35-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-333"><a href="#cb35-333" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-334"><a href="#cb35-334" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_value_rate"</span></span>
+<span id="cb35-335"><a href="#cb35-335" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb35-336"><a href="#cb35-336" aria-hidden="true" tabindex="-1"></a>AUC2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-337"><a href="#cb35-337" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-338"><a href="#cb35-338" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-339"><a href="#cb35-339" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
+<span id="cb35-340"><a href="#cb35-340" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-341"><a href="#cb35-341" aria-hidden="true" tabindex="-1"></a>AUC3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-342"><a href="#cb35-342" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-343"><a href="#cb35-343" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-344"><a href="#cb35-344" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb35-345"><a href="#cb35-345" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-346"><a href="#cb35-346" aria-hidden="true" tabindex="-1"></a>AUC4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-347"><a href="#cb35-347" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-348"><a href="#cb35-348" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-349"><a href="#cb35-349" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
+<span id="cb35-350"><a href="#cb35-350" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-351"><a href="#cb35-351" aria-hidden="true" tabindex="-1"></a>AUC5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-352"><a href="#cb35-352" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-353"><a href="#cb35-353" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-354"><a href="#cb35-354" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb35-355"><a href="#cb35-355" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-356"><a href="#cb35-356" aria-hidden="true" tabindex="-1"></a>AUC6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-357"><a href="#cb35-357" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-358"><a href="#cb35-358" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-359"><a href="#cb35-359" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
+<span id="cb35-360"><a href="#cb35-360" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-361"><a href="#cb35-361" aria-hidden="true" tabindex="-1"></a>AUC8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-362"><a href="#cb35-362" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-363"><a href="#cb35-363" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-364"><a href="#cb35-364" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
+<span id="cb35-365"><a href="#cb35-365" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-366"><a href="#cb35-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-367"><a href="#cb35-367" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(AUC2, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-368"><a href="#cb35-368" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(AUC3, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-369"><a href="#cb35-369" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(AUC4, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-370"><a href="#cb35-370" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(AUC5, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-371"><a href="#cb35-371" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(AUC6, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-372"><a href="#cb35-372" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(AUC8, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-373"><a href="#cb35-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-374"><a href="#cb35-374" aria-hidden="true" tabindex="-1"></a>tbl_auc_value_rate <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2, </span>
+<span id="cb35-375"><a href="#cb35-375" aria-hidden="true" tabindex="-1"></a>                            Tstart3,</span>
+<span id="cb35-376"><a href="#cb35-376" aria-hidden="true" tabindex="-1"></a>                            Tstart4,</span>
+<span id="cb35-377"><a href="#cb35-377" aria-hidden="true" tabindex="-1"></a>                            Tstart5,</span>
+<span id="cb35-378"><a href="#cb35-378" aria-hidden="true" tabindex="-1"></a>                            Tstart6, </span>
+<span id="cb35-379"><a href="#cb35-379" aria-hidden="true" tabindex="-1"></a>                            Tstart8) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-380"><a href="#cb35-380" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-381"><a href="#cb35-381" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
+<span id="cb35-382"><a href="#cb35-382" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
+<span id="cb35-383"><a href="#cb35-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-384"><a href="#cb35-384" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_auc_value_rate) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
+<span id="cb35-385"><a href="#cb35-385" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-386"><a href="#cb35-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-389"><a href="#cb35-389" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-390"><a href="#cb35-390" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_table_value_rate"</span></span>
 <span id="cb35-391"><a href="#cb35-391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-392"><a href="#cb35-392" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-392"><a href="#cb35-392" aria-hidden="true" tabindex="-1"></a>tbl_auc_value_rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
 <span id="cb35-393"><a href="#cb35-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-394"><a href="#cb35-394" aria-hidden="true" tabindex="-1"></a><span class="fu">#### AUC for Baseline Rate model</span></span>
+<span id="cb35-394"><a href="#cb35-394" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-395"><a href="#cb35-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-398"><a href="#cb35-398" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-399"><a href="#cb35-399" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_base_rate"</span></span>
-<span id="cb35-400"><a href="#cb35-400" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb35-401"><a href="#cb35-401" aria-hidden="true" tabindex="-1"></a>AUC2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-402"><a href="#cb35-402" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-403"><a href="#cb35-403" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-404"><a href="#cb35-404" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
-<span id="cb35-405"><a href="#cb35-405" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-406"><a href="#cb35-406" aria-hidden="true" tabindex="-1"></a>AUC3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-407"><a href="#cb35-407" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-408"><a href="#cb35-408" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-409"><a href="#cb35-409" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb35-410"><a href="#cb35-410" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-411"><a href="#cb35-411" aria-hidden="true" tabindex="-1"></a>AUC4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-412"><a href="#cb35-412" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-413"><a href="#cb35-413" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-414"><a href="#cb35-414" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
-<span id="cb35-415"><a href="#cb35-415" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-416"><a href="#cb35-416" aria-hidden="true" tabindex="-1"></a>AUC5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-417"><a href="#cb35-417" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-418"><a href="#cb35-418" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-419"><a href="#cb35-419" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb35-420"><a href="#cb35-420" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-421"><a href="#cb35-421" aria-hidden="true" tabindex="-1"></a>AUC6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-422"><a href="#cb35-422" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-423"><a href="#cb35-423" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-424"><a href="#cb35-424" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
-<span id="cb35-425"><a href="#cb35-425" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-426"><a href="#cb35-426" aria-hidden="true" tabindex="-1"></a>AUC8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-427"><a href="#cb35-427" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-428"><a href="#cb35-428" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-429"><a href="#cb35-429" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
-<span id="cb35-430"><a href="#cb35-430" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-431"><a href="#cb35-431" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-432"><a href="#cb35-432" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(AUC2, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-433"><a href="#cb35-433" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(AUC3, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-434"><a href="#cb35-434" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(AUC4, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-435"><a href="#cb35-435" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(AUC5, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-436"><a href="#cb35-436" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(AUC6, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-437"><a href="#cb35-437" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(AUC8, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-438"><a href="#cb35-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-439"><a href="#cb35-439" aria-hidden="true" tabindex="-1"></a>tbl_auc_base_rate <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2, </span>
-<span id="cb35-440"><a href="#cb35-440" aria-hidden="true" tabindex="-1"></a>                            Tstart3,</span>
-<span id="cb35-441"><a href="#cb35-441" aria-hidden="true" tabindex="-1"></a>                            Tstart4,</span>
-<span id="cb35-442"><a href="#cb35-442" aria-hidden="true" tabindex="-1"></a>                            Tstart5,</span>
-<span id="cb35-443"><a href="#cb35-443" aria-hidden="true" tabindex="-1"></a>                            Tstart6, </span>
-<span id="cb35-444"><a href="#cb35-444" aria-hidden="true" tabindex="-1"></a>                            Tstart8) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-445"><a href="#cb35-445" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb35-446"><a href="#cb35-446" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
-<span id="cb35-447"><a href="#cb35-447" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
-<span id="cb35-448"><a href="#cb35-448" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-449"><a href="#cb35-449" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_auc_base_rate) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
-<span id="cb35-450"><a href="#cb35-450" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-451"><a href="#cb35-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-454"><a href="#cb35-454" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-455"><a href="#cb35-455" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_table_base_rate"</span></span>
-<span id="cb35-456"><a href="#cb35-456" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-457"><a href="#cb35-457" aria-hidden="true" tabindex="-1"></a>tbl_auc_base_rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb35-458"><a href="#cb35-458" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-459"><a href="#cb35-459" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-460"><a href="#cb35-460" aria-hidden="true" tabindex="-1"></a><span class="fu">### Brier Scores</span></span>
+<span id="cb35-396"><a href="#cb35-396" aria-hidden="true" tabindex="-1"></a><span class="fu">#### AUC for Baseline Rate model</span></span>
+<span id="cb35-397"><a href="#cb35-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-400"><a href="#cb35-400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-401"><a href="#cb35-401" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_base_rate"</span></span>
+<span id="cb35-402"><a href="#cb35-402" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb35-403"><a href="#cb35-403" aria-hidden="true" tabindex="-1"></a>AUC2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-404"><a href="#cb35-404" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-405"><a href="#cb35-405" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-406"><a href="#cb35-406" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
+<span id="cb35-407"><a href="#cb35-407" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-408"><a href="#cb35-408" aria-hidden="true" tabindex="-1"></a>AUC3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-409"><a href="#cb35-409" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-410"><a href="#cb35-410" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-411"><a href="#cb35-411" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb35-412"><a href="#cb35-412" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-413"><a href="#cb35-413" aria-hidden="true" tabindex="-1"></a>AUC4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-414"><a href="#cb35-414" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-415"><a href="#cb35-415" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-416"><a href="#cb35-416" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
+<span id="cb35-417"><a href="#cb35-417" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-418"><a href="#cb35-418" aria-hidden="true" tabindex="-1"></a>AUC5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-419"><a href="#cb35-419" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-420"><a href="#cb35-420" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-421"><a href="#cb35-421" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb35-422"><a href="#cb35-422" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-423"><a href="#cb35-423" aria-hidden="true" tabindex="-1"></a>AUC6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-424"><a href="#cb35-424" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-425"><a href="#cb35-425" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-426"><a href="#cb35-426" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
+<span id="cb35-427"><a href="#cb35-427" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-428"><a href="#cb35-428" aria-hidden="true" tabindex="-1"></a>AUC8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-429"><a href="#cb35-429" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvAUC</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-430"><a href="#cb35-430" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-431"><a href="#cb35-431" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
+<span id="cb35-432"><a href="#cb35-432" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-433"><a href="#cb35-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-434"><a href="#cb35-434" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(AUC2, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-435"><a href="#cb35-435" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(AUC3, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-436"><a href="#cb35-436" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(AUC4, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-437"><a href="#cb35-437" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(AUC5, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-438"><a href="#cb35-438" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(AUC6, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-439"><a href="#cb35-439" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(AUC8, <span class="st">"auc"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-440"><a href="#cb35-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-441"><a href="#cb35-441" aria-hidden="true" tabindex="-1"></a>tbl_auc_base_rate <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2, </span>
+<span id="cb35-442"><a href="#cb35-442" aria-hidden="true" tabindex="-1"></a>                            Tstart3,</span>
+<span id="cb35-443"><a href="#cb35-443" aria-hidden="true" tabindex="-1"></a>                            Tstart4,</span>
+<span id="cb35-444"><a href="#cb35-444" aria-hidden="true" tabindex="-1"></a>                            Tstart5,</span>
+<span id="cb35-445"><a href="#cb35-445" aria-hidden="true" tabindex="-1"></a>                            Tstart6, </span>
+<span id="cb35-446"><a href="#cb35-446" aria-hidden="true" tabindex="-1"></a>                            Tstart8) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-447"><a href="#cb35-447" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-448"><a href="#cb35-448" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
+<span id="cb35-449"><a href="#cb35-449" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
+<span id="cb35-450"><a href="#cb35-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-451"><a href="#cb35-451" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_auc_base_rate) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
+<span id="cb35-452"><a href="#cb35-452" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-453"><a href="#cb35-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-456"><a href="#cb35-456" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-457"><a href="#cb35-457" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc_table_base_rate"</span></span>
+<span id="cb35-458"><a href="#cb35-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-459"><a href="#cb35-459" aria-hidden="true" tabindex="-1"></a>tbl_auc_base_rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb35-460"><a href="#cb35-460" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-461"><a href="#cb35-461" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-462"><a href="#cb35-462" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Brier Scores: Value model</span></span>
+<span id="cb35-462"><a href="#cb35-462" aria-hidden="true" tabindex="-1"></a><span class="fu">### Brier Scores</span></span>
 <span id="cb35-463"><a href="#cb35-463" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-466"><a href="#cb35-466" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-467"><a href="#cb35-467" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_table_value"</span></span>
-<span id="cb35-468"><a href="#cb35-468" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb35-469"><a href="#cb35-469" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-470"><a href="#cb35-470" aria-hidden="true" tabindex="-1"></a>Brier2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-471"><a href="#cb35-471" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-472"><a href="#cb35-472" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-473"><a href="#cb35-473" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
-<span id="cb35-474"><a href="#cb35-474" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-475"><a href="#cb35-475" aria-hidden="true" tabindex="-1"></a>Brier3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-476"><a href="#cb35-476" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-477"><a href="#cb35-477" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-478"><a href="#cb35-478" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb35-479"><a href="#cb35-479" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-480"><a href="#cb35-480" aria-hidden="true" tabindex="-1"></a>Brier4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-481"><a href="#cb35-481" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-482"><a href="#cb35-482" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-483"><a href="#cb35-483" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
-<span id="cb35-484"><a href="#cb35-484" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-485"><a href="#cb35-485" aria-hidden="true" tabindex="-1"></a>Brier5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-486"><a href="#cb35-486" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-487"><a href="#cb35-487" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-488"><a href="#cb35-488" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb35-489"><a href="#cb35-489" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-490"><a href="#cb35-490" aria-hidden="true" tabindex="-1"></a>Brier6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-491"><a href="#cb35-491" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-492"><a href="#cb35-492" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-493"><a href="#cb35-493" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
-<span id="cb35-494"><a href="#cb35-494" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-495"><a href="#cb35-495" aria-hidden="true" tabindex="-1"></a>Brier8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-496"><a href="#cb35-496" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
-<span id="cb35-497"><a href="#cb35-497" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-498"><a href="#cb35-498" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
-<span id="cb35-499"><a href="#cb35-499" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-500"><a href="#cb35-500" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-501"><a href="#cb35-501" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(Brier2, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-502"><a href="#cb35-502" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(Brier3, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-503"><a href="#cb35-503" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(Brier4, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-504"><a href="#cb35-504" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(Brier5, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-505"><a href="#cb35-505" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(Brier6, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-506"><a href="#cb35-506" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(Brier8, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-507"><a href="#cb35-507" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-508"><a href="#cb35-508" aria-hidden="true" tabindex="-1"></a>tbl_bs_value <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2,</span>
-<span id="cb35-509"><a href="#cb35-509" aria-hidden="true" tabindex="-1"></a>                Tstart3,</span>
-<span id="cb35-510"><a href="#cb35-510" aria-hidden="true" tabindex="-1"></a>                Tstart4,</span>
-<span id="cb35-511"><a href="#cb35-511" aria-hidden="true" tabindex="-1"></a>                Tstart5,</span>
-<span id="cb35-512"><a href="#cb35-512" aria-hidden="true" tabindex="-1"></a>                Tstart6,</span>
-<span id="cb35-513"><a href="#cb35-513" aria-hidden="true" tabindex="-1"></a>                Tstart8) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-514"><a href="#cb35-514" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb35-515"><a href="#cb35-515" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
-<span id="cb35-516"><a href="#cb35-516" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
-<span id="cb35-517"><a href="#cb35-517" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-518"><a href="#cb35-518" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_bs_value) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
-<span id="cb35-519"><a href="#cb35-519" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-520"><a href="#cb35-520" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-523"><a href="#cb35-523" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-524"><a href="#cb35-524" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_value"</span></span>
-<span id="cb35-525"><a href="#cb35-525" aria-hidden="true" tabindex="-1"></a>tbl_bs_value <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb35-526"><a href="#cb35-526" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-527"><a href="#cb35-527" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-528"><a href="#cb35-528" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Brier Scores: Value Rate model</span></span>
+<span id="cb35-464"><a href="#cb35-464" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Brier Scores: Value model</span></span>
+<span id="cb35-465"><a href="#cb35-465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-468"><a href="#cb35-468" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-469"><a href="#cb35-469" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_table_value"</span></span>
+<span id="cb35-470"><a href="#cb35-470" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb35-471"><a href="#cb35-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-472"><a href="#cb35-472" aria-hidden="true" tabindex="-1"></a>Brier2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-473"><a href="#cb35-473" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-474"><a href="#cb35-474" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-475"><a href="#cb35-475" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
+<span id="cb35-476"><a href="#cb35-476" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-477"><a href="#cb35-477" aria-hidden="true" tabindex="-1"></a>Brier3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-478"><a href="#cb35-478" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-479"><a href="#cb35-479" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-480"><a href="#cb35-480" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb35-481"><a href="#cb35-481" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-482"><a href="#cb35-482" aria-hidden="true" tabindex="-1"></a>Brier4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-483"><a href="#cb35-483" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-484"><a href="#cb35-484" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-485"><a href="#cb35-485" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
+<span id="cb35-486"><a href="#cb35-486" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-487"><a href="#cb35-487" aria-hidden="true" tabindex="-1"></a>Brier5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-488"><a href="#cb35-488" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-489"><a href="#cb35-489" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-490"><a href="#cb35-490" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb35-491"><a href="#cb35-491" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-492"><a href="#cb35-492" aria-hidden="true" tabindex="-1"></a>Brier6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-493"><a href="#cb35-493" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-494"><a href="#cb35-494" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-495"><a href="#cb35-495" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
+<span id="cb35-496"><a href="#cb35-496" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-497"><a href="#cb35-497" aria-hidden="true" tabindex="-1"></a>Brier8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-498"><a href="#cb35-498" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value,</span>
+<span id="cb35-499"><a href="#cb35-499" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-500"><a href="#cb35-500" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
+<span id="cb35-501"><a href="#cb35-501" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-502"><a href="#cb35-502" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-503"><a href="#cb35-503" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(Brier2, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-504"><a href="#cb35-504" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(Brier3, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-505"><a href="#cb35-505" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(Brier4, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-506"><a href="#cb35-506" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(Brier5, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-507"><a href="#cb35-507" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(Brier6, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-508"><a href="#cb35-508" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(Brier8, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-509"><a href="#cb35-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-510"><a href="#cb35-510" aria-hidden="true" tabindex="-1"></a>tbl_bs_value <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2,</span>
+<span id="cb35-511"><a href="#cb35-511" aria-hidden="true" tabindex="-1"></a>                Tstart3,</span>
+<span id="cb35-512"><a href="#cb35-512" aria-hidden="true" tabindex="-1"></a>                Tstart4,</span>
+<span id="cb35-513"><a href="#cb35-513" aria-hidden="true" tabindex="-1"></a>                Tstart5,</span>
+<span id="cb35-514"><a href="#cb35-514" aria-hidden="true" tabindex="-1"></a>                Tstart6,</span>
+<span id="cb35-515"><a href="#cb35-515" aria-hidden="true" tabindex="-1"></a>                Tstart8) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-516"><a href="#cb35-516" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-517"><a href="#cb35-517" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
+<span id="cb35-518"><a href="#cb35-518" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
+<span id="cb35-519"><a href="#cb35-519" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-520"><a href="#cb35-520" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_bs_value) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
+<span id="cb35-521"><a href="#cb35-521" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-522"><a href="#cb35-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-525"><a href="#cb35-525" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-526"><a href="#cb35-526" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_value"</span></span>
+<span id="cb35-527"><a href="#cb35-527" aria-hidden="true" tabindex="-1"></a>tbl_bs_value <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb35-528"><a href="#cb35-528" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-529"><a href="#cb35-529" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-532"><a href="#cb35-532" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-533"><a href="#cb35-533" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_table_value_rate"</span></span>
-<span id="cb35-534"><a href="#cb35-534" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb35-535"><a href="#cb35-535" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-536"><a href="#cb35-536" aria-hidden="true" tabindex="-1"></a>Brier2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-537"><a href="#cb35-537" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-538"><a href="#cb35-538" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-539"><a href="#cb35-539" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
-<span id="cb35-540"><a href="#cb35-540" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-541"><a href="#cb35-541" aria-hidden="true" tabindex="-1"></a>Brier3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-542"><a href="#cb35-542" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-543"><a href="#cb35-543" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-544"><a href="#cb35-544" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb35-545"><a href="#cb35-545" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-546"><a href="#cb35-546" aria-hidden="true" tabindex="-1"></a>Brier4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-547"><a href="#cb35-547" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-548"><a href="#cb35-548" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-549"><a href="#cb35-549" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
-<span id="cb35-550"><a href="#cb35-550" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-551"><a href="#cb35-551" aria-hidden="true" tabindex="-1"></a>Brier5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-552"><a href="#cb35-552" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-553"><a href="#cb35-553" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-554"><a href="#cb35-554" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb35-555"><a href="#cb35-555" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-556"><a href="#cb35-556" aria-hidden="true" tabindex="-1"></a>Brier6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-557"><a href="#cb35-557" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-558"><a href="#cb35-558" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-559"><a href="#cb35-559" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
-<span id="cb35-560"><a href="#cb35-560" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-561"><a href="#cb35-561" aria-hidden="true" tabindex="-1"></a>Brier8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-562"><a href="#cb35-562" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
-<span id="cb35-563"><a href="#cb35-563" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-564"><a href="#cb35-564" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
-<span id="cb35-565"><a href="#cb35-565" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-566"><a href="#cb35-566" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-567"><a href="#cb35-567" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(Brier2, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-568"><a href="#cb35-568" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(Brier3, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-569"><a href="#cb35-569" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(Brier4, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-570"><a href="#cb35-570" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(Brier5, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-571"><a href="#cb35-571" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(Brier6, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-572"><a href="#cb35-572" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(Brier8, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-573"><a href="#cb35-573" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-574"><a href="#cb35-574" aria-hidden="true" tabindex="-1"></a>tbl_bs_value_rate <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2,</span>
-<span id="cb35-575"><a href="#cb35-575" aria-hidden="true" tabindex="-1"></a>                Tstart3,</span>
-<span id="cb35-576"><a href="#cb35-576" aria-hidden="true" tabindex="-1"></a>                Tstart4,</span>
-<span id="cb35-577"><a href="#cb35-577" aria-hidden="true" tabindex="-1"></a>                Tstart5,</span>
-<span id="cb35-578"><a href="#cb35-578" aria-hidden="true" tabindex="-1"></a>                Tstart6,</span>
-<span id="cb35-579"><a href="#cb35-579" aria-hidden="true" tabindex="-1"></a>                Tstart8) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-580"><a href="#cb35-580" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb35-581"><a href="#cb35-581" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
-<span id="cb35-582"><a href="#cb35-582" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
-<span id="cb35-583"><a href="#cb35-583" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-584"><a href="#cb35-584" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_bs_value_rate) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
-<span id="cb35-585"><a href="#cb35-585" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-586"><a href="#cb35-586" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-589"><a href="#cb35-589" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-590"><a href="#cb35-590" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_value_rate"</span></span>
-<span id="cb35-591"><a href="#cb35-591" aria-hidden="true" tabindex="-1"></a>tbl_bs_value_rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb35-592"><a href="#cb35-592" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-593"><a href="#cb35-593" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-594"><a href="#cb35-594" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Brier Scores: Baseline Rate model</span></span>
+<span id="cb35-530"><a href="#cb35-530" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Brier Scores: Value Rate model</span></span>
+<span id="cb35-531"><a href="#cb35-531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-534"><a href="#cb35-534" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-535"><a href="#cb35-535" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_table_value_rate"</span></span>
+<span id="cb35-536"><a href="#cb35-536" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb35-537"><a href="#cb35-537" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-538"><a href="#cb35-538" aria-hidden="true" tabindex="-1"></a>Brier2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-539"><a href="#cb35-539" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-540"><a href="#cb35-540" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-541"><a href="#cb35-541" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
+<span id="cb35-542"><a href="#cb35-542" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-543"><a href="#cb35-543" aria-hidden="true" tabindex="-1"></a>Brier3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-544"><a href="#cb35-544" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-545"><a href="#cb35-545" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-546"><a href="#cb35-546" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb35-547"><a href="#cb35-547" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-548"><a href="#cb35-548" aria-hidden="true" tabindex="-1"></a>Brier4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-549"><a href="#cb35-549" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-550"><a href="#cb35-550" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-551"><a href="#cb35-551" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
+<span id="cb35-552"><a href="#cb35-552" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-553"><a href="#cb35-553" aria-hidden="true" tabindex="-1"></a>Brier5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-554"><a href="#cb35-554" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-555"><a href="#cb35-555" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-556"><a href="#cb35-556" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb35-557"><a href="#cb35-557" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-558"><a href="#cb35-558" aria-hidden="true" tabindex="-1"></a>Brier6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-559"><a href="#cb35-559" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-560"><a href="#cb35-560" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-561"><a href="#cb35-561" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
+<span id="cb35-562"><a href="#cb35-562" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-563"><a href="#cb35-563" aria-hidden="true" tabindex="-1"></a>Brier8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-564"><a href="#cb35-564" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>value.rate,</span>
+<span id="cb35-565"><a href="#cb35-565" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-566"><a href="#cb35-566" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
+<span id="cb35-567"><a href="#cb35-567" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-568"><a href="#cb35-568" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-569"><a href="#cb35-569" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(Brier2, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-570"><a href="#cb35-570" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(Brier3, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-571"><a href="#cb35-571" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(Brier4, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-572"><a href="#cb35-572" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(Brier5, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-573"><a href="#cb35-573" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(Brier6, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-574"><a href="#cb35-574" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(Brier8, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-575"><a href="#cb35-575" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-576"><a href="#cb35-576" aria-hidden="true" tabindex="-1"></a>tbl_bs_value_rate <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2,</span>
+<span id="cb35-577"><a href="#cb35-577" aria-hidden="true" tabindex="-1"></a>                Tstart3,</span>
+<span id="cb35-578"><a href="#cb35-578" aria-hidden="true" tabindex="-1"></a>                Tstart4,</span>
+<span id="cb35-579"><a href="#cb35-579" aria-hidden="true" tabindex="-1"></a>                Tstart5,</span>
+<span id="cb35-580"><a href="#cb35-580" aria-hidden="true" tabindex="-1"></a>                Tstart6,</span>
+<span id="cb35-581"><a href="#cb35-581" aria-hidden="true" tabindex="-1"></a>                Tstart8) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-582"><a href="#cb35-582" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-583"><a href="#cb35-583" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
+<span id="cb35-584"><a href="#cb35-584" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
+<span id="cb35-585"><a href="#cb35-585" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-586"><a href="#cb35-586" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_bs_value_rate) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
+<span id="cb35-587"><a href="#cb35-587" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-588"><a href="#cb35-588" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-591"><a href="#cb35-591" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-592"><a href="#cb35-592" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_value_rate"</span></span>
+<span id="cb35-593"><a href="#cb35-593" aria-hidden="true" tabindex="-1"></a>tbl_bs_value_rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb35-594"><a href="#cb35-594" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-595"><a href="#cb35-595" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-598"><a href="#cb35-598" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-599"><a href="#cb35-599" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_table_base_rate"</span></span>
-<span id="cb35-600"><a href="#cb35-600" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb35-601"><a href="#cb35-601" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-602"><a href="#cb35-602" aria-hidden="true" tabindex="-1"></a>Brier2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-603"><a href="#cb35-603" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-604"><a href="#cb35-604" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-605"><a href="#cb35-605" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
-<span id="cb35-606"><a href="#cb35-606" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-607"><a href="#cb35-607" aria-hidden="true" tabindex="-1"></a>Brier3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-608"><a href="#cb35-608" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-609"><a href="#cb35-609" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-610"><a href="#cb35-610" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
-<span id="cb35-611"><a href="#cb35-611" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-612"><a href="#cb35-612" aria-hidden="true" tabindex="-1"></a>Brier4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-613"><a href="#cb35-613" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-614"><a href="#cb35-614" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-615"><a href="#cb35-615" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
-<span id="cb35-616"><a href="#cb35-616" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-617"><a href="#cb35-617" aria-hidden="true" tabindex="-1"></a>Brier5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-618"><a href="#cb35-618" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-619"><a href="#cb35-619" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-620"><a href="#cb35-620" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb35-621"><a href="#cb35-621" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-622"><a href="#cb35-622" aria-hidden="true" tabindex="-1"></a>Brier6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-623"><a href="#cb35-623" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-624"><a href="#cb35-624" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-625"><a href="#cb35-625" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
-<span id="cb35-626"><a href="#cb35-626" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-627"><a href="#cb35-627" aria-hidden="true" tabindex="-1"></a>Brier8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
-<span id="cb35-628"><a href="#cb35-628" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
-<span id="cb35-629"><a href="#cb35-629" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
-<span id="cb35-630"><a href="#cb35-630" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
-<span id="cb35-631"><a href="#cb35-631" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
-<span id="cb35-632"><a href="#cb35-632" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-633"><a href="#cb35-633" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(Brier2, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-634"><a href="#cb35-634" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(Brier3, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-635"><a href="#cb35-635" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(Brier4, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-636"><a href="#cb35-636" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(Brier5, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-637"><a href="#cb35-637" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(Brier6, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-638"><a href="#cb35-638" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(Brier8, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb35-639"><a href="#cb35-639" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-640"><a href="#cb35-640" aria-hidden="true" tabindex="-1"></a>tbl_bs_base_rate <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2,</span>
-<span id="cb35-641"><a href="#cb35-641" aria-hidden="true" tabindex="-1"></a>                Tstart3,</span>
-<span id="cb35-642"><a href="#cb35-642" aria-hidden="true" tabindex="-1"></a>                Tstart4,</span>
-<span id="cb35-643"><a href="#cb35-643" aria-hidden="true" tabindex="-1"></a>                Tstart5,</span>
-<span id="cb35-644"><a href="#cb35-644" aria-hidden="true" tabindex="-1"></a>                Tstart6,</span>
-<span id="cb35-645"><a href="#cb35-645" aria-hidden="true" tabindex="-1"></a>                Tstart8) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-646"><a href="#cb35-646" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb35-647"><a href="#cb35-647" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
-<span id="cb35-648"><a href="#cb35-648" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
-<span id="cb35-649"><a href="#cb35-649" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-650"><a href="#cb35-650" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_bs_base_rate) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
-<span id="cb35-651"><a href="#cb35-651" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb35-652"><a href="#cb35-652" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-655"><a href="#cb35-655" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb35-656"><a href="#cb35-656" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_base_rate"</span></span>
-<span id="cb35-657"><a href="#cb35-657" aria-hidden="true" tabindex="-1"></a>tbl_bs_base_rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
-<span id="cb35-658"><a href="#cb35-658" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-596"><a href="#cb35-596" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Brier Scores: Baseline Rate model</span></span>
+<span id="cb35-597"><a href="#cb35-597" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-600"><a href="#cb35-600" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-601"><a href="#cb35-601" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_table_base_rate"</span></span>
+<span id="cb35-602"><a href="#cb35-602" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb35-603"><a href="#cb35-603" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-604"><a href="#cb35-604" aria-hidden="true" tabindex="-1"></a>Brier2  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-605"><a href="#cb35-605" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-606"><a href="#cb35-606" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-607"><a href="#cb35-607" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">2</span>,</span>
+<span id="cb35-608"><a href="#cb35-608" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-609"><a href="#cb35-609" aria-hidden="true" tabindex="-1"></a>Brier3  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-610"><a href="#cb35-610" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-611"><a href="#cb35-611" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-612"><a href="#cb35-612" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">3</span>,</span>
+<span id="cb35-613"><a href="#cb35-613" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-614"><a href="#cb35-614" aria-hidden="true" tabindex="-1"></a>Brier4  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-615"><a href="#cb35-615" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-616"><a href="#cb35-616" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-617"><a href="#cb35-617" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">4</span>,</span>
+<span id="cb35-618"><a href="#cb35-618" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-619"><a href="#cb35-619" aria-hidden="true" tabindex="-1"></a>Brier5  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-620"><a href="#cb35-620" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-621"><a href="#cb35-621" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-622"><a href="#cb35-622" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb35-623"><a href="#cb35-623" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-624"><a href="#cb35-624" aria-hidden="true" tabindex="-1"></a>Brier6  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-625"><a href="#cb35-625" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-626"><a href="#cb35-626" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-627"><a href="#cb35-627" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">6</span>,</span>
+<span id="cb35-628"><a href="#cb35-628" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-629"><a href="#cb35-629" aria-hidden="true" tabindex="-1"></a>Brier8  <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), </span>
+<span id="cb35-630"><a href="#cb35-630" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">~</span><span class="fu">try</span>(JMbayes2<span class="sc">::</span><span class="fu">tvBrier</span>(jmb2.<span class="fl">117.</span>base.rate,</span>
+<span id="cb35-631"><a href="#cb35-631" aria-hidden="true" tabindex="-1"></a>                                      swan_amh03,</span>
+<span id="cb35-632"><a href="#cb35-632" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Tstart =</span> <span class="dv">8</span>,</span>
+<span id="cb35-633"><a href="#cb35-633" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">Dt =</span> .x)))</span>
+<span id="cb35-634"><a href="#cb35-634" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-635"><a href="#cb35-635" aria-hidden="true" tabindex="-1"></a>Tstart2 <span class="ot">=</span> <span class="fu">map</span>(Brier2, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-636"><a href="#cb35-636" aria-hidden="true" tabindex="-1"></a>Tstart3 <span class="ot">=</span> <span class="fu">map</span>(Brier3, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-637"><a href="#cb35-637" aria-hidden="true" tabindex="-1"></a>Tstart4 <span class="ot">=</span> <span class="fu">map</span>(Brier4, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-638"><a href="#cb35-638" aria-hidden="true" tabindex="-1"></a>Tstart5 <span class="ot">=</span> <span class="fu">map</span>(Brier5, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-639"><a href="#cb35-639" aria-hidden="true" tabindex="-1"></a>Tstart6 <span class="ot">=</span> <span class="fu">map</span>(Brier6, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-640"><a href="#cb35-640" aria-hidden="true" tabindex="-1"></a>Tstart8 <span class="ot">=</span> <span class="fu">map</span>(Brier8, <span class="st">"Brier"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb35-641"><a href="#cb35-641" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-642"><a href="#cb35-642" aria-hidden="true" tabindex="-1"></a>tbl_bs_base_rate <span class="ot">&lt;-</span> <span class="fu">rbind</span>(Tstart2,</span>
+<span id="cb35-643"><a href="#cb35-643" aria-hidden="true" tabindex="-1"></a>                Tstart3,</span>
+<span id="cb35-644"><a href="#cb35-644" aria-hidden="true" tabindex="-1"></a>                Tstart4,</span>
+<span id="cb35-645"><a href="#cb35-645" aria-hidden="true" tabindex="-1"></a>                Tstart5,</span>
+<span id="cb35-646"><a href="#cb35-646" aria-hidden="true" tabindex="-1"></a>                Tstart6,</span>
+<span id="cb35-647"><a href="#cb35-647" aria-hidden="true" tabindex="-1"></a>                Tstart8) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-648"><a href="#cb35-648" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-649"><a href="#cb35-649" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
+<span id="cb35-650"><a href="#cb35-650" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">4</span>)</span>
+<span id="cb35-651"><a href="#cb35-651" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-652"><a href="#cb35-652" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tbl_bs_base_rate) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Dt1"</span>, <span class="st">"Dt2"</span>, <span class="st">"Dt3"</span>, <span class="st">"Dt4"</span>, <span class="st">"Dt5"</span>)</span>
+<span id="cb35-653"><a href="#cb35-653" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-654"><a href="#cb35-654" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-657"><a href="#cb35-657" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-658"><a href="#cb35-658" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "bs_base_rate"</span></span>
+<span id="cb35-659"><a href="#cb35-659" aria-hidden="true" tabindex="-1"></a>tbl_bs_base_rate <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span>
+<span id="cb35-660"><a href="#cb35-660" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-661"><a href="#cb35-661" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-662"><a href="#cb35-662" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

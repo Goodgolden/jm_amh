@@ -299,14 +299,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
   
 
-</header><div class="cell" data-hash="03_model_selection_cache/html/css-setup_99a311c61e13373db430f6023bde55f9">
+</header><div class="cell" data-hash="03_model_selection_cache/html/css-setup_121c6d8a032c7b61e72549fb9b18d192">
 <style type="text/css">
+
 .scroll-100 {
   max-height: 300px;
   max-width: 1000px;
   overflow-y: auto;
   background-color: inherit;
-}
+  }
+
 </style>
 </div>
 <section id="goal-for-this-chapter" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="goal-for-this-chapter">
@@ -333,6 +335,8 @@ Exploring include the Rate (Time-Dependent Slopes) in the <code>JM</code> model<
 <li><p><input type="checkbox" disabled="" checked="">
 Summary of model comparisons</p></li>
 <li><p><input type="checkbox" disabled="" checked=""><code>JM</code> package cannot calculate individual AUC and ROC, and Brier Score.</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+You are divine!</p></li>
 </ul></section><section id="model-selelction" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="model-selelction">
 <span class="header-section-number">3.2</span> Model selelction</h2>
 <ul>
@@ -1340,6 +1344,11 @@ Summary of model comparisons</p></li>
 #&gt; jm.fit31d 13635.76 13785.26 -6783.88 1058.79  3 &lt;0.0001</code></pre>
 </div>
 </div>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" checked="">
+You are spectacular!</li>
+</ul>
 
 
 <!-- -->
@@ -1512,7 +1521,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">message =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb82-9"><a href="#cb82-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">comment =</span> <span class="st">"#&gt;"</span>,</span>
 <span id="cb82-10"><a href="#cb82-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">cache =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb82-11"><a href="#cb82-11" aria-hidden="true" tabindex="-1"></a>                      <span class="co">#results = "hide",</span></span>
+<span id="cb82-11"><a href="#cb82-11" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># results = "hide",</span></span>
 <span id="cb82-12"><a href="#cb82-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">digits =</span> <span class="dv">4</span>,</span>
 <span id="cb82-13"><a href="#cb82-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb82-14"><a href="#cb82-14" aria-hidden="true" tabindex="-1"></a></span>
@@ -1542,566 +1551,573 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb82-38"><a href="#cb82-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-39"><a href="#cb82-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb82-40"><a href="#cb82-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{css, "css-setup", echo=FALSE}</span></span>
-<span id="cb82-41"><a href="#cb82-41" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">scroll</span><span class="dv">-100</span> <span class="op">{</span></span>
-<span id="cb82-42"><a href="#cb82-42" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>height<span class="op">:</span> 300px<span class="op">;</span></span>
-<span id="cb82-43"><a href="#cb82-43" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>width<span class="op">:</span> 1000px<span class="op">;</span></span>
-<span id="cb82-44"><a href="#cb82-44" aria-hidden="true" tabindex="-1"></a>  overflow<span class="op">-</span>y<span class="op">:</span> auto<span class="op">;</span></span>
-<span id="cb82-45"><a href="#cb82-45" aria-hidden="true" tabindex="-1"></a>  background<span class="op">-</span>color<span class="op">:</span> inherit<span class="op">;</span></span>
-<span id="cb82-46"><a href="#cb82-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb82-47"><a href="#cb82-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-41"><a href="#cb82-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-42"><a href="#cb82-42" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">scroll</span><span class="dv">-100</span> <span class="op">{</span></span>
+<span id="cb82-43"><a href="#cb82-43" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>height<span class="op">:</span> 300px<span class="op">;</span></span>
+<span id="cb82-44"><a href="#cb82-44" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>width<span class="op">:</span> 1000px<span class="op">;</span></span>
+<span id="cb82-45"><a href="#cb82-45" aria-hidden="true" tabindex="-1"></a>  overflow<span class="op">-</span>y<span class="op">:</span> auto<span class="op">;</span></span>
+<span id="cb82-46"><a href="#cb82-46" aria-hidden="true" tabindex="-1"></a>  background<span class="op">-</span>color<span class="op">:</span> inherit<span class="op">;</span></span>
+<span id="cb82-47"><a href="#cb82-47" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
 <span id="cb82-48"><a href="#cb82-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-49"><a href="#cb82-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal for this chapter</span></span>
+<span id="cb82-49"><a href="#cb82-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-50"><a href="#cb82-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-51"><a href="#cb82-51" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> List of all the variables in the clean dataset</span>
+<span id="cb82-51"><a href="#cb82-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal for this chapter</span></span>
 <span id="cb82-52"><a href="#cb82-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-53"><a href="#cb82-53" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Model selection for the survival sub-model (backward selection by EJC)</span>
+<span id="cb82-53"><a href="#cb82-53" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> List of all the variables in the clean dataset</span>
 <span id="cb82-54"><a href="#cb82-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-55"><a href="#cb82-55" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Model selection for the survival sub-model with <span class="in">`step`</span></span>
+<span id="cb82-55"><a href="#cb82-55" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Model selection for the survival sub-model (backward selection by EJC)</span>
 <span id="cb82-56"><a href="#cb82-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-57"><a href="#cb82-57" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Two methods are consistent with each other</span>
+<span id="cb82-57"><a href="#cb82-57" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Model selection for the survival sub-model with <span class="in">`step`</span></span>
 <span id="cb82-58"><a href="#cb82-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-59"><a href="#cb82-59" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Joint model with the selected survival sub-model (by EJC)</span>
+<span id="cb82-59"><a href="#cb82-59" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Two methods are consistent with each other</span>
 <span id="cb82-60"><a href="#cb82-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-61"><a href="#cb82-61" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Joint model factorization v.s. stratification (by EJC)</span>
+<span id="cb82-61"><a href="#cb82-61" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Joint model with the selected survival sub-model (by EJC)</span>
 <span id="cb82-62"><a href="#cb82-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-63"><a href="#cb82-63" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Fit the joint model with <span class="in">`JM`</span> package and get ROC and AUC <span class="co">[</span><span class="ot">failed</span><span class="co">]</span>{style="color:red"} (by EJC)</span>
+<span id="cb82-63"><a href="#cb82-63" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Joint model factorization v.s. stratification (by EJC)</span>
 <span id="cb82-64"><a href="#cb82-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-65"><a href="#cb82-65" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Dynamic predictions for the joint model <span class="co">[</span><span class="ot">failed</span><span class="co">]</span>{style="color:red"} ( by EJC)</span>
+<span id="cb82-65"><a href="#cb82-65" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Fit the joint model with <span class="in">`JM`</span> package and get ROC and AUC <span class="co">[</span><span class="ot">failed</span><span class="co">]</span>{style="color:red"} (by EJC)</span>
 <span id="cb82-66"><a href="#cb82-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-67"><a href="#cb82-67" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Exploring include the Rate (Time-Dependent Slopes) in the <span class="in">`JM`</span> model</span>
+<span id="cb82-67"><a href="#cb82-67" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Dynamic predictions for the joint model <span class="co">[</span><span class="ot">failed</span><span class="co">]</span>{style="color:red"} ( by EJC)</span>
 <span id="cb82-68"><a href="#cb82-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-69"><a href="#cb82-69" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Summary of model comparisons</span>
+<span id="cb82-69"><a href="#cb82-69" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Exploring include the Rate (Time-Dependent Slopes) in the <span class="in">`JM`</span> model</span>
 <span id="cb82-70"><a href="#cb82-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-71"><a href="#cb82-71" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`JM`</span> package cannot calculate individual AUC and ROC, and Brier Score.</span>
+<span id="cb82-71"><a href="#cb82-71" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Summary of model comparisons</span>
 <span id="cb82-72"><a href="#cb82-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-73"><a href="#cb82-73" aria-hidden="true" tabindex="-1"></a><span class="fu">## Model selelction</span></span>
+<span id="cb82-73"><a href="#cb82-73" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`JM`</span> package cannot calculate individual AUC and ROC, and Brier Score.</span>
 <span id="cb82-74"><a href="#cb82-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-75"><a href="#cb82-75" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>swan_amh0 is the longitudinal dataset</span>
+<span id="cb82-75"><a href="#cb82-75" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 <span id="cb82-76"><a href="#cb82-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-77"><a href="#cb82-77" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>swan_amh1 is the id dataset</span>
+<span id="cb82-77"><a href="#cb82-77" aria-hidden="true" tabindex="-1"></a><span class="fu">## Model selelction</span></span>
 <span id="cb82-78"><a href="#cb82-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-81"><a href="#cb82-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-82"><a href="#cb82-82" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "loading data"</span></span>
-<span id="cb82-83"><a href="#cb82-83" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh0.rda"</span>)</span>
-<span id="cb82-84"><a href="#cb82-84" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh1.rda"</span>)</span>
-<span id="cb82-85"><a href="#cb82-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-86"><a href="#cb82-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-87"><a href="#cb82-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-88"><a href="#cb82-88" aria-hidden="true" tabindex="-1"></a><span class="fu">## Backward selection of vars</span></span>
+<span id="cb82-79"><a href="#cb82-79" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>swan_amh0 is the longitudinal dataset</span>
+<span id="cb82-80"><a href="#cb82-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-81"><a href="#cb82-81" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>swan_amh1 is the id dataset</span>
+<span id="cb82-82"><a href="#cb82-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-85"><a href="#cb82-85" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-86"><a href="#cb82-86" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "loading data"</span></span>
+<span id="cb82-87"><a href="#cb82-87" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh0.rda"</span>)</span>
+<span id="cb82-88"><a href="#cb82-88" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh1.rda"</span>)</span>
 <span id="cb82-89"><a href="#cb82-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-90"><a href="#cb82-90" aria-hidden="true" tabindex="-1"></a>The fitted model <span class="in">`surv.fit16`</span> from this <span class="in">`03_model_selection`</span> is the same as the <span class="in">`surv.fit1`</span> from <span class="sc">\`</span>02_jm.qmd. Need to keep $site + ethnic + smoke + bmi$.</span>
+<span id="cb82-90"><a href="#cb82-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-91"><a href="#cb82-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-92"><a href="#cb82-92" aria-hidden="true" tabindex="-1"></a>All the variables:\</span>
-<span id="cb82-93"><a href="#cb82-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>surv outcomes: "etime" "event". - lme outcomes: "log(amh)"</span>
-<span id="cb82-94"><a href="#cb82-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-95"><a href="#cb82-95" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>longitudinal vars:</span>
-<span id="cb82-96"><a href="#cb82-96" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"id"</span>
-<span id="cb82-97"><a href="#cb82-97" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"time"</span>
-<span id="cb82-98"><a href="#cb82-98" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Not included into models:</span>
-<span id="cb82-99"><a href="#cb82-99" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"age"</span>
-<span id="cb82-100"><a href="#cb82-100" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"age0"</span>
-<span id="cb82-101"><a href="#cb82-101" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"bmi_cat"</span>
-<span id="cb82-102"><a href="#cb82-102" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"fmp_age"</span>
-<span id="cb82-103"><a href="#cb82-103" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"parity"</span>
-<span id="cb82-104"><a href="#cb82-104" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"phys_act"</span>
-<span id="cb82-105"><a href="#cb82-105" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"start_time"</span>
-<span id="cb82-106"><a href="#cb82-106" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"train"</span>
-<span id="cb82-107"><a href="#cb82-107" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"visit"</span>
-<span id="cb82-108"><a href="#cb82-108" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>survival vars:</span>
-<span id="cb82-109"><a href="#cb82-109" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"alcohol"*,</span>
-<span id="cb82-110"><a href="#cb82-110" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"bc_pills"*,</span>
-<span id="cb82-111"><a href="#cb82-111" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"bmi"*,</span>
-<span id="cb82-112"><a href="#cb82-112" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"children"*,</span>
-<span id="cb82-113"><a href="#cb82-113" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"edu"*,</span>
-<span id="cb82-114"><a href="#cb82-114" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"employed"*,</span>
-<span id="cb82-115"><a href="#cb82-115" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"ethnic"*,</span>
-<span id="cb82-116"><a href="#cb82-116" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"health"*,</span>
-<span id="cb82-117"><a href="#cb82-117" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"married"*,</span>
-<span id="cb82-118"><a href="#cb82-118" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"site"*,</span>
-<span id="cb82-119"><a href="#cb82-119" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"smoke"*</span>
-<span id="cb82-120"><a href="#cb82-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-123"><a href="#cb82-123" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-124"><a href="#cb82-124" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "backward_selection"</span></span>
-<span id="cb82-125"><a href="#cb82-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-126"><a href="#cb82-126" aria-hidden="true" tabindex="-1"></a>surv.fit10 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> children <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-127"><a href="#cb82-127" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span> phys_act <span class="sc">+</span></span>
-<span id="cb82-128"><a href="#cb82-128" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(employed) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
-<span id="cb82-129"><a href="#cb82-129" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
-<span id="cb82-130"><a href="#cb82-130" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb82-131"><a href="#cb82-131" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-132"><a href="#cb82-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-133"><a href="#cb82-133" aria-hidden="true" tabindex="-1"></a><span class="do">### Need to keep site + ethnic + smoke + bmi</span></span>
-<span id="cb82-134"><a href="#cb82-134" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for physical activity (taking out phys.act)</span></span>
-<span id="cb82-135"><a href="#cb82-135" aria-hidden="true" tabindex="-1"></a>surv.fit11 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> children <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-136"><a href="#cb82-136" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
-<span id="cb82-137"><a href="#cb82-137" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(employed) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
-<span id="cb82-138"><a href="#cb82-138" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
-<span id="cb82-139"><a href="#cb82-139" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb82-140"><a href="#cb82-140" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-141"><a href="#cb82-141" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit10, surv.fit11)</span>
-<span id="cb82-142"><a href="#cb82-142" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit10); <span class="fu">AIC</span>(surv.fit11)</span>
-<span id="cb82-143"><a href="#cb82-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-144"><a href="#cb82-144" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for employed</span></span>
-<span id="cb82-145"><a href="#cb82-145" aria-hidden="true" tabindex="-1"></a>surv.fit12 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> children <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-146"><a href="#cb82-146" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
-<span id="cb82-147"><a href="#cb82-147" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
-<span id="cb82-148"><a href="#cb82-148" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, <span class="at">x =</span> <span class="cn">TRUE</span>, <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-149"><a href="#cb82-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-150"><a href="#cb82-150" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit11, surv.fit12)</span>
-<span id="cb82-151"><a href="#cb82-151" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit11); <span class="fu">AIC</span>(surv.fit12)</span>
-<span id="cb82-152"><a href="#cb82-152" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for children</span></span>
-<span id="cb82-153"><a href="#cb82-153" aria-hidden="true" tabindex="-1"></a>surv.fit13 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-154"><a href="#cb82-154" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
-<span id="cb82-155"><a href="#cb82-155" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
-<span id="cb82-156"><a href="#cb82-156" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, <span class="at">x =</span> <span class="cn">TRUE</span>, <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-157"><a href="#cb82-157" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit12, surv.fit13)</span>
-<span id="cb82-158"><a href="#cb82-158" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit12); <span class="fu">AIC</span>(surv.fit13)</span>
-<span id="cb82-159"><a href="#cb82-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-160"><a href="#cb82-160" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for edu (education)</span></span>
-<span id="cb82-161"><a href="#cb82-161" aria-hidden="true" tabindex="-1"></a>surv.fit14 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-162"><a href="#cb82-162" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
-<span id="cb82-163"><a href="#cb82-163" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
-<span id="cb82-164"><a href="#cb82-164" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
-<span id="cb82-165"><a href="#cb82-165" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb82-166"><a href="#cb82-166" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-167"><a href="#cb82-167" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit13); <span class="fu">AIC</span>(surv.fit14)</span>
-<span id="cb82-168"><a href="#cb82-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-169"><a href="#cb82-169" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for alcohol</span></span>
-<span id="cb82-170"><a href="#cb82-170" aria-hidden="true" tabindex="-1"></a>surv.fit15 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-171"><a href="#cb82-171" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
-<span id="cb82-172"><a href="#cb82-172" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(health),</span>
-<span id="cb82-173"><a href="#cb82-173" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
-<span id="cb82-174"><a href="#cb82-174" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb82-175"><a href="#cb82-175" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-176"><a href="#cb82-176" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit14); <span class="fu">AIC</span>(surv.fit15)</span>
-<span id="cb82-177"><a href="#cb82-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-178"><a href="#cb82-178" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for health</span></span>
-<span id="cb82-179"><a href="#cb82-179" aria-hidden="true" tabindex="-1"></a>surv.fit16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-180"><a href="#cb82-180" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke),</span>
-<span id="cb82-181"><a href="#cb82-181" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
-<span id="cb82-182"><a href="#cb82-182" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb82-183"><a href="#cb82-183" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-184"><a href="#cb82-184" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit15); <span class="fu">AIC</span>(surv.fit16)</span>
-<span id="cb82-185"><a href="#cb82-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-186"><a href="#cb82-186" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for bc_pills</span></span>
-<span id="cb82-187"><a href="#cb82-187" aria-hidden="true" tabindex="-1"></a>surv.fit17 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-188"><a href="#cb82-188" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke),</span>
-<span id="cb82-189"><a href="#cb82-189" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
-<span id="cb82-190"><a href="#cb82-190" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb82-191"><a href="#cb82-191" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-192"><a href="#cb82-192" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit16); <span class="fu">AIC</span>(surv.fit17)</span>
-<span id="cb82-193"><a href="#cb82-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-194"><a href="#cb82-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-197"><a href="#cb82-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-198"><a href="#cb82-198" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "survival_summary"</span></span>
-<span id="cb82-199"><a href="#cb82-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-200"><a href="#cb82-200" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb82-201"><a href="#cb82-201" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">fit11 =</span> <span class="fu">glance</span>(surv.fit11), </span>
-<span id="cb82-202"><a href="#cb82-202" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit12 =</span> <span class="fu">glance</span>(surv.fit12), </span>
-<span id="cb82-203"><a href="#cb82-203" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit13 =</span> <span class="fu">glance</span>(surv.fit13),</span>
-<span id="cb82-204"><a href="#cb82-204" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit14 =</span> <span class="fu">glance</span>(surv.fit14),</span>
-<span id="cb82-205"><a href="#cb82-205" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit15 =</span> <span class="fu">glance</span>(surv.fit15),</span>
-<span id="cb82-206"><a href="#cb82-206" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit16 =</span> <span class="fu">glance</span>(surv.fit16),</span>
-<span id="cb82-207"><a href="#cb82-207" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit17 =</span> <span class="fu">glance</span>(surv.fit17)) <span class="sc">%&gt;%</span></span>
-<span id="cb82-208"><a href="#cb82-208" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">c</span>(<span class="st">"fit11"</span>, <span class="st">"fit12"</span>, <span class="st">"fit13"</span>,</span>
-<span id="cb82-209"><a href="#cb82-209" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"fit14"</span>, <span class="st">"fit15"</span>, <span class="st">"fit16"</span>,</span>
-<span id="cb82-210"><a href="#cb82-210" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"fit17"</span>),</span>
-<span id="cb82-211"><a href="#cb82-211" aria-hidden="true" tabindex="-1"></a>         <span class="at">formula =</span> <span class="fu">c</span>(surv.fit11<span class="sc">$</span>formula,</span>
-<span id="cb82-212"><a href="#cb82-212" aria-hidden="true" tabindex="-1"></a>                     surv.fit12<span class="sc">$</span>formula,</span>
-<span id="cb82-213"><a href="#cb82-213" aria-hidden="true" tabindex="-1"></a>                     surv.fit13<span class="sc">$</span>formula,</span>
-<span id="cb82-214"><a href="#cb82-214" aria-hidden="true" tabindex="-1"></a>                     surv.fit14<span class="sc">$</span>formula,</span>
-<span id="cb82-215"><a href="#cb82-215" aria-hidden="true" tabindex="-1"></a>                     surv.fit15<span class="sc">$</span>formula,</span>
-<span id="cb82-216"><a href="#cb82-216" aria-hidden="true" tabindex="-1"></a>                     surv.fit16<span class="sc">$</span>formula,</span>
-<span id="cb82-217"><a href="#cb82-217" aria-hidden="true" tabindex="-1"></a>                     surv.fit17<span class="sc">$</span>formula),</span>
-<span id="cb82-218"><a href="#cb82-218" aria-hidden="true" tabindex="-1"></a>         <span class="at">formula =</span> <span class="fu">as.character</span>(formula)) <span class="sc">%&gt;%</span></span>
-<span id="cb82-219"><a href="#cb82-219" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(name, logLik, AIC, </span>
-<span id="cb82-220"><a href="#cb82-220" aria-hidden="true" tabindex="-1"></a>                BIC, r.squared, concordance, formula) </span>
-<span id="cb82-221"><a href="#cb82-221" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-222"><a href="#cb82-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-223"><a href="#cb82-223" aria-hidden="true" tabindex="-1"></a>Here is the final survival sub-model.</span>
-<span id="cb82-224"><a href="#cb82-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-227"><a href="#cb82-227" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-228"><a href="#cb82-228" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "final_model"</span></span>
-<span id="cb82-229"><a href="#cb82-229" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.fit16)</span>
-<span id="cb82-230"><a href="#cb82-230" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-231"><a href="#cb82-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-232"><a href="#cb82-232" aria-hidden="true" tabindex="-1"></a>The comparison is not exactly make sense to me, so need to talk with EJC for further works on the model. Backward model selection is not my favorite <span class="in">`r emoji::emoji("disappointed")`</span> at all.</span>
-<span id="cb82-233"><a href="#cb82-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-236"><a href="#cb82-236" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-237"><a href="#cb82-237" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "backward_comparison"</span></span>
-<span id="cb82-238"><a href="#cb82-238" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb82-239"><a href="#cb82-239" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb82-240"><a href="#cb82-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-241"><a href="#cb82-241" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit1, surv.fit11) <span class="do">## phys.act NOT SIGN</span></span>
-<span id="cb82-242"><a href="#cb82-242" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit11, surv.fit12) <span class="do">## employed NOT SIGN</span></span>
-<span id="cb82-243"><a href="#cb82-243" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit12, surv.fit13) <span class="do">## children NOT SIGN</span></span>
-<span id="cb82-244"><a href="#cb82-244" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit13, surv.fit14) <span class="do">## edu NOT SIGN</span></span>
-<span id="cb82-245"><a href="#cb82-245" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit14, surv.fit15) <span class="do">## alcohol NOT SIGN</span></span>
-<span id="cb82-246"><a href="#cb82-246" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit15, surv.fit16) <span class="do">## health NOT SIGN</span></span>
-<span id="cb82-247"><a href="#cb82-247" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit16, surv.fit17) <span class="do">## bc_pills IS SIGNIF</span></span>
-<span id="cb82-248"><a href="#cb82-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-249"><a href="#cb82-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-250"><a href="#cb82-250" aria-hidden="true" tabindex="-1"></a><span class="fu">## Using `step` function</span></span>
-<span id="cb82-251"><a href="#cb82-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-252"><a href="#cb82-252" aria-hidden="true" tabindex="-1"></a>The results show there are extra variables we can include, if necessary. Here are the results using step function.</span>
+<span id="cb82-92"><a href="#cb82-92" aria-hidden="true" tabindex="-1"></a><span class="fu">## Backward selection of vars</span></span>
+<span id="cb82-93"><a href="#cb82-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-94"><a href="#cb82-94" aria-hidden="true" tabindex="-1"></a>The fitted model <span class="in">`surv.fit16`</span> from this <span class="in">`03_model_selection`</span> is the same as the <span class="in">`surv.fit1`</span> from <span class="sc">\`</span>02_jm.qmd. Need to keep $site + ethnic + smoke + bmi$.</span>
+<span id="cb82-95"><a href="#cb82-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-96"><a href="#cb82-96" aria-hidden="true" tabindex="-1"></a>All the variables:\</span>
+<span id="cb82-97"><a href="#cb82-97" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>surv outcomes: "etime" "event". - lme outcomes: "log(amh)"</span>
+<span id="cb82-98"><a href="#cb82-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-99"><a href="#cb82-99" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>longitudinal vars:</span>
+<span id="cb82-100"><a href="#cb82-100" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"id"</span>
+<span id="cb82-101"><a href="#cb82-101" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"time"</span>
+<span id="cb82-102"><a href="#cb82-102" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Not included into models:</span>
+<span id="cb82-103"><a href="#cb82-103" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"age"</span>
+<span id="cb82-104"><a href="#cb82-104" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"age0"</span>
+<span id="cb82-105"><a href="#cb82-105" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"bmi_cat"</span>
+<span id="cb82-106"><a href="#cb82-106" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"fmp_age"</span>
+<span id="cb82-107"><a href="#cb82-107" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"parity"</span>
+<span id="cb82-108"><a href="#cb82-108" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"phys_act"</span>
+<span id="cb82-109"><a href="#cb82-109" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"start_time"</span>
+<span id="cb82-110"><a href="#cb82-110" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"train"</span>
+<span id="cb82-111"><a href="#cb82-111" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>"visit"</span>
+<span id="cb82-112"><a href="#cb82-112" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>survival vars:</span>
+<span id="cb82-113"><a href="#cb82-113" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"alcohol"*,</span>
+<span id="cb82-114"><a href="#cb82-114" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"bc_pills"*,</span>
+<span id="cb82-115"><a href="#cb82-115" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"bmi"*,</span>
+<span id="cb82-116"><a href="#cb82-116" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"children"*,</span>
+<span id="cb82-117"><a href="#cb82-117" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"edu"*,</span>
+<span id="cb82-118"><a href="#cb82-118" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"employed"*,</span>
+<span id="cb82-119"><a href="#cb82-119" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"ethnic"*,</span>
+<span id="cb82-120"><a href="#cb82-120" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"health"*,</span>
+<span id="cb82-121"><a href="#cb82-121" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"married"*,</span>
+<span id="cb82-122"><a href="#cb82-122" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"site"*,</span>
+<span id="cb82-123"><a href="#cb82-123" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>*"smoke"*</span>
+<span id="cb82-124"><a href="#cb82-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-127"><a href="#cb82-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-128"><a href="#cb82-128" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "backward_selection"</span></span>
+<span id="cb82-129"><a href="#cb82-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-130"><a href="#cb82-130" aria-hidden="true" tabindex="-1"></a>surv.fit10 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> children <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-131"><a href="#cb82-131" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span> phys_act <span class="sc">+</span></span>
+<span id="cb82-132"><a href="#cb82-132" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(employed) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
+<span id="cb82-133"><a href="#cb82-133" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
+<span id="cb82-134"><a href="#cb82-134" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb82-135"><a href="#cb82-135" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-136"><a href="#cb82-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-137"><a href="#cb82-137" aria-hidden="true" tabindex="-1"></a><span class="do">### Need to keep site + ethnic + smoke + bmi</span></span>
+<span id="cb82-138"><a href="#cb82-138" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for physical activity (taking out phys.act)</span></span>
+<span id="cb82-139"><a href="#cb82-139" aria-hidden="true" tabindex="-1"></a>surv.fit11 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> children <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-140"><a href="#cb82-140" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
+<span id="cb82-141"><a href="#cb82-141" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(employed) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
+<span id="cb82-142"><a href="#cb82-142" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
+<span id="cb82-143"><a href="#cb82-143" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb82-144"><a href="#cb82-144" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-145"><a href="#cb82-145" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit10, surv.fit11)</span>
+<span id="cb82-146"><a href="#cb82-146" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit10); <span class="fu">AIC</span>(surv.fit11)</span>
+<span id="cb82-147"><a href="#cb82-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-148"><a href="#cb82-148" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for employed</span></span>
+<span id="cb82-149"><a href="#cb82-149" aria-hidden="true" tabindex="-1"></a>surv.fit12 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> children <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-150"><a href="#cb82-150" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
+<span id="cb82-151"><a href="#cb82-151" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
+<span id="cb82-152"><a href="#cb82-152" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, <span class="at">x =</span> <span class="cn">TRUE</span>, <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-153"><a href="#cb82-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-154"><a href="#cb82-154" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit11, surv.fit12)</span>
+<span id="cb82-155"><a href="#cb82-155" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit11); <span class="fu">AIC</span>(surv.fit12)</span>
+<span id="cb82-156"><a href="#cb82-156" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for children</span></span>
+<span id="cb82-157"><a href="#cb82-157" aria-hidden="true" tabindex="-1"></a>surv.fit13 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-158"><a href="#cb82-158" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
+<span id="cb82-159"><a href="#cb82-159" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
+<span id="cb82-160"><a href="#cb82-160" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, <span class="at">x =</span> <span class="cn">TRUE</span>, <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-161"><a href="#cb82-161" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit12, surv.fit13)</span>
+<span id="cb82-162"><a href="#cb82-162" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit12); <span class="fu">AIC</span>(surv.fit13)</span>
+<span id="cb82-163"><a href="#cb82-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-164"><a href="#cb82-164" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for edu (education)</span></span>
+<span id="cb82-165"><a href="#cb82-165" aria-hidden="true" tabindex="-1"></a>surv.fit14 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-166"><a href="#cb82-166" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
+<span id="cb82-167"><a href="#cb82-167" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(health),</span>
+<span id="cb82-168"><a href="#cb82-168" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
+<span id="cb82-169"><a href="#cb82-169" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-170"><a href="#cb82-170" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-171"><a href="#cb82-171" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit13); <span class="fu">AIC</span>(surv.fit14)</span>
+<span id="cb82-172"><a href="#cb82-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-173"><a href="#cb82-173" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for alcohol</span></span>
+<span id="cb82-174"><a href="#cb82-174" aria-hidden="true" tabindex="-1"></a>surv.fit15 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-175"><a href="#cb82-175" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
+<span id="cb82-176"><a href="#cb82-176" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(health),</span>
+<span id="cb82-177"><a href="#cb82-177" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
+<span id="cb82-178"><a href="#cb82-178" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-179"><a href="#cb82-179" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-180"><a href="#cb82-180" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit14); <span class="fu">AIC</span>(surv.fit15)</span>
+<span id="cb82-181"><a href="#cb82-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-182"><a href="#cb82-182" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for health</span></span>
+<span id="cb82-183"><a href="#cb82-183" aria-hidden="true" tabindex="-1"></a>surv.fit16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-184"><a href="#cb82-184" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke),</span>
+<span id="cb82-185"><a href="#cb82-185" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
+<span id="cb82-186"><a href="#cb82-186" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-187"><a href="#cb82-187" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-188"><a href="#cb82-188" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit15); <span class="fu">AIC</span>(surv.fit16)</span>
+<span id="cb82-189"><a href="#cb82-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-190"><a href="#cb82-190" aria-hidden="true" tabindex="-1"></a><span class="do">## testing for bc_pills</span></span>
+<span id="cb82-191"><a href="#cb82-191" aria-hidden="true" tabindex="-1"></a>surv.fit17 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-192"><a href="#cb82-192" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke),</span>
+<span id="cb82-193"><a href="#cb82-193" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> swan_amh1, </span>
+<span id="cb82-194"><a href="#cb82-194" aria-hidden="true" tabindex="-1"></a>                    <span class="at">x =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb82-195"><a href="#cb82-195" aria-hidden="true" tabindex="-1"></a>                    <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-196"><a href="#cb82-196" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(surv.fit16); <span class="fu">AIC</span>(surv.fit17)</span>
+<span id="cb82-197"><a href="#cb82-197" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-198"><a href="#cb82-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-201"><a href="#cb82-201" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-202"><a href="#cb82-202" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "survival_summary"</span></span>
+<span id="cb82-203"><a href="#cb82-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-204"><a href="#cb82-204" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb82-205"><a href="#cb82-205" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">fit11 =</span> <span class="fu">glance</span>(surv.fit11), </span>
+<span id="cb82-206"><a href="#cb82-206" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit12 =</span> <span class="fu">glance</span>(surv.fit12), </span>
+<span id="cb82-207"><a href="#cb82-207" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit13 =</span> <span class="fu">glance</span>(surv.fit13),</span>
+<span id="cb82-208"><a href="#cb82-208" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit14 =</span> <span class="fu">glance</span>(surv.fit14),</span>
+<span id="cb82-209"><a href="#cb82-209" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit15 =</span> <span class="fu">glance</span>(surv.fit15),</span>
+<span id="cb82-210"><a href="#cb82-210" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit16 =</span> <span class="fu">glance</span>(surv.fit16),</span>
+<span id="cb82-211"><a href="#cb82-211" aria-hidden="true" tabindex="-1"></a>      <span class="at">fit17 =</span> <span class="fu">glance</span>(surv.fit17)) <span class="sc">%&gt;%</span></span>
+<span id="cb82-212"><a href="#cb82-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">c</span>(<span class="st">"fit11"</span>, <span class="st">"fit12"</span>, <span class="st">"fit13"</span>,</span>
+<span id="cb82-213"><a href="#cb82-213" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"fit14"</span>, <span class="st">"fit15"</span>, <span class="st">"fit16"</span>,</span>
+<span id="cb82-214"><a href="#cb82-214" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"fit17"</span>),</span>
+<span id="cb82-215"><a href="#cb82-215" aria-hidden="true" tabindex="-1"></a>         <span class="at">formula =</span> <span class="fu">c</span>(surv.fit11<span class="sc">$</span>formula,</span>
+<span id="cb82-216"><a href="#cb82-216" aria-hidden="true" tabindex="-1"></a>                     surv.fit12<span class="sc">$</span>formula,</span>
+<span id="cb82-217"><a href="#cb82-217" aria-hidden="true" tabindex="-1"></a>                     surv.fit13<span class="sc">$</span>formula,</span>
+<span id="cb82-218"><a href="#cb82-218" aria-hidden="true" tabindex="-1"></a>                     surv.fit14<span class="sc">$</span>formula,</span>
+<span id="cb82-219"><a href="#cb82-219" aria-hidden="true" tabindex="-1"></a>                     surv.fit15<span class="sc">$</span>formula,</span>
+<span id="cb82-220"><a href="#cb82-220" aria-hidden="true" tabindex="-1"></a>                     surv.fit16<span class="sc">$</span>formula,</span>
+<span id="cb82-221"><a href="#cb82-221" aria-hidden="true" tabindex="-1"></a>                     surv.fit17<span class="sc">$</span>formula),</span>
+<span id="cb82-222"><a href="#cb82-222" aria-hidden="true" tabindex="-1"></a>         <span class="at">formula =</span> <span class="fu">as.character</span>(formula)) <span class="sc">%&gt;%</span></span>
+<span id="cb82-223"><a href="#cb82-223" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(name, logLik, AIC, </span>
+<span id="cb82-224"><a href="#cb82-224" aria-hidden="true" tabindex="-1"></a>                BIC, r.squared, concordance, formula) </span>
+<span id="cb82-225"><a href="#cb82-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-226"><a href="#cb82-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-227"><a href="#cb82-227" aria-hidden="true" tabindex="-1"></a>Here is the final survival sub-model.</span>
+<span id="cb82-228"><a href="#cb82-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-231"><a href="#cb82-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-232"><a href="#cb82-232" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "final_model"</span></span>
+<span id="cb82-233"><a href="#cb82-233" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.fit16)</span>
+<span id="cb82-234"><a href="#cb82-234" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-235"><a href="#cb82-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-236"><a href="#cb82-236" aria-hidden="true" tabindex="-1"></a>The comparison is not exactly make sense to me, so need to talk with EJC for further works on the model. Backward model selection is not my favorite <span class="in">`r emoji::emoji("disappointed")`</span> at all.</span>
+<span id="cb82-237"><a href="#cb82-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-240"><a href="#cb82-240" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-241"><a href="#cb82-241" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "backward_comparison"</span></span>
+<span id="cb82-242"><a href="#cb82-242" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb82-243"><a href="#cb82-243" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb82-244"><a href="#cb82-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-245"><a href="#cb82-245" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit1, surv.fit11) <span class="do">## phys.act NOT SIGN</span></span>
+<span id="cb82-246"><a href="#cb82-246" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit11, surv.fit12) <span class="do">## employed NOT SIGN</span></span>
+<span id="cb82-247"><a href="#cb82-247" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit12, surv.fit13) <span class="do">## children NOT SIGN</span></span>
+<span id="cb82-248"><a href="#cb82-248" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit13, surv.fit14) <span class="do">## edu NOT SIGN</span></span>
+<span id="cb82-249"><a href="#cb82-249" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit14, surv.fit15) <span class="do">## alcohol NOT SIGN</span></span>
+<span id="cb82-250"><a href="#cb82-250" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit15, surv.fit16) <span class="do">## health NOT SIGN</span></span>
+<span id="cb82-251"><a href="#cb82-251" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(surv.fit16, surv.fit17) <span class="do">## bc_pills IS SIGNIF</span></span>
+<span id="cb82-252"><a href="#cb82-252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-253"><a href="#cb82-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-254"><a href="#cb82-254" aria-hidden="true" tabindex="-1"></a>The selection with upper of the full model including all the variables, the lower of the null model with only the intercept.</span>
+<span id="cb82-254"><a href="#cb82-254" aria-hidden="true" tabindex="-1"></a><span class="fu">## Using `step` function</span></span>
 <span id="cb82-255"><a href="#cb82-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-258"><a href="#cb82-258" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-259"><a href="#cb82-259" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "step_function"</span></span>
-<span id="cb82-260"><a href="#cb82-260" aria-hidden="true" tabindex="-1"></a>surv.fit1 <span class="ot">&lt;-</span> surv.fit16</span>
-<span id="cb82-261"><a href="#cb82-261" aria-hidden="true" tabindex="-1"></a>surv.step <span class="ot">&lt;-</span> <span class="fu">step</span>(surv.fit1, </span>
-<span id="cb82-262"><a href="#cb82-262" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scope =</span> <span class="fu">list</span>(<span class="at">upper =</span> <span class="sc">~</span>age <span class="sc">+</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> children <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-263"><a href="#cb82-263" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
-<span id="cb82-264"><a href="#cb82-264" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(employed) <span class="sc">+</span></span>
-<span id="cb82-265"><a href="#cb82-265" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">factor</span>(health),</span>
-<span id="cb82-266"><a href="#cb82-266" aria-hidden="true" tabindex="-1"></a>                               <span class="at">lower =</span> <span class="sc">~</span> <span class="dv">1</span>))</span>
-<span id="cb82-267"><a href="#cb82-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-268"><a href="#cb82-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-269"><a href="#cb82-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-270"><a href="#cb82-270" aria-hidden="true" tabindex="-1"></a><span class="fu">### `step()` selected "best" model</span></span>
+<span id="cb82-256"><a href="#cb82-256" aria-hidden="true" tabindex="-1"></a>The results show there are extra variables we can include, if necessary. Here are the results using step function.</span>
+<span id="cb82-257"><a href="#cb82-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-258"><a href="#cb82-258" aria-hidden="true" tabindex="-1"></a>The selection with upper of the full model including all the variables, the lower of the null model with only the intercept.</span>
+<span id="cb82-259"><a href="#cb82-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-262"><a href="#cb82-262" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-263"><a href="#cb82-263" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "step_function"</span></span>
+<span id="cb82-264"><a href="#cb82-264" aria-hidden="true" tabindex="-1"></a>surv.fit1 <span class="ot">&lt;-</span> surv.fit16</span>
+<span id="cb82-265"><a href="#cb82-265" aria-hidden="true" tabindex="-1"></a>surv.step <span class="ot">&lt;-</span> <span class="fu">step</span>(surv.fit1, </span>
+<span id="cb82-266"><a href="#cb82-266" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scope =</span> <span class="fu">list</span>(<span class="at">upper =</span> <span class="sc">~</span>age <span class="sc">+</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> children <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-267"><a href="#cb82-267" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">factor</span>(site) <span class="sc">+</span> <span class="fu">factor</span>(ethnic) <span class="sc">+</span> <span class="fu">factor</span>(smoke) <span class="sc">+</span></span>
+<span id="cb82-268"><a href="#cb82-268" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">factor</span>(edu) <span class="sc">+</span> <span class="fu">factor</span>(alcohol) <span class="sc">+</span> <span class="fu">factor</span>(employed) <span class="sc">+</span></span>
+<span id="cb82-269"><a href="#cb82-269" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">factor</span>(health),</span>
+<span id="cb82-270"><a href="#cb82-270" aria-hidden="true" tabindex="-1"></a>                               <span class="at">lower =</span> <span class="sc">~</span> <span class="dv">1</span>))</span>
 <span id="cb82-271"><a href="#cb82-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-272"><a href="#cb82-272" aria-hidden="true" tabindex="-1"></a>Here are the final model from <span class="in">`step()`</span> function, which is does not including the <span class="in">`bmi`</span> and <span class="in">`ethnic`</span> variables. ***However the `age` is included in the model***.</span>
+<span id="cb82-272"><a href="#cb82-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-273"><a href="#cb82-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-274"><a href="#cb82-274" aria-hidden="true" tabindex="-1"></a>Need to talk with EJC, I was not sure why do not include <span class="in">`age`</span> into the survival model.</span>
+<span id="cb82-274"><a href="#cb82-274" aria-hidden="true" tabindex="-1"></a><span class="fu">### `step()` selected "best" model</span></span>
 <span id="cb82-275"><a href="#cb82-275" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-278"><a href="#cb82-278" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-279"><a href="#cb82-279" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "step_summary"</span></span>
-<span id="cb82-280"><a href="#cb82-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-281"><a href="#cb82-281" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(surv.step<span class="sc">$</span>formula)</span>
-<span id="cb82-282"><a href="#cb82-282" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.step)</span>
-<span id="cb82-283"><a href="#cb82-283" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-276"><a href="#cb82-276" aria-hidden="true" tabindex="-1"></a>Here are the final model from <span class="in">`step()`</span> function, which is does not including the <span class="in">`bmi`</span> and <span class="in">`ethnic`</span> variables. ***However the `age` is included in the model***.</span>
+<span id="cb82-277"><a href="#cb82-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-278"><a href="#cb82-278" aria-hidden="true" tabindex="-1"></a>Need to talk with EJC, I was not sure why do not include <span class="in">`age`</span> into the survival model.</span>
+<span id="cb82-279"><a href="#cb82-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-282"><a href="#cb82-282" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-283"><a href="#cb82-283" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "step_summary"</span></span>
 <span id="cb82-284"><a href="#cb82-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-285"><a href="#cb82-285" aria-hidden="true" tabindex="-1"></a><span class="fu">## Joint model with `JM::survfitJM()`</span></span>
-<span id="cb82-286"><a href="#cb82-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-287"><a href="#cb82-287" aria-hidden="true" tabindex="-1"></a>Here is the joint model with</span>
+<span id="cb82-285"><a href="#cb82-285" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(surv.step<span class="sc">$</span>formula)</span>
+<span id="cb82-286"><a href="#cb82-286" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.step)</span>
+<span id="cb82-287"><a href="#cb82-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-288"><a href="#cb82-288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-289"><a href="#cb82-289" aria-hidden="true" tabindex="-1"></a>$lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$</span>
+<span id="cb82-289"><a href="#cb82-289" aria-hidden="true" tabindex="-1"></a><span class="fu">## Joint model with `JM::survfitJM()`</span></span>
 <span id="cb82-290"><a href="#cb82-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-291"><a href="#cb82-291" aria-hidden="true" tabindex="-1"></a>$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
+<span id="cb82-291"><a href="#cb82-291" aria-hidden="true" tabindex="-1"></a>Here is the joint model with</span>
 <span id="cb82-292"><a href="#cb82-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-293"><a href="#cb82-293" aria-hidden="true" tabindex="-1"></a>This is the most basic form, no slope, on interaction, on integral functions. Also the original model, included in EJC's notes (***the model with only factor(ethnic) + factor(smoke), STILL does not allow for calc of AUC.***)</span>
+<span id="cb82-293"><a href="#cb82-293" aria-hidden="true" tabindex="-1"></a>$lme.fit1 \sim (fixed = lamh \sim time, \ random = \sim time| id)$</span>
 <span id="cb82-294"><a href="#cb82-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-297"><a href="#cb82-297" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-298"><a href="#cb82-298" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "joint_model"</span></span>
-<span id="cb82-299"><a href="#cb82-299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-300"><a href="#cb82-300" aria-hidden="true" tabindex="-1"></a><span class="do">### the model with only factor(ethnic) + factor(smoke) </span></span>
-<span id="cb82-301"><a href="#cb82-301" aria-hidden="true" tabindex="-1"></a><span class="do">### STILL does not allow for calc of AUC</span></span>
-<span id="cb82-302"><a href="#cb82-302" aria-hidden="true" tabindex="-1"></a>lme.fit1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time, </span>
-<span id="cb82-303"><a href="#cb82-303" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh0, </span>
-<span id="cb82-304"><a href="#cb82-304" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span>id)</span>
-<span id="cb82-305"><a href="#cb82-305" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-306"><a href="#cb82-306" aria-hidden="true" tabindex="-1"></a><span class="do">## joint model fit</span></span>
-<span id="cb82-307"><a href="#cb82-307" aria-hidden="true" tabindex="-1"></a>joint.fit1 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit1,</span>
-<span id="cb82-308"><a href="#cb82-308" aria-hidden="true" tabindex="-1"></a>                         surv.fit1,</span>
-<span id="cb82-309"><a href="#cb82-309" aria-hidden="true" tabindex="-1"></a>                         <span class="at">timeVar =</span> <span class="st">"time"</span>, </span>
-<span id="cb82-310"><a href="#cb82-310" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
-<span id="cb82-311"><a href="#cb82-311" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(joint.fit1)</span>
-<span id="cb82-312"><a href="#cb82-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-313"><a href="#cb82-313" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-314"><a href="#cb82-314" aria-hidden="true" tabindex="-1"></a><span class="fu">## Trying stratified baseline hazard</span></span>
-<span id="cb82-315"><a href="#cb82-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-316"><a href="#cb82-316" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>One is to include the other covariates (or multiple covariates) as regression terms for the hazard function.</span>
+<span id="cb82-295"><a href="#cb82-295" aria-hidden="true" tabindex="-1"></a>$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
+<span id="cb82-296"><a href="#cb82-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-297"><a href="#cb82-297" aria-hidden="true" tabindex="-1"></a>This is the most basic form, no slope, on interaction, on integral functions. Also the original model, included in EJC's notes (***the model with only factor(ethnic) + factor(smoke), STILL does not allow for calc of AUC.***)</span>
+<span id="cb82-298"><a href="#cb82-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-301"><a href="#cb82-301" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-302"><a href="#cb82-302" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "joint_model"</span></span>
+<span id="cb82-303"><a href="#cb82-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-304"><a href="#cb82-304" aria-hidden="true" tabindex="-1"></a><span class="do">### the model with only factor(ethnic) + factor(smoke) </span></span>
+<span id="cb82-305"><a href="#cb82-305" aria-hidden="true" tabindex="-1"></a><span class="do">### STILL does not allow for calc of AUC</span></span>
+<span id="cb82-306"><a href="#cb82-306" aria-hidden="true" tabindex="-1"></a>lme.fit1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time, </span>
+<span id="cb82-307"><a href="#cb82-307" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh0, </span>
+<span id="cb82-308"><a href="#cb82-308" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span>id)</span>
+<span id="cb82-309"><a href="#cb82-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-310"><a href="#cb82-310" aria-hidden="true" tabindex="-1"></a><span class="do">## joint model fit</span></span>
+<span id="cb82-311"><a href="#cb82-311" aria-hidden="true" tabindex="-1"></a>joint.fit1 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit1,</span>
+<span id="cb82-312"><a href="#cb82-312" aria-hidden="true" tabindex="-1"></a>                         surv.fit1,</span>
+<span id="cb82-313"><a href="#cb82-313" aria-hidden="true" tabindex="-1"></a>                         <span class="at">timeVar =</span> <span class="st">"time"</span>, </span>
+<span id="cb82-314"><a href="#cb82-314" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
+<span id="cb82-315"><a href="#cb82-315" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(joint.fit1)</span>
+<span id="cb82-316"><a href="#cb82-316" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-317"><a href="#cb82-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-318"><a href="#cb82-318" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Alternatively, if the covariates we are adjusting for is categorical with a small number of levels $G$, we may construct a stratified log-rank test.</span>
+<span id="cb82-318"><a href="#cb82-318" aria-hidden="true" tabindex="-1"></a><span class="fu">## Trying stratified baseline hazard</span></span>
 <span id="cb82-319"><a href="#cb82-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-320"><a href="#cb82-320" aria-hidden="true" tabindex="-1"></a>If we stratify on event with <span class="in">`strata()`</span> we get estimates of the effect of the covariates on events under the assumption that they affect both groups equally.</span>
+<span id="cb82-320"><a href="#cb82-320" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>One is to include the other covariates (or multiple covariates) as regression terms for the hazard function.</span>
 <span id="cb82-321"><a href="#cb82-321" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-324"><a href="#cb82-324" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-325"><a href="#cb82-325" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "stratified_baseline"</span></span>
-<span id="cb82-326"><a href="#cb82-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-327"><a href="#cb82-327" aria-hidden="true" tabindex="-1"></a><span class="co"># surv.fit1 &lt;- coxph(Surv(etime, event) ~ married + bc_pills + bmi +</span></span>
-<span id="cb82-328"><a href="#cb82-328" aria-hidden="true" tabindex="-1"></a><span class="co">#                       factor(site) + factor(ethnic) + factor(smoke),</span></span>
-<span id="cb82-329"><a href="#cb82-329" aria-hidden="true" tabindex="-1"></a><span class="co">#                     data = swan_amh1, </span></span>
-<span id="cb82-330"><a href="#cb82-330" aria-hidden="true" tabindex="-1"></a><span class="co">#                     x = TRUE,</span></span>
-<span id="cb82-331"><a href="#cb82-331" aria-hidden="true" tabindex="-1"></a><span class="co">#                     model = TRUE)</span></span>
-<span id="cb82-332"><a href="#cb82-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-333"><a href="#cb82-333" aria-hidden="true" tabindex="-1"></a>surv.fit2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
-<span id="cb82-334"><a href="#cb82-334" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">strata</span>(site) <span class="sc">+</span> <span class="fu">strata</span>(ethnic) <span class="sc">+</span> <span class="fu">strata</span>(smoke),</span>
-<span id="cb82-335"><a href="#cb82-335" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> swan_amh1,</span>
-<span id="cb82-336"><a href="#cb82-336" aria-hidden="true" tabindex="-1"></a>                   <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb82-337"><a href="#cb82-337" aria-hidden="true" tabindex="-1"></a>                   <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-338"><a href="#cb82-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-339"><a href="#cb82-339" aria-hidden="true" tabindex="-1"></a><span class="co"># anova(surv.fit1, surv.fit2)</span></span>
-<span id="cb82-340"><a href="#cb82-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-341"><a href="#cb82-341" aria-hidden="true" tabindex="-1"></a><span class="do">## joint model fit</span></span>
-<span id="cb82-342"><a href="#cb82-342" aria-hidden="true" tabindex="-1"></a>joint.fit2 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit1,</span>
-<span id="cb82-343"><a href="#cb82-343" aria-hidden="true" tabindex="-1"></a>                         surv.fit2,</span>
-<span id="cb82-344"><a href="#cb82-344" aria-hidden="true" tabindex="-1"></a>                         <span class="at">timeVar =</span> <span class="st">"time"</span>,</span>
-<span id="cb82-345"><a href="#cb82-345" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
-<span id="cb82-346"><a href="#cb82-346" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(joint.fit2)</span></span>
-<span id="cb82-347"><a href="#cb82-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-348"><a href="#cb82-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-349"><a href="#cb82-349" aria-hidden="true" tabindex="-1"></a><span class="do">### only smoke as a strata</span></span>
-<span id="cb82-350"><a href="#cb82-350" aria-hidden="true" tabindex="-1"></a>surv.fit3 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills  <span class="sc">+</span> bmi  <span class="sc">+</span></span>
-<span id="cb82-351"><a href="#cb82-351" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">strata</span>(smoke) ,</span>
-<span id="cb82-352"><a href="#cb82-352" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> swan_amh1,</span>
-<span id="cb82-353"><a href="#cb82-353" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb82-354"><a href="#cb82-354" aria-hidden="true" tabindex="-1"></a>                  <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb82-355"><a href="#cb82-355" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(surv.fit3)</span></span>
-<span id="cb82-356"><a href="#cb82-356" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-357"><a href="#cb82-357" aria-hidden="true" tabindex="-1"></a><span class="do">## joint model fit</span></span>
-<span id="cb82-358"><a href="#cb82-358" aria-hidden="true" tabindex="-1"></a>joint.fit3 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit1, </span>
-<span id="cb82-359"><a href="#cb82-359" aria-hidden="true" tabindex="-1"></a>                         surv.fit3,</span>
-<span id="cb82-360"><a href="#cb82-360" aria-hidden="true" tabindex="-1"></a>                         <span class="at">timeVar =</span> <span class="st">"time"</span>,</span>
-<span id="cb82-361"><a href="#cb82-361" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
-<span id="cb82-362"><a href="#cb82-362" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-363"><a href="#cb82-363" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-364"><a href="#cb82-364" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-365"><a href="#cb82-365" aria-hidden="true" tabindex="-1"></a><span class="fu">### Summary for Survival sub-models</span></span>
+<span id="cb82-322"><a href="#cb82-322" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Alternatively, if the covariates we are adjusting for is categorical with a small number of levels $G$, we may construct a stratified log-rank test.</span>
+<span id="cb82-323"><a href="#cb82-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-324"><a href="#cb82-324" aria-hidden="true" tabindex="-1"></a>If we stratify on event with <span class="in">`strata()`</span> we get estimates of the effect of the covariates on events under the assumption that they affect both groups equally.</span>
+<span id="cb82-325"><a href="#cb82-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-328"><a href="#cb82-328" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-329"><a href="#cb82-329" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "stratified_baseline"</span></span>
+<span id="cb82-330"><a href="#cb82-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-331"><a href="#cb82-331" aria-hidden="true" tabindex="-1"></a><span class="co"># surv.fit1 &lt;- coxph(Surv(etime, event) ~ married + bc_pills + bmi +</span></span>
+<span id="cb82-332"><a href="#cb82-332" aria-hidden="true" tabindex="-1"></a><span class="co">#                       factor(site) + factor(ethnic) + factor(smoke),</span></span>
+<span id="cb82-333"><a href="#cb82-333" aria-hidden="true" tabindex="-1"></a><span class="co">#                     data = swan_amh1, </span></span>
+<span id="cb82-334"><a href="#cb82-334" aria-hidden="true" tabindex="-1"></a><span class="co">#                     x = TRUE,</span></span>
+<span id="cb82-335"><a href="#cb82-335" aria-hidden="true" tabindex="-1"></a><span class="co">#                     model = TRUE)</span></span>
+<span id="cb82-336"><a href="#cb82-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-337"><a href="#cb82-337" aria-hidden="true" tabindex="-1"></a>surv.fit2 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills <span class="sc">+</span> bmi <span class="sc">+</span></span>
+<span id="cb82-338"><a href="#cb82-338" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">strata</span>(site) <span class="sc">+</span> <span class="fu">strata</span>(ethnic) <span class="sc">+</span> <span class="fu">strata</span>(smoke),</span>
+<span id="cb82-339"><a href="#cb82-339" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> swan_amh1,</span>
+<span id="cb82-340"><a href="#cb82-340" aria-hidden="true" tabindex="-1"></a>                   <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-341"><a href="#cb82-341" aria-hidden="true" tabindex="-1"></a>                   <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-342"><a href="#cb82-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-343"><a href="#cb82-343" aria-hidden="true" tabindex="-1"></a><span class="co"># anova(surv.fit1, surv.fit2)</span></span>
+<span id="cb82-344"><a href="#cb82-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-345"><a href="#cb82-345" aria-hidden="true" tabindex="-1"></a><span class="do">## joint model fit</span></span>
+<span id="cb82-346"><a href="#cb82-346" aria-hidden="true" tabindex="-1"></a>joint.fit2 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit1,</span>
+<span id="cb82-347"><a href="#cb82-347" aria-hidden="true" tabindex="-1"></a>                         surv.fit2,</span>
+<span id="cb82-348"><a href="#cb82-348" aria-hidden="true" tabindex="-1"></a>                         <span class="at">timeVar =</span> <span class="st">"time"</span>,</span>
+<span id="cb82-349"><a href="#cb82-349" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
+<span id="cb82-350"><a href="#cb82-350" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(joint.fit2)</span></span>
+<span id="cb82-351"><a href="#cb82-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-352"><a href="#cb82-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-353"><a href="#cb82-353" aria-hidden="true" tabindex="-1"></a><span class="do">### only smoke as a strata</span></span>
+<span id="cb82-354"><a href="#cb82-354" aria-hidden="true" tabindex="-1"></a>surv.fit3 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> bc_pills  <span class="sc">+</span> bmi  <span class="sc">+</span></span>
+<span id="cb82-355"><a href="#cb82-355" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">strata</span>(smoke) ,</span>
+<span id="cb82-356"><a href="#cb82-356" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> swan_amh1,</span>
+<span id="cb82-357"><a href="#cb82-357" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-358"><a href="#cb82-358" aria-hidden="true" tabindex="-1"></a>                  <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-359"><a href="#cb82-359" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(surv.fit3)</span></span>
+<span id="cb82-360"><a href="#cb82-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-361"><a href="#cb82-361" aria-hidden="true" tabindex="-1"></a><span class="do">## joint model fit</span></span>
+<span id="cb82-362"><a href="#cb82-362" aria-hidden="true" tabindex="-1"></a>joint.fit3 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit1, </span>
+<span id="cb82-363"><a href="#cb82-363" aria-hidden="true" tabindex="-1"></a>                         surv.fit3,</span>
+<span id="cb82-364"><a href="#cb82-364" aria-hidden="true" tabindex="-1"></a>                         <span class="at">timeVar =</span> <span class="st">"time"</span>,</span>
+<span id="cb82-365"><a href="#cb82-365" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
 <span id="cb82-366"><a href="#cb82-366" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-369"><a href="#cb82-369" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-370"><a href="#cb82-370" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "surv.fit2"</span></span>
-<span id="cb82-371"><a href="#cb82-371" aria-hidden="true" tabindex="-1"></a>surv.fit2</span>
-<span id="cb82-372"><a href="#cb82-372" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(joint.fit2)[[<span class="dv">2</span>]]</span>
-<span id="cb82-373"><a href="#cb82-373" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-374"><a href="#cb82-374" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-377"><a href="#cb82-377" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-378"><a href="#cb82-378" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "surv.fit3"</span></span>
-<span id="cb82-379"><a href="#cb82-379" aria-hidden="true" tabindex="-1"></a>surv.fit3</span>
-<span id="cb82-380"><a href="#cb82-380" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(joint.fit3)[[<span class="dv">2</span>]]</span>
-<span id="cb82-381"><a href="#cb82-381" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-382"><a href="#cb82-382" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-383"><a href="#cb82-383" aria-hidden="true" tabindex="-1"></a><span class="fu">### Checking Stratification</span></span>
-<span id="cb82-384"><a href="#cb82-384" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-387"><a href="#cb82-387" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-388"><a href="#cb82-388" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "survdiff"</span></span>
-<span id="cb82-389"><a href="#cb82-389" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> bc_pills, <span class="at">data =</span> swan_amh1)</span>
-<span id="cb82-390"><a href="#cb82-390" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> bc_pills <span class="sc">+</span> <span class="fu">strata</span>(site) <span class="sc">+</span> <span class="fu">strata</span>(ethnic) <span class="sc">+</span> <span class="fu">strata</span>(smoke),</span>
-<span id="cb82-391"><a href="#cb82-391" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> swan_amh1)</span>
-<span id="cb82-392"><a href="#cb82-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-393"><a href="#cb82-393" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married, <span class="at">data =</span> swan_amh1)</span>
-<span id="cb82-394"><a href="#cb82-394" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> <span class="fu">strata</span>(site) <span class="sc">+</span> <span class="fu">strata</span>(ethnic) <span class="sc">+</span> <span class="fu">strata</span>(smoke),</span>
+<span id="cb82-367"><a href="#cb82-367" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-368"><a href="#cb82-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-369"><a href="#cb82-369" aria-hidden="true" tabindex="-1"></a><span class="fu">### Summary for Survival sub-models</span></span>
+<span id="cb82-370"><a href="#cb82-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-373"><a href="#cb82-373" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-374"><a href="#cb82-374" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "surv.fit2"</span></span>
+<span id="cb82-375"><a href="#cb82-375" aria-hidden="true" tabindex="-1"></a>surv.fit2</span>
+<span id="cb82-376"><a href="#cb82-376" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(joint.fit2)[[<span class="dv">2</span>]]</span>
+<span id="cb82-377"><a href="#cb82-377" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-378"><a href="#cb82-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-381"><a href="#cb82-381" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-382"><a href="#cb82-382" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "surv.fit3"</span></span>
+<span id="cb82-383"><a href="#cb82-383" aria-hidden="true" tabindex="-1"></a>surv.fit3</span>
+<span id="cb82-384"><a href="#cb82-384" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(joint.fit3)[[<span class="dv">2</span>]]</span>
+<span id="cb82-385"><a href="#cb82-385" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-386"><a href="#cb82-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-387"><a href="#cb82-387" aria-hidden="true" tabindex="-1"></a><span class="fu">### Checking Stratification</span></span>
+<span id="cb82-388"><a href="#cb82-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-391"><a href="#cb82-391" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-392"><a href="#cb82-392" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "survdiff"</span></span>
+<span id="cb82-393"><a href="#cb82-393" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> bc_pills, <span class="at">data =</span> swan_amh1)</span>
+<span id="cb82-394"><a href="#cb82-394" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> bc_pills <span class="sc">+</span> <span class="fu">strata</span>(site) <span class="sc">+</span> <span class="fu">strata</span>(ethnic) <span class="sc">+</span> <span class="fu">strata</span>(smoke),</span>
 <span id="cb82-395"><a href="#cb82-395" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> swan_amh1)</span>
-<span id="cb82-396"><a href="#cb82-396" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-397"><a href="#cb82-397" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-400"><a href="#cb82-400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-401"><a href="#cb82-401" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "tidy_surv"</span></span>
-<span id="cb82-402"><a href="#cb82-402" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.fit1) </span>
-<span id="cb82-403"><a href="#cb82-403" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.fit2) </span>
-<span id="cb82-404"><a href="#cb82-404" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.fit3) </span>
-<span id="cb82-405"><a href="#cb82-405" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-406"><a href="#cb82-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-407"><a href="#cb82-407" aria-hidden="true" tabindex="-1"></a><span class="fu">## Obtaining dynamic predictions</span></span>
-<span id="cb82-408"><a href="#cb82-408" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-409"><a href="#cb82-409" aria-hidden="true" tabindex="-1"></a>This function accepts as main arguments a fitted joint model and a data frame that contains the longitudinal and covariate information for the subjects for which we wish to calculate the predicted survival probabilities.</span>
+<span id="cb82-396"><a href="#cb82-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-397"><a href="#cb82-397" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married, <span class="at">data =</span> swan_amh1)</span>
+<span id="cb82-398"><a href="#cb82-398" aria-hidden="true" tabindex="-1"></a><span class="fu">survdiff</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> married <span class="sc">+</span> <span class="fu">strata</span>(site) <span class="sc">+</span> <span class="fu">strata</span>(ethnic) <span class="sc">+</span> <span class="fu">strata</span>(smoke),</span>
+<span id="cb82-399"><a href="#cb82-399" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> swan_amh1)</span>
+<span id="cb82-400"><a href="#cb82-400" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-401"><a href="#cb82-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-404"><a href="#cb82-404" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-405"><a href="#cb82-405" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "tidy_surv"</span></span>
+<span id="cb82-406"><a href="#cb82-406" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.fit1) </span>
+<span id="cb82-407"><a href="#cb82-407" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.fit2) </span>
+<span id="cb82-408"><a href="#cb82-408" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(surv.fit3) </span>
+<span id="cb82-409"><a href="#cb82-409" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-410"><a href="#cb82-410" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-413"><a href="#cb82-413" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-414"><a href="#cb82-414" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dynamic_predictions"</span></span>
-<span id="cb82-415"><a href="#cb82-415" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb82-416"><a href="#cb82-416" aria-hidden="true" tabindex="-1"></a><span class="co">#| error: true</span></span>
-<span id="cb82-417"><a href="#cb82-417" aria-hidden="true" tabindex="-1"></a>ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(swan_amh0<span class="sc">$</span>id)</span>
-<span id="cb82-418"><a href="#cb82-418" aria-hidden="true" tabindex="-1"></a><span class="do">## length(ids)</span></span>
-<span id="cb82-419"><a href="#cb82-419" aria-hidden="true" tabindex="-1"></a><span class="do">## Prediction for the survival outcomes</span></span>
-<span id="cb82-420"><a href="#cb82-420" aria-hidden="true" tabindex="-1"></a>ND1 <span class="ot">&lt;-</span> swan_amh0[swan_amh0<span class="sc">$</span>id <span class="sc">==</span> ids[<span class="dv">8</span>], ] <span class="do">## 4, 5, 7 (not so good)</span></span>
-<span id="cb82-421"><a href="#cb82-421" aria-hidden="true" tabindex="-1"></a>sfit <span class="ot">&lt;-</span> JM<span class="sc">::</span><span class="fu">survfitJM</span>(joint.fit3,</span>
-<span id="cb82-422"><a href="#cb82-422" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata =</span> ND1, </span>
-<span id="cb82-423"><a href="#cb82-423" aria-hidden="true" tabindex="-1"></a>                      <span class="at">idVar =</span> <span class="st">"id"</span>) </span>
-<span id="cb82-424"><a href="#cb82-424" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-425"><a href="#cb82-425" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-426"><a href="#cb82-426" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-427"><a href="#cb82-427" aria-hidden="true" tabindex="-1"></a><span class="in">```{r class.output="scroll-100"}</span></span>
-<span id="cb82-428"><a href="#cb82-428" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "id110"</span></span>
-<span id="cb82-429"><a href="#cb82-429" aria-hidden="true" tabindex="-1"></a>ND1</span>
+<span id="cb82-411"><a href="#cb82-411" aria-hidden="true" tabindex="-1"></a><span class="fu">## Obtaining dynamic predictions</span></span>
+<span id="cb82-412"><a href="#cb82-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-413"><a href="#cb82-413" aria-hidden="true" tabindex="-1"></a>This function accepts as main arguments a fitted joint model and a data frame that contains the longitudinal and covariate information for the subjects for which we wish to calculate the predicted survival probabilities.</span>
+<span id="cb82-414"><a href="#cb82-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-417"><a href="#cb82-417" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-418"><a href="#cb82-418" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dynamic_predictions"</span></span>
+<span id="cb82-419"><a href="#cb82-419" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb82-420"><a href="#cb82-420" aria-hidden="true" tabindex="-1"></a><span class="co">#| error: true</span></span>
+<span id="cb82-421"><a href="#cb82-421" aria-hidden="true" tabindex="-1"></a>ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(swan_amh0<span class="sc">$</span>id)</span>
+<span id="cb82-422"><a href="#cb82-422" aria-hidden="true" tabindex="-1"></a><span class="do">## length(ids)</span></span>
+<span id="cb82-423"><a href="#cb82-423" aria-hidden="true" tabindex="-1"></a><span class="do">## Prediction for the survival outcomes</span></span>
+<span id="cb82-424"><a href="#cb82-424" aria-hidden="true" tabindex="-1"></a>ND1 <span class="ot">&lt;-</span> swan_amh0[swan_amh0<span class="sc">$</span>id <span class="sc">==</span> ids[<span class="dv">8</span>], ] <span class="do">## 4, 5, 7 (not so good)</span></span>
+<span id="cb82-425"><a href="#cb82-425" aria-hidden="true" tabindex="-1"></a>sfit <span class="ot">&lt;-</span> JM<span class="sc">::</span><span class="fu">survfitJM</span>(joint.fit3,</span>
+<span id="cb82-426"><a href="#cb82-426" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata =</span> ND1, </span>
+<span id="cb82-427"><a href="#cb82-427" aria-hidden="true" tabindex="-1"></a>                      <span class="at">idVar =</span> <span class="st">"id"</span>) </span>
+<span id="cb82-428"><a href="#cb82-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-429"><a href="#cb82-429" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-430"><a href="#cb82-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-431"><a href="#cb82-431" aria-hidden="true" tabindex="-1"></a><span class="co"># subset(ND1, </span></span>
-<span id="cb82-432"><a href="#cb82-432" aria-hidden="true" tabindex="-1"></a><span class="co">#        select = c('id', 'age0', 'time', </span></span>
-<span id="cb82-433"><a href="#cb82-433" aria-hidden="true" tabindex="-1"></a><span class="co">#                   'start_time', </span></span>
-<span id="cb82-434"><a href="#cb82-434" aria-hidden="true" tabindex="-1"></a><span class="co">#                   'etime', 'amh'))</span></span>
-<span id="cb82-435"><a href="#cb82-435" aria-hidden="true" tabindex="-1"></a><span class="co">#                   </span></span>
-<span id="cb82-436"><a href="#cb82-436" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-437"><a href="#cb82-437" aria-hidden="true" tabindex="-1"></a>sfit<span class="sc">$</span>summaries<span class="sc">$</span><span class="st">`</span><span class="at">1100390</span><span class="st">`</span> <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
-<span id="cb82-438"><a href="#cb82-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-439"><a href="#cb82-439" aria-hidden="true" tabindex="-1"></a>id1100390 <span class="ot">&lt;-</span> <span class="fu">filter</span>(swan_amh0, id <span class="sc">==</span> ids[<span class="dv">5</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb82-440"><a href="#cb82-440" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(etime, lamh)</span>
-<span id="cb82-441"><a href="#cb82-441" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-431"><a href="#cb82-431" aria-hidden="true" tabindex="-1"></a><span class="in">```{r class.output="scroll-100"}</span></span>
+<span id="cb82-432"><a href="#cb82-432" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "id110"</span></span>
+<span id="cb82-433"><a href="#cb82-433" aria-hidden="true" tabindex="-1"></a>ND1</span>
+<span id="cb82-434"><a href="#cb82-434" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-435"><a href="#cb82-435" aria-hidden="true" tabindex="-1"></a><span class="co"># subset(ND1, </span></span>
+<span id="cb82-436"><a href="#cb82-436" aria-hidden="true" tabindex="-1"></a><span class="co">#        select = c('id', 'age0', 'time', </span></span>
+<span id="cb82-437"><a href="#cb82-437" aria-hidden="true" tabindex="-1"></a><span class="co">#                   'start_time', </span></span>
+<span id="cb82-438"><a href="#cb82-438" aria-hidden="true" tabindex="-1"></a><span class="co">#                   'etime', 'amh'))</span></span>
+<span id="cb82-439"><a href="#cb82-439" aria-hidden="true" tabindex="-1"></a><span class="co">#                   </span></span>
+<span id="cb82-440"><a href="#cb82-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-441"><a href="#cb82-441" aria-hidden="true" tabindex="-1"></a>sfit<span class="sc">$</span>summaries<span class="sc">$</span><span class="st">`</span><span class="at">1100390</span><span class="st">`</span> <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
 <span id="cb82-442"><a href="#cb82-442" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-443"><a href="#cb82-443" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-444"><a href="#cb82-444" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-447"><a href="#cb82-447" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-448"><a href="#cb82-448" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "plot_dm"</span></span>
-<span id="cb82-449"><a href="#cb82-449" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sfit, <span class="at">estimator =</span> <span class="st">"mean"</span>, </span>
-<span id="cb82-450"><a href="#cb82-450" aria-hidden="true" tabindex="-1"></a>     <span class="at">include.y =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb82-451"><a href="#cb82-451" aria-hidden="true" tabindex="-1"></a>     <span class="at">conf.int =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb82-452"><a href="#cb82-452" aria-hidden="true" tabindex="-1"></a>     <span class="at">fill.area =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb82-453"><a href="#cb82-453" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.area =</span> <span class="st">"lightgrey"</span>)</span>
-<span id="cb82-454"><a href="#cb82-454" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-455"><a href="#cb82-455" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-456"><a href="#cb82-456" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-457"><a href="#cb82-457" aria-hidden="true" tabindex="-1"></a><span class="fu">### AUC and ROC</span></span>
+<span id="cb82-443"><a href="#cb82-443" aria-hidden="true" tabindex="-1"></a>id1100390 <span class="ot">&lt;-</span> <span class="fu">filter</span>(swan_amh0, id <span class="sc">==</span> ids[<span class="dv">5</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb82-444"><a href="#cb82-444" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(etime, lamh)</span>
+<span id="cb82-445"><a href="#cb82-445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-446"><a href="#cb82-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-447"><a href="#cb82-447" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-448"><a href="#cb82-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-451"><a href="#cb82-451" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-452"><a href="#cb82-452" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "plot_dm"</span></span>
+<span id="cb82-453"><a href="#cb82-453" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sfit, <span class="at">estimator =</span> <span class="st">"mean"</span>, </span>
+<span id="cb82-454"><a href="#cb82-454" aria-hidden="true" tabindex="-1"></a>     <span class="at">include.y =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb82-455"><a href="#cb82-455" aria-hidden="true" tabindex="-1"></a>     <span class="at">conf.int =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb82-456"><a href="#cb82-456" aria-hidden="true" tabindex="-1"></a>     <span class="at">fill.area =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb82-457"><a href="#cb82-457" aria-hidden="true" tabindex="-1"></a>     <span class="at">col.area =</span> <span class="st">"lightgrey"</span>)</span>
 <span id="cb82-458"><a href="#cb82-458" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-459"><a href="#cb82-459" aria-hidden="true" tabindex="-1"></a>I can only pullout the AUC for certain models, not all of them. The ROC function gets problems too. There is also on function for Brier Score in <span class="in">`JM`</span> package.</span>
+<span id="cb82-459"><a href="#cb82-459" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-460"><a href="#cb82-460" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-463"><a href="#cb82-463" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-464"><a href="#cb82-464" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc"</span></span>
-<span id="cb82-465"><a href="#cb82-465" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb82-466"><a href="#cb82-466" aria-hidden="true" tabindex="-1"></a><span class="co">#| error: true</span></span>
-<span id="cb82-467"><a href="#cb82-467" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-468"><a href="#cb82-468" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-469"><a href="#cb82-469" aria-hidden="true" tabindex="-1"></a><span class="do">## Tstart is the time up which long measurements are used in the predictions</span></span>
-<span id="cb82-470"><a href="#cb82-470" aria-hidden="true" tabindex="-1"></a><span class="do">## Dt = is the window of time that will be considered for predictions;</span></span>
-<span id="cb82-471"><a href="#cb82-471" aria-hidden="true" tabindex="-1"></a><span class="do">## discrimination is calculated based on this window</span></span>
-<span id="cb82-472"><a href="#cb82-472" aria-hidden="true" tabindex="-1"></a>auc2.t3 <span class="ot">&lt;-</span> <span class="fu">try</span>(JM<span class="sc">::</span><span class="fu">aucJM</span>(joint.fit2,</span>
-<span id="cb82-473"><a href="#cb82-473" aria-hidden="true" tabindex="-1"></a>                     <span class="at">newdata =</span> swan_amh0,</span>
-<span id="cb82-474"><a href="#cb82-474" aria-hidden="true" tabindex="-1"></a>                     <span class="at">idVar =</span> <span class="st">"id"</span>,</span>
-<span id="cb82-475"><a href="#cb82-475" aria-hidden="true" tabindex="-1"></a>                     <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb82-476"><a href="#cb82-476" aria-hidden="true" tabindex="-1"></a>                     <span class="at">Dt =</span> <span class="dv">3</span>))</span>
-<span id="cb82-477"><a href="#cb82-477" aria-hidden="true" tabindex="-1"></a>auc2.t3</span>
-<span id="cb82-478"><a href="#cb82-478" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-479"><a href="#cb82-479" aria-hidden="true" tabindex="-1"></a>auc1 <span class="ot">&lt;-</span> JM<span class="sc">::</span><span class="fu">aucJM</span>(joint.fit3,</span>
-<span id="cb82-480"><a href="#cb82-480" aria-hidden="true" tabindex="-1"></a>                  <span class="at">newdata =</span> swan_amh0,</span>
-<span id="cb82-481"><a href="#cb82-481" aria-hidden="true" tabindex="-1"></a>                  <span class="at">idVar =</span> <span class="st">"id"</span>,</span>
-<span id="cb82-482"><a href="#cb82-482" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb82-483"><a href="#cb82-483" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Dt =</span> <span class="dv">3</span>) <span class="do">##</span></span>
-<span id="cb82-484"><a href="#cb82-484" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-485"><a href="#cb82-485" aria-hidden="true" tabindex="-1"></a>auc2 <span class="ot">&lt;-</span> <span class="fu">try</span>(JM<span class="sc">::</span><span class="fu">aucJM</span>(joint.fit3, </span>
-<span id="cb82-486"><a href="#cb82-486" aria-hidden="true" tabindex="-1"></a>                  <span class="at">newdata =</span> swan_amh0,</span>
-<span id="cb82-487"><a href="#cb82-487" aria-hidden="true" tabindex="-1"></a>                  <span class="at">idVar =</span> <span class="st">"id"</span>,</span>
-<span id="cb82-488"><a href="#cb82-488" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
-<span id="cb82-489"><a href="#cb82-489" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Dt =</span> <span class="dv">3</span>)) </span>
-<span id="cb82-490"><a href="#cb82-490" aria-hidden="true" tabindex="-1"></a>auc2</span>
-<span id="cb82-491"><a href="#cb82-491" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-492"><a href="#cb82-492" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-493"><a href="#cb82-493" aria-hidden="true" tabindex="-1"></a><span class="fu">## Time-Dependent Slopes Parameterization</span></span>
-<span id="cb82-494"><a href="#cb82-494" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-495"><a href="#cb82-495" aria-hidden="true" tabindex="-1"></a>However, since for each patient the marker follows a trajectory in time, it is also reasonable to consider parameterizations that allow the risk for an event to also depend on other features of this trajectory. A parameterization of this type has been considered by <span class="in">`Ye et al. (2008b)`</span> who postulated a joint model in which the risk depends on both the current true value of the trajectory and the slope of the true trajectory at time <span class="in">`t`</span>.</span>
+<span id="cb82-461"><a href="#cb82-461" aria-hidden="true" tabindex="-1"></a><span class="fu">### AUC and ROC</span></span>
+<span id="cb82-462"><a href="#cb82-462" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-463"><a href="#cb82-463" aria-hidden="true" tabindex="-1"></a>I can only pullout the AUC for certain models, not all of them. The ROC function gets problems too. There is also on function for Brier Score in <span class="in">`JM`</span> package.</span>
+<span id="cb82-464"><a href="#cb82-464" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-467"><a href="#cb82-467" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-468"><a href="#cb82-468" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "auc"</span></span>
+<span id="cb82-469"><a href="#cb82-469" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb82-470"><a href="#cb82-470" aria-hidden="true" tabindex="-1"></a><span class="co">#| error: true</span></span>
+<span id="cb82-471"><a href="#cb82-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-472"><a href="#cb82-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-473"><a href="#cb82-473" aria-hidden="true" tabindex="-1"></a><span class="do">## Tstart is the time up which long measurements are used in the predictions</span></span>
+<span id="cb82-474"><a href="#cb82-474" aria-hidden="true" tabindex="-1"></a><span class="do">## Dt = is the window of time that will be considered for predictions;</span></span>
+<span id="cb82-475"><a href="#cb82-475" aria-hidden="true" tabindex="-1"></a><span class="do">## discrimination is calculated based on this window</span></span>
+<span id="cb82-476"><a href="#cb82-476" aria-hidden="true" tabindex="-1"></a>auc2.t3 <span class="ot">&lt;-</span> <span class="fu">try</span>(JM<span class="sc">::</span><span class="fu">aucJM</span>(joint.fit2,</span>
+<span id="cb82-477"><a href="#cb82-477" aria-hidden="true" tabindex="-1"></a>                     <span class="at">newdata =</span> swan_amh0,</span>
+<span id="cb82-478"><a href="#cb82-478" aria-hidden="true" tabindex="-1"></a>                     <span class="at">idVar =</span> <span class="st">"id"</span>,</span>
+<span id="cb82-479"><a href="#cb82-479" aria-hidden="true" tabindex="-1"></a>                     <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb82-480"><a href="#cb82-480" aria-hidden="true" tabindex="-1"></a>                     <span class="at">Dt =</span> <span class="dv">3</span>))</span>
+<span id="cb82-481"><a href="#cb82-481" aria-hidden="true" tabindex="-1"></a>auc2.t3</span>
+<span id="cb82-482"><a href="#cb82-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-483"><a href="#cb82-483" aria-hidden="true" tabindex="-1"></a>auc1 <span class="ot">&lt;-</span> JM<span class="sc">::</span><span class="fu">aucJM</span>(joint.fit3,</span>
+<span id="cb82-484"><a href="#cb82-484" aria-hidden="true" tabindex="-1"></a>                  <span class="at">newdata =</span> swan_amh0,</span>
+<span id="cb82-485"><a href="#cb82-485" aria-hidden="true" tabindex="-1"></a>                  <span class="at">idVar =</span> <span class="st">"id"</span>,</span>
+<span id="cb82-486"><a href="#cb82-486" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb82-487"><a href="#cb82-487" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Dt =</span> <span class="dv">3</span>) <span class="do">##</span></span>
+<span id="cb82-488"><a href="#cb82-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-489"><a href="#cb82-489" aria-hidden="true" tabindex="-1"></a>auc2 <span class="ot">&lt;-</span> <span class="fu">try</span>(JM<span class="sc">::</span><span class="fu">aucJM</span>(joint.fit3, </span>
+<span id="cb82-490"><a href="#cb82-490" aria-hidden="true" tabindex="-1"></a>                  <span class="at">newdata =</span> swan_amh0,</span>
+<span id="cb82-491"><a href="#cb82-491" aria-hidden="true" tabindex="-1"></a>                  <span class="at">idVar =</span> <span class="st">"id"</span>,</span>
+<span id="cb82-492"><a href="#cb82-492" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Tstart =</span> <span class="dv">5</span>,</span>
+<span id="cb82-493"><a href="#cb82-493" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Dt =</span> <span class="dv">3</span>)) </span>
+<span id="cb82-494"><a href="#cb82-494" aria-hidden="true" tabindex="-1"></a>auc2</span>
+<span id="cb82-495"><a href="#cb82-495" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-496"><a href="#cb82-496" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-497"><a href="#cb82-497" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb82-498"><a href="#cb82-498" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
-<span id="cb82-499"><a href="#cb82-499" aria-hidden="true" tabindex="-1"></a>  h_i(t) &amp; = h_0(t) \exp<span class="sc">\{</span>\gamma^{\top}w_i + \alpha_1 m_i(t) + \alpha_2 m'_i(t)<span class="sc">\}\\</span></span>
-<span id="cb82-500"><a href="#cb82-500" aria-hidden="true" tabindex="-1"></a>  m'_i(t) &amp; = \frac {d} {dt} m_i(t) = \frac {d} {dt} \{ x^{\top}_i (t) \beta + z_i^{\top} (t) b_i <span class="sc">\}\\</span></span>
-<span id="cb82-501"><a href="#cb82-501" aria-hidden="true" tabindex="-1"></a>  m'_i(t) &amp; = <span class="co">[</span><span class="ot">x_i^{slope}(t)</span><span class="co">]</span>^{\top} \beta^{slope} + <span class="co">[</span><span class="ot">z_i^{slope}(t)</span><span class="co">]</span>^{\top} b_i^{slope}</span>
-<span id="cb82-502"><a href="#cb82-502" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
-<span id="cb82-503"><a href="#cb82-503" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb82-504"><a href="#cb82-504" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-505"><a href="#cb82-505" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Including the interaction term in the cox-model for $m_i$</span>
-<span id="cb82-506"><a href="#cb82-506" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-507"><a href="#cb82-507" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The <span class="in">`time`</span> variable needs to be nonlinear for the longitudinal data</span>
+<span id="cb82-497"><a href="#cb82-497" aria-hidden="true" tabindex="-1"></a><span class="fu">## Time-Dependent Slopes Parameterization</span></span>
+<span id="cb82-498"><a href="#cb82-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-499"><a href="#cb82-499" aria-hidden="true" tabindex="-1"></a>However, since for each patient the marker follows a trajectory in time, it is also reasonable to consider parameterizations that allow the risk for an event to also depend on other features of this trajectory. A parameterization of this type has been considered by <span class="in">`Ye et al. (2008b)`</span> who postulated a joint model in which the risk depends on both the current true value of the trajectory and the slope of the true trajectory at time <span class="in">`t`</span>.</span>
+<span id="cb82-500"><a href="#cb82-500" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-501"><a href="#cb82-501" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb82-502"><a href="#cb82-502" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb82-503"><a href="#cb82-503" aria-hidden="true" tabindex="-1"></a>  h_i(t) &amp; = h_0(t) \exp<span class="sc">\{</span>\gamma^{\top}w_i + \alpha_1 m_i(t) + \alpha_2 m'_i(t)<span class="sc">\}\\</span></span>
+<span id="cb82-504"><a href="#cb82-504" aria-hidden="true" tabindex="-1"></a>  m'_i(t) &amp; = \frac {d} {dt} m_i(t) = \frac {d} {dt} \{ x^{\top}_i (t) \beta + z_i^{\top} (t) b_i <span class="sc">\}\\</span></span>
+<span id="cb82-505"><a href="#cb82-505" aria-hidden="true" tabindex="-1"></a>  m'_i(t) &amp; = <span class="co">[</span><span class="ot">x_i^{slope}(t)</span><span class="co">]</span>^{\top} \beta^{slope} + <span class="co">[</span><span class="ot">z_i^{slope}(t)</span><span class="co">]</span>^{\top} b_i^{slope}</span>
+<span id="cb82-506"><a href="#cb82-506" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb82-507"><a href="#cb82-507" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb82-508"><a href="#cb82-508" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-509"><a href="#cb82-509" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>so I included the <span class="in">`I(time^2)`</span> term in the <span class="in">`lme`</span> model</span>
+<span id="cb82-509"><a href="#cb82-509" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Including the interaction term in the cox-model for $m_i$</span>
 <span id="cb82-510"><a href="#cb82-510" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-511"><a href="#cb82-511" aria-hidden="true" tabindex="-1"></a><span class="in">```{r class.output="scroll-100"}</span></span>
-<span id="cb82-512"><a href="#cb82-512" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "lme_extended"</span></span>
-<span id="cb82-513"><a href="#cb82-513" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-514"><a href="#cb82-514" aria-hidden="true" tabindex="-1"></a>control <span class="ot">&lt;-</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
-<span id="cb82-515"><a href="#cb82-515" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-516"><a href="#cb82-516" aria-hidden="true" tabindex="-1"></a>lme.fit2 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time <span class="sc">+</span> <span class="fu">I</span>(time<span class="sc">^</span><span class="dv">2</span>), </span>
-<span id="cb82-517"><a href="#cb82-517" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh0, </span>
-<span id="cb82-518"><a href="#cb82-518" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
-<span id="cb82-519"><a href="#cb82-519" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
-<span id="cb82-520"><a href="#cb82-520" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-521"><a href="#cb82-521" aria-hidden="true" tabindex="-1"></a>lme.fit3 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time <span class="sc">+</span> <span class="fu">I</span>(time<span class="sc">^</span><span class="dv">2</span>), </span>
-<span id="cb82-522"><a href="#cb82-522" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh0, </span>
-<span id="cb82-523"><a href="#cb82-523" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
-<span id="cb82-524"><a href="#cb82-524" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time <span class="sc">+</span> <span class="fu">I</span>(time<span class="sc">^</span><span class="dv">2</span>) <span class="sc">|</span> id)</span>
-<span id="cb82-525"><a href="#cb82-525" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-526"><a href="#cb82-526" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="fu">glance</span>(lme.fit1), </span>
-<span id="cb82-527"><a href="#cb82-527" aria-hidden="true" tabindex="-1"></a>      <span class="fu">glance</span>(lme.fit2), </span>
-<span id="cb82-528"><a href="#cb82-528" aria-hidden="true" tabindex="-1"></a>      <span class="fu">glance</span>(lme.fit3))</span>
-<span id="cb82-529"><a href="#cb82-529" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-530"><a href="#cb82-530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-533"><a href="#cb82-533" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-534"><a href="#cb82-534" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "joint_model_slope"</span></span>
-<span id="cb82-535"><a href="#cb82-535" aria-hidden="true" tabindex="-1"></a>jm.fit21 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit2,</span>
-<span id="cb82-536"><a href="#cb82-536" aria-hidden="true" tabindex="-1"></a>                       surv.fit1,</span>
-<span id="cb82-537"><a href="#cb82-537" aria-hidden="true" tabindex="-1"></a>                       <span class="at">timeVar =</span> <span class="st">"time"</span>,</span>
-<span id="cb82-538"><a href="#cb82-538" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
-<span id="cb82-539"><a href="#cb82-539" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-540"><a href="#cb82-540" aria-hidden="true" tabindex="-1"></a>jm.fit31 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit3,</span>
-<span id="cb82-541"><a href="#cb82-541" aria-hidden="true" tabindex="-1"></a>                       surv.fit1,</span>
-<span id="cb82-542"><a href="#cb82-542" aria-hidden="true" tabindex="-1"></a>                       <span class="at">timeVar =</span> <span class="st">"time"</span>,</span>
-<span id="cb82-543"><a href="#cb82-543" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
-<span id="cb82-544"><a href="#cb82-544" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-545"><a href="#cb82-545" aria-hidden="true" tabindex="-1"></a><span class="co"># jm.fit22 &lt;- jointModel(lme.fit2,</span></span>
-<span id="cb82-546"><a href="#cb82-546" aria-hidden="true" tabindex="-1"></a><span class="co">#                        surv.fit2,</span></span>
-<span id="cb82-547"><a href="#cb82-547" aria-hidden="true" tabindex="-1"></a><span class="co">#                        timeVar = "time",</span></span>
-<span id="cb82-548"><a href="#cb82-548" aria-hidden="true" tabindex="-1"></a><span class="co">#                        # interFact = list(value = ~ age,</span></span>
-<span id="cb82-549"><a href="#cb82-549" aria-hidden="true" tabindex="-1"></a><span class="co">#                        #                  ##  a named list with a component named value</span></span>
-<span id="cb82-550"><a href="#cb82-550" aria-hidden="true" tabindex="-1"></a><span class="co">#                        #                  ##  that provides an R formula specifying the</span></span>
-<span id="cb82-551"><a href="#cb82-551" aria-hidden="true" tabindex="-1"></a><span class="co">#                        #                  ##  form of the W2 design matrix</span></span>
-<span id="cb82-552"><a href="#cb82-552" aria-hidden="true" tabindex="-1"></a><span class="co">#                        #                  data = swan_amh1),</span></span>
-<span id="cb82-553"><a href="#cb82-553" aria-hidden="true" tabindex="-1"></a><span class="co">#                        method = "piecewise-PH-aGH")</span></span>
-<span id="cb82-554"><a href="#cb82-554" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-555"><a href="#cb82-555" aria-hidden="true" tabindex="-1"></a><span class="co"># jm.fit32 &lt;- jointModel(lme.fit3,</span></span>
-<span id="cb82-556"><a href="#cb82-556" aria-hidden="true" tabindex="-1"></a><span class="co">#                        surv.fit2,</span></span>
-<span id="cb82-557"><a href="#cb82-557" aria-hidden="true" tabindex="-1"></a><span class="co">#                        timeVar = "time",</span></span>
-<span id="cb82-558"><a href="#cb82-558" aria-hidden="true" tabindex="-1"></a><span class="co">#                        method = "piecewise-PH-aGH")</span></span>
-<span id="cb82-559"><a href="#cb82-559" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-560"><a href="#cb82-560" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-563"><a href="#cb82-563" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-564"><a href="#cb82-564" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "derivative"</span></span>
-<span id="cb82-565"><a href="#cb82-565" aria-hidden="true" tabindex="-1"></a><span class="co"># model.matrix(lamh ~ time + I(time^2), </span></span>
-<span id="cb82-566"><a href="#cb82-566" aria-hidden="true" tabindex="-1"></a><span class="co">#                 data = swan_amh0)</span></span>
-<span id="cb82-567"><a href="#cb82-567" aria-hidden="true" tabindex="-1"></a>dform2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="fu">I</span>(<span class="dv">2</span> <span class="sc">*</span> time),</span>
-<span id="cb82-568"><a href="#cb82-568" aria-hidden="true" tabindex="-1"></a>              <span class="do">## the 2nd and 3rd fixed effects of mi(t) used</span></span>
-<span id="cb82-569"><a href="#cb82-569" aria-hidden="true" tabindex="-1"></a>              <span class="at">indFixed =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, </span>
-<span id="cb82-570"><a href="#cb82-570" aria-hidden="true" tabindex="-1"></a>              <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
-<span id="cb82-571"><a href="#cb82-571" aria-hidden="true" tabindex="-1"></a>              <span class="do">## the second random effect of mi(t)</span></span>
-<span id="cb82-572"><a href="#cb82-572" aria-hidden="true" tabindex="-1"></a>              <span class="at">indRandom =</span> <span class="dv">2</span>)</span>
-<span id="cb82-573"><a href="#cb82-573" aria-hidden="true" tabindex="-1"></a>dform3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="fu">I</span>(<span class="dv">2</span> <span class="sc">*</span> time),</span>
-<span id="cb82-574"><a href="#cb82-574" aria-hidden="true" tabindex="-1"></a>              <span class="do">## the 2nd and 3rd fixed effects of mi(t) used</span></span>
-<span id="cb82-575"><a href="#cb82-575" aria-hidden="true" tabindex="-1"></a>              <span class="at">indFixed =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, </span>
-<span id="cb82-576"><a href="#cb82-576" aria-hidden="true" tabindex="-1"></a>              <span class="at">random =</span> <span class="sc">~</span> <span class="fu">I</span>(<span class="dv">2</span> <span class="sc">*</span> time), </span>
-<span id="cb82-577"><a href="#cb82-577" aria-hidden="true" tabindex="-1"></a>              <span class="do">## the second and third random effect of mi(t)</span></span>
-<span id="cb82-578"><a href="#cb82-578" aria-hidden="true" tabindex="-1"></a>              <span class="at">indRandom =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>)</span>
-<span id="cb82-579"><a href="#cb82-579" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-580"><a href="#cb82-580" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-581"><a href="#cb82-581" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-582"><a href="#cb82-582" aria-hidden="true" tabindex="-1"></a>Warning: Stop time must be <span class="sc">\&gt;</span> start time, NA created</span>
+<span id="cb82-511"><a href="#cb82-511" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The <span class="in">`time`</span> variable needs to be nonlinear for the longitudinal data</span>
+<span id="cb82-512"><a href="#cb82-512" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-513"><a href="#cb82-513" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>so I included the <span class="in">`I(time^2)`</span> term in the <span class="in">`lme`</span> model</span>
+<span id="cb82-514"><a href="#cb82-514" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-515"><a href="#cb82-515" aria-hidden="true" tabindex="-1"></a><span class="in">```{r class.output="scroll-100"}</span></span>
+<span id="cb82-516"><a href="#cb82-516" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "lme_extended"</span></span>
+<span id="cb82-517"><a href="#cb82-517" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-518"><a href="#cb82-518" aria-hidden="true" tabindex="-1"></a>control <span class="ot">&lt;-</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
+<span id="cb82-519"><a href="#cb82-519" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-520"><a href="#cb82-520" aria-hidden="true" tabindex="-1"></a>lme.fit2 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time <span class="sc">+</span> <span class="fu">I</span>(time<span class="sc">^</span><span class="dv">2</span>), </span>
+<span id="cb82-521"><a href="#cb82-521" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh0, </span>
+<span id="cb82-522"><a href="#cb82-522" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
+<span id="cb82-523"><a href="#cb82-523" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
+<span id="cb82-524"><a href="#cb82-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-525"><a href="#cb82-525" aria-hidden="true" tabindex="-1"></a>lme.fit3 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time <span class="sc">+</span> <span class="fu">I</span>(time<span class="sc">^</span><span class="dv">2</span>), </span>
+<span id="cb82-526"><a href="#cb82-526" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh0, </span>
+<span id="cb82-527"><a href="#cb82-527" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
+<span id="cb82-528"><a href="#cb82-528" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time <span class="sc">+</span> <span class="fu">I</span>(time<span class="sc">^</span><span class="dv">2</span>) <span class="sc">|</span> id)</span>
+<span id="cb82-529"><a href="#cb82-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-530"><a href="#cb82-530" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="fu">glance</span>(lme.fit1), </span>
+<span id="cb82-531"><a href="#cb82-531" aria-hidden="true" tabindex="-1"></a>      <span class="fu">glance</span>(lme.fit2), </span>
+<span id="cb82-532"><a href="#cb82-532" aria-hidden="true" tabindex="-1"></a>      <span class="fu">glance</span>(lme.fit3))</span>
+<span id="cb82-533"><a href="#cb82-533" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-534"><a href="#cb82-534" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-537"><a href="#cb82-537" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-538"><a href="#cb82-538" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "joint_model_slope"</span></span>
+<span id="cb82-539"><a href="#cb82-539" aria-hidden="true" tabindex="-1"></a>jm.fit21 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit2,</span>
+<span id="cb82-540"><a href="#cb82-540" aria-hidden="true" tabindex="-1"></a>                       surv.fit1,</span>
+<span id="cb82-541"><a href="#cb82-541" aria-hidden="true" tabindex="-1"></a>                       <span class="at">timeVar =</span> <span class="st">"time"</span>,</span>
+<span id="cb82-542"><a href="#cb82-542" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
+<span id="cb82-543"><a href="#cb82-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-544"><a href="#cb82-544" aria-hidden="true" tabindex="-1"></a>jm.fit31 <span class="ot">&lt;-</span> <span class="fu">jointModel</span>(lme.fit3,</span>
+<span id="cb82-545"><a href="#cb82-545" aria-hidden="true" tabindex="-1"></a>                       surv.fit1,</span>
+<span id="cb82-546"><a href="#cb82-546" aria-hidden="true" tabindex="-1"></a>                       <span class="at">timeVar =</span> <span class="st">"time"</span>,</span>
+<span id="cb82-547"><a href="#cb82-547" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"piecewise-PH-aGH"</span>)</span>
+<span id="cb82-548"><a href="#cb82-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-549"><a href="#cb82-549" aria-hidden="true" tabindex="-1"></a><span class="co"># jm.fit22 &lt;- jointModel(lme.fit2,</span></span>
+<span id="cb82-550"><a href="#cb82-550" aria-hidden="true" tabindex="-1"></a><span class="co">#                        surv.fit2,</span></span>
+<span id="cb82-551"><a href="#cb82-551" aria-hidden="true" tabindex="-1"></a><span class="co">#                        timeVar = "time",</span></span>
+<span id="cb82-552"><a href="#cb82-552" aria-hidden="true" tabindex="-1"></a><span class="co">#                        # interFact = list(value = ~ age,</span></span>
+<span id="cb82-553"><a href="#cb82-553" aria-hidden="true" tabindex="-1"></a><span class="co">#                        #                  ##  a named list with a component named value</span></span>
+<span id="cb82-554"><a href="#cb82-554" aria-hidden="true" tabindex="-1"></a><span class="co">#                        #                  ##  that provides an R formula specifying the</span></span>
+<span id="cb82-555"><a href="#cb82-555" aria-hidden="true" tabindex="-1"></a><span class="co">#                        #                  ##  form of the W2 design matrix</span></span>
+<span id="cb82-556"><a href="#cb82-556" aria-hidden="true" tabindex="-1"></a><span class="co">#                        #                  data = swan_amh1),</span></span>
+<span id="cb82-557"><a href="#cb82-557" aria-hidden="true" tabindex="-1"></a><span class="co">#                        method = "piecewise-PH-aGH")</span></span>
+<span id="cb82-558"><a href="#cb82-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-559"><a href="#cb82-559" aria-hidden="true" tabindex="-1"></a><span class="co"># jm.fit32 &lt;- jointModel(lme.fit3,</span></span>
+<span id="cb82-560"><a href="#cb82-560" aria-hidden="true" tabindex="-1"></a><span class="co">#                        surv.fit2,</span></span>
+<span id="cb82-561"><a href="#cb82-561" aria-hidden="true" tabindex="-1"></a><span class="co">#                        timeVar = "time",</span></span>
+<span id="cb82-562"><a href="#cb82-562" aria-hidden="true" tabindex="-1"></a><span class="co">#                        method = "piecewise-PH-aGH")</span></span>
+<span id="cb82-563"><a href="#cb82-563" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-564"><a href="#cb82-564" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-567"><a href="#cb82-567" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-568"><a href="#cb82-568" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "derivative"</span></span>
+<span id="cb82-569"><a href="#cb82-569" aria-hidden="true" tabindex="-1"></a><span class="co"># model.matrix(lamh ~ time + I(time^2), </span></span>
+<span id="cb82-570"><a href="#cb82-570" aria-hidden="true" tabindex="-1"></a><span class="co">#                 data = swan_amh0)</span></span>
+<span id="cb82-571"><a href="#cb82-571" aria-hidden="true" tabindex="-1"></a>dform2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="fu">I</span>(<span class="dv">2</span> <span class="sc">*</span> time),</span>
+<span id="cb82-572"><a href="#cb82-572" aria-hidden="true" tabindex="-1"></a>              <span class="do">## the 2nd and 3rd fixed effects of mi(t) used</span></span>
+<span id="cb82-573"><a href="#cb82-573" aria-hidden="true" tabindex="-1"></a>              <span class="at">indFixed =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, </span>
+<span id="cb82-574"><a href="#cb82-574" aria-hidden="true" tabindex="-1"></a>              <span class="at">random =</span> <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb82-575"><a href="#cb82-575" aria-hidden="true" tabindex="-1"></a>              <span class="do">## the second random effect of mi(t)</span></span>
+<span id="cb82-576"><a href="#cb82-576" aria-hidden="true" tabindex="-1"></a>              <span class="at">indRandom =</span> <span class="dv">2</span>)</span>
+<span id="cb82-577"><a href="#cb82-577" aria-hidden="true" tabindex="-1"></a>dform3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="fu">I</span>(<span class="dv">2</span> <span class="sc">*</span> time),</span>
+<span id="cb82-578"><a href="#cb82-578" aria-hidden="true" tabindex="-1"></a>              <span class="do">## the 2nd and 3rd fixed effects of mi(t) used</span></span>
+<span id="cb82-579"><a href="#cb82-579" aria-hidden="true" tabindex="-1"></a>              <span class="at">indFixed =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, </span>
+<span id="cb82-580"><a href="#cb82-580" aria-hidden="true" tabindex="-1"></a>              <span class="at">random =</span> <span class="sc">~</span> <span class="fu">I</span>(<span class="dv">2</span> <span class="sc">*</span> time), </span>
+<span id="cb82-581"><a href="#cb82-581" aria-hidden="true" tabindex="-1"></a>              <span class="do">## the second and third random effect of mi(t)</span></span>
+<span id="cb82-582"><a href="#cb82-582" aria-hidden="true" tabindex="-1"></a>              <span class="at">indRandom =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>)</span>
 <span id="cb82-583"><a href="#cb82-583" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-586"><a href="#cb82-586" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-587"><a href="#cb82-587" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "update_model"</span></span>
-<span id="cb82-588"><a href="#cb82-588" aria-hidden="true" tabindex="-1"></a>jm.fit21d <span class="ot">&lt;-</span> <span class="fu">update</span>(jm.fit21,</span>
-<span id="cb82-589"><a href="#cb82-589" aria-hidden="true" tabindex="-1"></a>                    <span class="at">parameterization =</span> <span class="st">"both"</span>,</span>
-<span id="cb82-590"><a href="#cb82-590" aria-hidden="true" tabindex="-1"></a>                    <span class="at">derivForm =</span> dform2)</span>
-<span id="cb82-591"><a href="#cb82-591" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-592"><a href="#cb82-592" aria-hidden="true" tabindex="-1"></a>jm.fit31d <span class="ot">&lt;-</span> <span class="fu">update</span>(jm.fit31,</span>
+<span id="cb82-584"><a href="#cb82-584" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-585"><a href="#cb82-585" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-586"><a href="#cb82-586" aria-hidden="true" tabindex="-1"></a>Warning: Stop time must be <span class="sc">\&gt;</span> start time, NA created</span>
+<span id="cb82-587"><a href="#cb82-587" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-590"><a href="#cb82-590" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-591"><a href="#cb82-591" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "update_model"</span></span>
+<span id="cb82-592"><a href="#cb82-592" aria-hidden="true" tabindex="-1"></a>jm.fit21d <span class="ot">&lt;-</span> <span class="fu">update</span>(jm.fit21,</span>
 <span id="cb82-593"><a href="#cb82-593" aria-hidden="true" tabindex="-1"></a>                    <span class="at">parameterization =</span> <span class="st">"both"</span>,</span>
-<span id="cb82-594"><a href="#cb82-594" aria-hidden="true" tabindex="-1"></a>                    <span class="at">derivForm =</span> dform3)</span>
-<span id="cb82-595"><a href="#cb82-595" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-596"><a href="#cb82-596" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-597"><a href="#cb82-597" aria-hidden="true" tabindex="-1"></a><span class="fu">### Here is the summarization of the models</span></span>
-<span id="cb82-598"><a href="#cb82-598" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-599"><a href="#cb82-599" aria-hidden="true" tabindex="-1"></a>$lme.fit2 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time| id)$</span>
+<span id="cb82-594"><a href="#cb82-594" aria-hidden="true" tabindex="-1"></a>                    <span class="at">derivForm =</span> dform2)</span>
+<span id="cb82-595"><a href="#cb82-595" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-596"><a href="#cb82-596" aria-hidden="true" tabindex="-1"></a>jm.fit31d <span class="ot">&lt;-</span> <span class="fu">update</span>(jm.fit31,</span>
+<span id="cb82-597"><a href="#cb82-597" aria-hidden="true" tabindex="-1"></a>                    <span class="at">parameterization =</span> <span class="st">"both"</span>,</span>
+<span id="cb82-598"><a href="#cb82-598" aria-hidden="true" tabindex="-1"></a>                    <span class="at">derivForm =</span> dform3)</span>
+<span id="cb82-599"><a href="#cb82-599" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-600"><a href="#cb82-600" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-601"><a href="#cb82-601" aria-hidden="true" tabindex="-1"></a>$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
+<span id="cb82-601"><a href="#cb82-601" aria-hidden="true" tabindex="-1"></a><span class="fu">### Here is the summarization of the models</span></span>
 <span id="cb82-602"><a href="#cb82-602" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-605"><a href="#cb82-605" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-606"><a href="#cb82-606" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "summary_slope_models21"</span></span>
-<span id="cb82-607"><a href="#cb82-607" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jm.fit21d)</span>
-<span id="cb82-608"><a href="#cb82-608" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-609"><a href="#cb82-609" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-610"><a href="#cb82-610" aria-hidden="true" tabindex="-1"></a>$lme.fit3 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time + I(time^2)| id)$</span>
-<span id="cb82-611"><a href="#cb82-611" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-612"><a href="#cb82-612" aria-hidden="true" tabindex="-1"></a>$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
+<span id="cb82-603"><a href="#cb82-603" aria-hidden="true" tabindex="-1"></a>$lme.fit2 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time| id)$</span>
+<span id="cb82-604"><a href="#cb82-604" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-605"><a href="#cb82-605" aria-hidden="true" tabindex="-1"></a>$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
+<span id="cb82-606"><a href="#cb82-606" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-609"><a href="#cb82-609" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-610"><a href="#cb82-610" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "summary_slope_models21"</span></span>
+<span id="cb82-611"><a href="#cb82-611" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jm.fit21d)</span>
+<span id="cb82-612"><a href="#cb82-612" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-613"><a href="#cb82-613" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-616"><a href="#cb82-616" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-617"><a href="#cb82-617" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "summary_slope_models31"</span></span>
-<span id="cb82-618"><a href="#cb82-618" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jm.fit31d)</span>
-<span id="cb82-619"><a href="#cb82-619" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-620"><a href="#cb82-620" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-621"><a href="#cb82-621" aria-hidden="true" tabindex="-1"></a>The model with slope term is better than the model without slope term</span>
-<span id="cb82-622"><a href="#cb82-622" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-623"><a href="#cb82-623" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparision for jm.fit21 and jm.fit21d</span></span>
+<span id="cb82-614"><a href="#cb82-614" aria-hidden="true" tabindex="-1"></a>$lme.fit3 \sim (fixed = lamh \sim time + I(time^2), \ random = \sim time + I(time^2)| id)$</span>
+<span id="cb82-615"><a href="#cb82-615" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-616"><a href="#cb82-616" aria-hidden="true" tabindex="-1"></a>$surv.fit1 \sim coxph(Surv(etime, event) \sim married + bc<span class="sc">\_</span>pills + bmi + factor(site) + factor(ethnic) + factor(smoke))$</span>
+<span id="cb82-617"><a href="#cb82-617" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-620"><a href="#cb82-620" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-621"><a href="#cb82-621" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "summary_slope_models31"</span></span>
+<span id="cb82-622"><a href="#cb82-622" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jm.fit31d)</span>
+<span id="cb82-623"><a href="#cb82-623" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb82-624"><a href="#cb82-624" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-627"><a href="#cb82-627" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-628"><a href="#cb82-628" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "anova_21_21d"</span></span>
-<span id="cb82-629"><a href="#cb82-629" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(jm.fit21, jm.fit21d, <span class="at">process =</span> <span class="st">"Event"</span>)</span>
-<span id="cb82-630"><a href="#cb82-630" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-631"><a href="#cb82-631" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-632"><a href="#cb82-632" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparision for jm.fit31 and jm.fit31d</span></span>
-<span id="cb82-633"><a href="#cb82-633" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-636"><a href="#cb82-636" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-637"><a href="#cb82-637" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "anova_31_31d"</span></span>
-<span id="cb82-638"><a href="#cb82-638" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(jm.fit31, jm.fit31d, <span class="at">process =</span> <span class="st">"Event"</span>)</span>
-<span id="cb82-639"><a href="#cb82-639" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb82-640"><a href="#cb82-640" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-641"><a href="#cb82-641" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparision for jm.fit21d and jm.fit31d</span></span>
-<span id="cb82-642"><a href="#cb82-642" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb82-645"><a href="#cb82-645" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb82-646"><a href="#cb82-646" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "anova_21d_31d"</span></span>
-<span id="cb82-647"><a href="#cb82-647" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(jm.fit21d, jm.fit31d)</span>
-<span id="cb82-648"><a href="#cb82-648" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-625"><a href="#cb82-625" aria-hidden="true" tabindex="-1"></a>The model with slope term is better than the model without slope term</span>
+<span id="cb82-626"><a href="#cb82-626" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-627"><a href="#cb82-627" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparision for jm.fit21 and jm.fit21d</span></span>
+<span id="cb82-628"><a href="#cb82-628" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-631"><a href="#cb82-631" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-632"><a href="#cb82-632" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "anova_21_21d"</span></span>
+<span id="cb82-633"><a href="#cb82-633" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(jm.fit21, jm.fit21d, <span class="at">process =</span> <span class="st">"Event"</span>)</span>
+<span id="cb82-634"><a href="#cb82-634" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-635"><a href="#cb82-635" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-636"><a href="#cb82-636" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparision for jm.fit31 and jm.fit31d</span></span>
+<span id="cb82-637"><a href="#cb82-637" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-640"><a href="#cb82-640" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-641"><a href="#cb82-641" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "anova_31_31d"</span></span>
+<span id="cb82-642"><a href="#cb82-642" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(jm.fit31, jm.fit31d, <span class="at">process =</span> <span class="st">"Event"</span>)</span>
+<span id="cb82-643"><a href="#cb82-643" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-644"><a href="#cb82-644" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-645"><a href="#cb82-645" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparision for jm.fit21d and jm.fit31d</span></span>
+<span id="cb82-646"><a href="#cb82-646" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-649"><a href="#cb82-649" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb82-650"><a href="#cb82-650" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "anova_21d_31d"</span></span>
+<span id="cb82-651"><a href="#cb82-651" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(jm.fit21d, jm.fit31d)</span>
+<span id="cb82-652"><a href="#cb82-652" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb82-653"><a href="#cb82-653" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-654"><a href="#cb82-654" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-655"><a href="#cb82-655" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -304,6 +304,8 @@ Backward model selection joint model (without rate) with <code>JMbayes2</code></
 Rate model, Baseline Rate model, Value model comparison</p></li>
 <li><p><input type="checkbox" disabled="" checked="">
 Tables for the models</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+You are first-rate!</p></li>
 </ul></section><section id="dummy-variables-for-site-and-ethnicity" class="level2" data-number="13.2"><h2 data-number="13.2" class="anchored" data-anchor-id="dummy-variables-for-site-and-ethnicity">
 <span class="header-section-number">13.2</span> Dummy variables for <code>site</code> and <code>ethnicity</code>
 </h2>
@@ -2470,6 +2472,11 @@ jmb117 &lt;- JMbayes2::jm(Surv_object = s17,
                                Mixed_objects = lme1, 
                                time_var = "time",
                                control = jmcontrol) </code></pre>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" checked="">
+You are first-rate!</li>
+</ul>
 
 
 <!-- -->
@@ -2636,327 +2643,327 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Model Selection II - Factor"</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">warnings =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">message =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">comment =</span> <span class="st">"#&gt;"</span>,</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">cache =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                      <span class="co">#results = "hide",</span></span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">digits =</span> <span class="dv">4</span>,</span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co"># ## clean the R environment</span></span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># graphics.off()</span></span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co"># rm(list = ls())</span></span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="co"># freshr::freshr()</span></span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="do">## load packages</span></span>
-<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
-<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JMbayes2, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">load_all</span>()</span>
-<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="do">## check the directory for the file</span></span>
-<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="co"># here::dr_here()</span></span>
-<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">set_here</span>()</span>
-<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{css, "css-setup", echo=FALSE}</span></span>
-<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">scroll</span><span class="dv">-100</span> <span class="op">{</span></span>
-<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>height<span class="op">:</span> 300px<span class="op">;</span></span>
-<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>width<span class="op">:</span> 1000px<span class="op">;</span></span>
-<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a>  overflow<span class="op">-</span>y<span class="op">:</span> auto<span class="op">;</span></span>
-<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a>  background<span class="op">-</span>color<span class="op">:</span> inherit<span class="op">;</span></span>
-<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal of the analysis</span></span>
-<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Backward model selection joint model (without rate) with <span class="in">`JMbayes2`</span></span>
-<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Rate model, Baseline Rate model, Value model comparison</span>
-<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Tables for the models</span>
-<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dummy variables for `site` and `ethnicity`</span></span>
-<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dummy_variables"</span></span>
-<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh03.rda"</span>)</span>
-<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh13.rda"</span>)</span>
-<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">warnings =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">message =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">comment =</span> <span class="st">"#&gt;"</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">cache =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>                      <span class="co">#results = "hide",</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">digits =</span> <span class="dv">4</span>,</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ## clean the R environment</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co"># graphics.off()</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># rm(list = ls())</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co"># freshr::freshr()</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="do">## load packages</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JMbayes2, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">load_all</span>()</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="do">## check the directory for the file</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="co"># here::dr_here()</span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">set_here</span>()</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{css, "css-setup", echo=FALSE}</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">scroll</span><span class="dv">-100</span> <span class="op">{</span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>height<span class="op">:</span> 300px<span class="op">;</span></span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>width<span class="op">:</span> 1000px<span class="op">;</span></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>  overflow<span class="op">-</span>y<span class="op">:</span> auto<span class="op">;</span></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a>  background<span class="op">-</span>color<span class="op">:</span> inherit<span class="op">;</span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal of the analysis</span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Backward model selection joint model (without rate) with <span class="in">`JMbayes2`</span></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Rate model, Baseline Rate model, Value model comparison</span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> Tables for the models</span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
+<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dummy variables for `site` and `ethnicity`</span></span>
+<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "dummy_variables"</span></span>
+<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh03.rda"</span>)</span>
+<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/swan_amh13.rda"</span>)</span>
 <span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
-<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
-<span id="cb30-64"><a href="#cb30-64" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
-<span id="cb30-65"><a href="#cb30-65" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">3</span>,</span>
-<span id="cb30-66"><a href="#cb30-66" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
-<span id="cb30-67"><a href="#cb30-67" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">3</span>)</span>
-<span id="cb30-68"><a href="#cb30-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-69"><a href="#cb30-69" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
-<span id="cb30-70"><a href="#cb30-70" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh03,</span>
-<span id="cb30-71"><a href="#cb30-71" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
-<span id="cb30-72"><a href="#cb30-72" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
-<span id="cb30-73"><a href="#cb30-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-74"><a href="#cb30-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-75"><a href="#cb30-75" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fit the joint model</span></span>
-<span id="cb30-76"><a href="#cb30-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-77"><a href="#cb30-77" aria-hidden="true" tabindex="-1"></a>Need to keep $site + ethnic + smoke + bmi$</span>
-<span id="cb30-78"><a href="#cb30-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-79"><a href="#cb30-79" aria-hidden="true" tabindex="-1"></a><span class="fu">### Full model</span></span>
-<span id="cb30-80"><a href="#cb30-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-83"><a href="#cb30-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-84"><a href="#cb30-84" aria-hidden="true" tabindex="-1"></a>s10 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb30-85"><a href="#cb30-85" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb30-86"><a href="#cb30-86" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
-<span id="cb30-87"><a href="#cb30-87" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb30-88"><a href="#cb30-88" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
-<span id="cb30-89"><a href="#cb30-89" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb30-90"><a href="#cb30-90" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb30-91"><a href="#cb30-91" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb30-92"><a href="#cb30-92" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb30-93"><a href="#cb30-93" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb30-94"><a href="#cb30-94" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb30-95"><a href="#cb30-95" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-96"><a href="#cb30-96" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-97"><a href="#cb30-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-98"><a href="#cb30-98" aria-hidden="true" tabindex="-1"></a>jmb110 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s10,</span>
-<span id="cb30-99"><a href="#cb30-99" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb30-100"><a href="#cb30-100" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb30-101"><a href="#cb30-101" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb30-102"><a href="#cb30-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-103"><a href="#cb30-103" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb110)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb30-104"><a href="#cb30-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-105"><a href="#cb30-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-106"><a href="#cb30-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-107"><a href="#cb30-107" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `health` variable</span></span>
-<span id="cb30-108"><a href="#cb30-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-111"><a href="#cb30-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-112"><a href="#cb30-112" aria-hidden="true" tabindex="-1"></a><span class="do">## surv11 is the full model with all the variables</span></span>
-<span id="cb30-113"><a href="#cb30-113" aria-hidden="true" tabindex="-1"></a>s11 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb30-114"><a href="#cb30-114" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
-<span id="cb30-115"><a href="#cb30-115" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
-<span id="cb30-116"><a href="#cb30-116" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
-<span id="cb30-117"><a href="#cb30-117" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb30-118"><a href="#cb30-118" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb30-119"><a href="#cb30-119" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb30-120"><a href="#cb30-120" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb30-121"><a href="#cb30-121" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb30-122"><a href="#cb30-122" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb30-123"><a href="#cb30-123" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb30-124"><a href="#cb30-124" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-125"><a href="#cb30-125" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-126"><a href="#cb30-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-127"><a href="#cb30-127" aria-hidden="true" tabindex="-1"></a>jmb111 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s11,</span>
-<span id="cb30-128"><a href="#cb30-128" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb30-129"><a href="#cb30-129" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb30-130"><a href="#cb30-130" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb30-131"><a href="#cb30-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-132"><a href="#cb30-132" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb111)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb30-133"><a href="#cb30-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-134"><a href="#cb30-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-137"><a href="#cb30-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-138"><a href="#cb30-138" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb110, jmb111)</span>
-<span id="cb30-139"><a href="#cb30-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-140"><a href="#cb30-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-141"><a href="#cb30-141" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `alcohol` variable</span></span>
-<span id="cb30-142"><a href="#cb30-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-145"><a href="#cb30-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-146"><a href="#cb30-146" aria-hidden="true" tabindex="-1"></a>s12 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb30-147"><a href="#cb30-147" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb30-148"><a href="#cb30-148" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
-<span id="cb30-149"><a href="#cb30-149" aria-hidden="true" tabindex="-1"></a>                  bc_pills <span class="sc">+</span> </span>
-<span id="cb30-150"><a href="#cb30-150" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
-<span id="cb30-151"><a href="#cb30-151" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span></span>
-<span id="cb30-152"><a href="#cb30-152" aria-hidden="true" tabindex="-1"></a>                  employed <span class="sc">+</span></span>
-<span id="cb30-153"><a href="#cb30-153" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb30-154"><a href="#cb30-154" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb30-155"><a href="#cb30-155" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb30-156"><a href="#cb30-156" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb30-157"><a href="#cb30-157" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb30-158"><a href="#cb30-158" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb30-159"><a href="#cb30-159" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb30-160"><a href="#cb30-160" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-161"><a href="#cb30-161" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-162"><a href="#cb30-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-163"><a href="#cb30-163" aria-hidden="true" tabindex="-1"></a>jmb112 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s12,</span>
-<span id="cb30-164"><a href="#cb30-164" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb30-165"><a href="#cb30-165" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb30-166"><a href="#cb30-166" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb30-167"><a href="#cb30-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-168"><a href="#cb30-168" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb112)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb30-169"><a href="#cb30-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-170"><a href="#cb30-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-173"><a href="#cb30-173" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-174"><a href="#cb30-174" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb111, jmb112)</span>
-<span id="cb30-175"><a href="#cb30-175" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-176"><a href="#cb30-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-177"><a href="#cb30-177" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `bc_pills` variable</span></span>
-<span id="cb30-178"><a href="#cb30-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-181"><a href="#cb30-181" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-182"><a href="#cb30-182" aria-hidden="true" tabindex="-1"></a>s13 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb30-183"><a href="#cb30-183" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb30-184"><a href="#cb30-184" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
-<span id="cb30-185"><a href="#cb30-185" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
-<span id="cb30-186"><a href="#cb30-186" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
-<span id="cb30-187"><a href="#cb30-187" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
-<span id="cb30-188"><a href="#cb30-188" aria-hidden="true" tabindex="-1"></a>                  employed <span class="sc">+</span></span>
-<span id="cb30-189"><a href="#cb30-189" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb30-190"><a href="#cb30-190" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb30-191"><a href="#cb30-191" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb30-192"><a href="#cb30-192" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb30-193"><a href="#cb30-193" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb30-194"><a href="#cb30-194" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb30-195"><a href="#cb30-195" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb30-196"><a href="#cb30-196" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-197"><a href="#cb30-197" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-198"><a href="#cb30-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-199"><a href="#cb30-199" aria-hidden="true" tabindex="-1"></a>jmb113 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s13,</span>
-<span id="cb30-200"><a href="#cb30-200" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb30-201"><a href="#cb30-201" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb30-202"><a href="#cb30-202" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb30-203"><a href="#cb30-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-204"><a href="#cb30-204" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb113)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb30-205"><a href="#cb30-205" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-206"><a href="#cb30-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-209"><a href="#cb30-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-210"><a href="#cb30-210" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb113, jmb112)</span>
-<span id="cb30-211"><a href="#cb30-211" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-212"><a href="#cb30-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-213"><a href="#cb30-213" aria-hidden="true" tabindex="-1"></a><span class="fu">### **Dropping `education` variable**</span></span>
-<span id="cb30-214"><a href="#cb30-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-217"><a href="#cb30-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-218"><a href="#cb30-218" aria-hidden="true" tabindex="-1"></a>s14 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb30-219"><a href="#cb30-219" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb30-220"><a href="#cb30-220" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
-<span id="cb30-221"><a href="#cb30-221" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
-<span id="cb30-222"><a href="#cb30-222" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
-<span id="cb30-223"><a href="#cb30-223" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
-<span id="cb30-224"><a href="#cb30-224" aria-hidden="true" tabindex="-1"></a>                  employed <span class="sc">+</span></span>
-<span id="cb30-225"><a href="#cb30-225" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb30-226"><a href="#cb30-226" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb30-227"><a href="#cb30-227" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb30-228"><a href="#cb30-228" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb30-229"><a href="#cb30-229" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb30-230"><a href="#cb30-230" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb30-231"><a href="#cb30-231" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb30-232"><a href="#cb30-232" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-233"><a href="#cb30-233" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-234"><a href="#cb30-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-235"><a href="#cb30-235" aria-hidden="true" tabindex="-1"></a>jmb114 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s14,</span>
-<span id="cb30-236"><a href="#cb30-236" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb30-237"><a href="#cb30-237" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb30-238"><a href="#cb30-238" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb30-239"><a href="#cb30-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-240"><a href="#cb30-240" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb114)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb30-241"><a href="#cb30-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-242"><a href="#cb30-242" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-243"><a href="#cb30-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-246"><a href="#cb30-246" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-247"><a href="#cb30-247" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb113, jmb114)</span>
-<span id="cb30-248"><a href="#cb30-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-249"><a href="#cb30-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-250"><a href="#cb30-250" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `employed` variable</span></span>
-<span id="cb30-251"><a href="#cb30-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-254"><a href="#cb30-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-255"><a href="#cb30-255" aria-hidden="true" tabindex="-1"></a>s15 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb30-256"><a href="#cb30-256" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb30-257"><a href="#cb30-257" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
-<span id="cb30-258"><a href="#cb30-258" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
-<span id="cb30-259"><a href="#cb30-259" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
-<span id="cb30-260"><a href="#cb30-260" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
-<span id="cb30-261"><a href="#cb30-261" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb30-262"><a href="#cb30-262" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb30-263"><a href="#cb30-263" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb30-264"><a href="#cb30-264" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb30-265"><a href="#cb30-265" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb30-266"><a href="#cb30-266" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb30-267"><a href="#cb30-267" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb30-268"><a href="#cb30-268" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb30-269"><a href="#cb30-269" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-270"><a href="#cb30-270" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-271"><a href="#cb30-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-272"><a href="#cb30-272" aria-hidden="true" tabindex="-1"></a>jmb115 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s15,</span>
-<span id="cb30-273"><a href="#cb30-273" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb30-274"><a href="#cb30-274" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb30-275"><a href="#cb30-275" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb30-276"><a href="#cb30-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-277"><a href="#cb30-277" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb115)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb30-278"><a href="#cb30-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-279"><a href="#cb30-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-282"><a href="#cb30-282" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-283"><a href="#cb30-283" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb115, jmb114)</span>
-<span id="cb30-284"><a href="#cb30-284" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-285"><a href="#cb30-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-286"><a href="#cb30-286" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `children` variable</span></span>
-<span id="cb30-287"><a href="#cb30-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-290"><a href="#cb30-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-291"><a href="#cb30-291" aria-hidden="true" tabindex="-1"></a>s16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb30-292"><a href="#cb30-292" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb30-293"><a href="#cb30-293" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
-<span id="cb30-294"><a href="#cb30-294" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
-<span id="cb30-295"><a href="#cb30-295" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children + </span></span>
-<span id="cb30-296"><a href="#cb30-296" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
-<span id="cb30-297"><a href="#cb30-297" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb30-298"><a href="#cb30-298" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb30-299"><a href="#cb30-299" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
-<span id="cb30-300"><a href="#cb30-300" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb30-301"><a href="#cb30-301" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb30-302"><a href="#cb30-302" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb30-303"><a href="#cb30-303" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb30-304"><a href="#cb30-304" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb30-305"><a href="#cb30-305" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-306"><a href="#cb30-306" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-307"><a href="#cb30-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-308"><a href="#cb30-308" aria-hidden="true" tabindex="-1"></a>jmb116 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s16,</span>
-<span id="cb30-309"><a href="#cb30-309" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb30-310"><a href="#cb30-310" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb30-311"><a href="#cb30-311" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb30-312"><a href="#cb30-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-313"><a href="#cb30-313" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb116)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb30-314"><a href="#cb30-314" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-315"><a href="#cb30-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-318"><a href="#cb30-318" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-319"><a href="#cb30-319" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb115, jmb116)</span>
-<span id="cb30-320"><a href="#cb30-320" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-321"><a href="#cb30-321" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-322"><a href="#cb30-322" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `married` variable</span></span>
-<span id="cb30-323"><a href="#cb30-323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-326"><a href="#cb30-326" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-327"><a href="#cb30-327" aria-hidden="true" tabindex="-1"></a>s17 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
-<span id="cb30-328"><a href="#cb30-328" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
-<span id="cb30-329"><a href="#cb30-329" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
-<span id="cb30-330"><a href="#cb30-330" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
-<span id="cb30-331"><a href="#cb30-331" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children + </span></span>
-<span id="cb30-332"><a href="#cb30-332" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
-<span id="cb30-333"><a href="#cb30-333" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
-<span id="cb30-334"><a href="#cb30-334" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
-<span id="cb30-335"><a href="#cb30-335" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
-<span id="cb30-336"><a href="#cb30-336" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
-<span id="cb30-337"><a href="#cb30-337" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
-<span id="cb30-338"><a href="#cb30-338" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
-<span id="cb30-339"><a href="#cb30-339" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
-<span id="cb30-340"><a href="#cb30-340" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
-<span id="cb30-341"><a href="#cb30-341" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb30-342"><a href="#cb30-342" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-343"><a href="#cb30-343" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-344"><a href="#cb30-344" aria-hidden="true" tabindex="-1"></a>jmb117 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s17,</span>
-<span id="cb30-345"><a href="#cb30-345" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
-<span id="cb30-346"><a href="#cb30-346" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
-<span id="cb30-347"><a href="#cb30-347" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
-<span id="cb30-348"><a href="#cb30-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-349"><a href="#cb30-349" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb117)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
-<span id="cb30-350"><a href="#cb30-350" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-351"><a href="#cb30-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-354"><a href="#cb30-354" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-355"><a href="#cb30-355" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb116, jmb117)</span>
-<span id="cb30-356"><a href="#cb30-356" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-357"><a href="#cb30-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a>control <span class="ot">=</span> <span class="fu">lmeControl</span>(<span class="at">opt =</span> <span class="st">"optim"</span>)</span>
+<span id="cb30-64"><a href="#cb30-64" aria-hidden="true" tabindex="-1"></a>jmcontrol <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n_iter =</span> <span class="dv">5000</span>, </span>
+<span id="cb30-65"><a href="#cb30-65" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_burnin =</span> <span class="dv">1000</span>, </span>
+<span id="cb30-66"><a href="#cb30-66" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n_chains =</span> <span class="dv">3</span>,</span>
+<span id="cb30-67"><a href="#cb30-67" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">55555</span>,</span>
+<span id="cb30-68"><a href="#cb30-68" aria-hidden="true" tabindex="-1"></a>                  <span class="at">cores =</span> <span class="dv">3</span>)</span>
+<span id="cb30-69"><a href="#cb30-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-70"><a href="#cb30-70" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lme</span>(lamh <span class="sc">~</span> time,</span>
+<span id="cb30-71"><a href="#cb30-71" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh03,</span>
+<span id="cb30-72"><a href="#cb30-72" aria-hidden="true" tabindex="-1"></a>                <span class="at">control =</span> control,</span>
+<span id="cb30-73"><a href="#cb30-73" aria-hidden="true" tabindex="-1"></a>                <span class="at">random =</span> <span class="sc">~</span> time<span class="sc">|</span> id)</span>
+<span id="cb30-74"><a href="#cb30-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-75"><a href="#cb30-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-76"><a href="#cb30-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fit the joint model</span></span>
+<span id="cb30-77"><a href="#cb30-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-78"><a href="#cb30-78" aria-hidden="true" tabindex="-1"></a>Need to keep $site + ethnic + smoke + bmi$</span>
+<span id="cb30-79"><a href="#cb30-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-80"><a href="#cb30-80" aria-hidden="true" tabindex="-1"></a><span class="fu">### Full model</span></span>
+<span id="cb30-81"><a href="#cb30-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-84"><a href="#cb30-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-85"><a href="#cb30-85" aria-hidden="true" tabindex="-1"></a>s10 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb30-86"><a href="#cb30-86" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb30-87"><a href="#cb30-87" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
+<span id="cb30-88"><a href="#cb30-88" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb30-89"><a href="#cb30-89" aria-hidden="true" tabindex="-1"></a>                  health <span class="sc">+</span></span>
+<span id="cb30-90"><a href="#cb30-90" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb30-91"><a href="#cb30-91" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb30-92"><a href="#cb30-92" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb30-93"><a href="#cb30-93" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb30-94"><a href="#cb30-94" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb30-95"><a href="#cb30-95" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb30-96"><a href="#cb30-96" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-97"><a href="#cb30-97" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-98"><a href="#cb30-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-99"><a href="#cb30-99" aria-hidden="true" tabindex="-1"></a>jmb110 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s10,</span>
+<span id="cb30-100"><a href="#cb30-100" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb30-101"><a href="#cb30-101" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb30-102"><a href="#cb30-102" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb30-103"><a href="#cb30-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-104"><a href="#cb30-104" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb110)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb30-105"><a href="#cb30-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-106"><a href="#cb30-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-107"><a href="#cb30-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-108"><a href="#cb30-108" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `health` variable</span></span>
+<span id="cb30-109"><a href="#cb30-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-112"><a href="#cb30-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-113"><a href="#cb30-113" aria-hidden="true" tabindex="-1"></a><span class="do">## surv11 is the full model with all the variables</span></span>
+<span id="cb30-114"><a href="#cb30-114" aria-hidden="true" tabindex="-1"></a>s11 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb30-115"><a href="#cb30-115" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> alcohol <span class="sc">+</span></span>
+<span id="cb30-116"><a href="#cb30-116" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> bc_pills <span class="sc">+</span> </span>
+<span id="cb30-117"><a href="#cb30-117" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> edu <span class="sc">+</span> employed <span class="sc">+</span></span>
+<span id="cb30-118"><a href="#cb30-118" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb30-119"><a href="#cb30-119" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb30-120"><a href="#cb30-120" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb30-121"><a href="#cb30-121" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb30-122"><a href="#cb30-122" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb30-123"><a href="#cb30-123" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb30-124"><a href="#cb30-124" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb30-125"><a href="#cb30-125" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-126"><a href="#cb30-126" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-127"><a href="#cb30-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-128"><a href="#cb30-128" aria-hidden="true" tabindex="-1"></a>jmb111 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s11,</span>
+<span id="cb30-129"><a href="#cb30-129" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb30-130"><a href="#cb30-130" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb30-131"><a href="#cb30-131" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb30-132"><a href="#cb30-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-133"><a href="#cb30-133" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb111)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb30-134"><a href="#cb30-134" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-135"><a href="#cb30-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-138"><a href="#cb30-138" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-139"><a href="#cb30-139" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb110, jmb111)</span>
+<span id="cb30-140"><a href="#cb30-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-141"><a href="#cb30-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-142"><a href="#cb30-142" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `alcohol` variable</span></span>
+<span id="cb30-143"><a href="#cb30-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-146"><a href="#cb30-146" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-147"><a href="#cb30-147" aria-hidden="true" tabindex="-1"></a>s12 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb30-148"><a href="#cb30-148" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb30-149"><a href="#cb30-149" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
+<span id="cb30-150"><a href="#cb30-150" aria-hidden="true" tabindex="-1"></a>                  bc_pills <span class="sc">+</span> </span>
+<span id="cb30-151"><a href="#cb30-151" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
+<span id="cb30-152"><a href="#cb30-152" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span></span>
+<span id="cb30-153"><a href="#cb30-153" aria-hidden="true" tabindex="-1"></a>                  employed <span class="sc">+</span></span>
+<span id="cb30-154"><a href="#cb30-154" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb30-155"><a href="#cb30-155" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb30-156"><a href="#cb30-156" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb30-157"><a href="#cb30-157" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb30-158"><a href="#cb30-158" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb30-159"><a href="#cb30-159" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb30-160"><a href="#cb30-160" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb30-161"><a href="#cb30-161" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-162"><a href="#cb30-162" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-163"><a href="#cb30-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-164"><a href="#cb30-164" aria-hidden="true" tabindex="-1"></a>jmb112 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s12,</span>
+<span id="cb30-165"><a href="#cb30-165" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb30-166"><a href="#cb30-166" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb30-167"><a href="#cb30-167" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb30-168"><a href="#cb30-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-169"><a href="#cb30-169" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb112)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb30-170"><a href="#cb30-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-171"><a href="#cb30-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-174"><a href="#cb30-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-175"><a href="#cb30-175" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb111, jmb112)</span>
+<span id="cb30-176"><a href="#cb30-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-177"><a href="#cb30-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-178"><a href="#cb30-178" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `bc_pills` variable</span></span>
+<span id="cb30-179"><a href="#cb30-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-182"><a href="#cb30-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-183"><a href="#cb30-183" aria-hidden="true" tabindex="-1"></a>s13 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb30-184"><a href="#cb30-184" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb30-185"><a href="#cb30-185" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
+<span id="cb30-186"><a href="#cb30-186" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
+<span id="cb30-187"><a href="#cb30-187" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
+<span id="cb30-188"><a href="#cb30-188" aria-hidden="true" tabindex="-1"></a>                  edu <span class="sc">+</span> </span>
+<span id="cb30-189"><a href="#cb30-189" aria-hidden="true" tabindex="-1"></a>                  employed <span class="sc">+</span></span>
+<span id="cb30-190"><a href="#cb30-190" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb30-191"><a href="#cb30-191" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb30-192"><a href="#cb30-192" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb30-193"><a href="#cb30-193" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb30-194"><a href="#cb30-194" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb30-195"><a href="#cb30-195" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb30-196"><a href="#cb30-196" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb30-197"><a href="#cb30-197" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-198"><a href="#cb30-198" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-199"><a href="#cb30-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-200"><a href="#cb30-200" aria-hidden="true" tabindex="-1"></a>jmb113 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s13,</span>
+<span id="cb30-201"><a href="#cb30-201" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb30-202"><a href="#cb30-202" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb30-203"><a href="#cb30-203" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb30-204"><a href="#cb30-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-205"><a href="#cb30-205" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb113)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb30-206"><a href="#cb30-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-207"><a href="#cb30-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-210"><a href="#cb30-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-211"><a href="#cb30-211" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb113, jmb112)</span>
+<span id="cb30-212"><a href="#cb30-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-213"><a href="#cb30-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-214"><a href="#cb30-214" aria-hidden="true" tabindex="-1"></a><span class="fu">### **Dropping `education` variable**</span></span>
+<span id="cb30-215"><a href="#cb30-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-218"><a href="#cb30-218" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-219"><a href="#cb30-219" aria-hidden="true" tabindex="-1"></a>s14 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb30-220"><a href="#cb30-220" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb30-221"><a href="#cb30-221" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
+<span id="cb30-222"><a href="#cb30-222" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
+<span id="cb30-223"><a href="#cb30-223" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
+<span id="cb30-224"><a href="#cb30-224" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
+<span id="cb30-225"><a href="#cb30-225" aria-hidden="true" tabindex="-1"></a>                  employed <span class="sc">+</span></span>
+<span id="cb30-226"><a href="#cb30-226" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb30-227"><a href="#cb30-227" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb30-228"><a href="#cb30-228" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb30-229"><a href="#cb30-229" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb30-230"><a href="#cb30-230" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb30-231"><a href="#cb30-231" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb30-232"><a href="#cb30-232" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb30-233"><a href="#cb30-233" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-234"><a href="#cb30-234" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-235"><a href="#cb30-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-236"><a href="#cb30-236" aria-hidden="true" tabindex="-1"></a>jmb114 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s14,</span>
+<span id="cb30-237"><a href="#cb30-237" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb30-238"><a href="#cb30-238" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb30-239"><a href="#cb30-239" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb30-240"><a href="#cb30-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-241"><a href="#cb30-241" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb114)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb30-242"><a href="#cb30-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-243"><a href="#cb30-243" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-244"><a href="#cb30-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-247"><a href="#cb30-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-248"><a href="#cb30-248" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb113, jmb114)</span>
+<span id="cb30-249"><a href="#cb30-249" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-250"><a href="#cb30-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-251"><a href="#cb30-251" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `employed` variable</span></span>
+<span id="cb30-252"><a href="#cb30-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-255"><a href="#cb30-255" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-256"><a href="#cb30-256" aria-hidden="true" tabindex="-1"></a>s15 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb30-257"><a href="#cb30-257" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb30-258"><a href="#cb30-258" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
+<span id="cb30-259"><a href="#cb30-259" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
+<span id="cb30-260"><a href="#cb30-260" aria-hidden="true" tabindex="-1"></a>                  children <span class="sc">+</span> </span>
+<span id="cb30-261"><a href="#cb30-261" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
+<span id="cb30-262"><a href="#cb30-262" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb30-263"><a href="#cb30-263" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb30-264"><a href="#cb30-264" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb30-265"><a href="#cb30-265" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb30-266"><a href="#cb30-266" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb30-267"><a href="#cb30-267" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb30-268"><a href="#cb30-268" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb30-269"><a href="#cb30-269" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb30-270"><a href="#cb30-270" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-271"><a href="#cb30-271" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-272"><a href="#cb30-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-273"><a href="#cb30-273" aria-hidden="true" tabindex="-1"></a>jmb115 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s15,</span>
+<span id="cb30-274"><a href="#cb30-274" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb30-275"><a href="#cb30-275" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb30-276"><a href="#cb30-276" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb30-277"><a href="#cb30-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-278"><a href="#cb30-278" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb115)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb30-279"><a href="#cb30-279" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-280"><a href="#cb30-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-283"><a href="#cb30-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-284"><a href="#cb30-284" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb115, jmb114)</span>
+<span id="cb30-285"><a href="#cb30-285" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-286"><a href="#cb30-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-287"><a href="#cb30-287" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `children` variable</span></span>
+<span id="cb30-288"><a href="#cb30-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-291"><a href="#cb30-291" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-292"><a href="#cb30-292" aria-hidden="true" tabindex="-1"></a>s16 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb30-293"><a href="#cb30-293" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb30-294"><a href="#cb30-294" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
+<span id="cb30-295"><a href="#cb30-295" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
+<span id="cb30-296"><a href="#cb30-296" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children + </span></span>
+<span id="cb30-297"><a href="#cb30-297" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
+<span id="cb30-298"><a href="#cb30-298" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb30-299"><a href="#cb30-299" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb30-300"><a href="#cb30-300" aria-hidden="true" tabindex="-1"></a>                  married <span class="sc">+</span> </span>
+<span id="cb30-301"><a href="#cb30-301" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb30-302"><a href="#cb30-302" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb30-303"><a href="#cb30-303" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb30-304"><a href="#cb30-304" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb30-305"><a href="#cb30-305" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb30-306"><a href="#cb30-306" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-307"><a href="#cb30-307" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-308"><a href="#cb30-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-309"><a href="#cb30-309" aria-hidden="true" tabindex="-1"></a>jmb116 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s16,</span>
+<span id="cb30-310"><a href="#cb30-310" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb30-311"><a href="#cb30-311" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb30-312"><a href="#cb30-312" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb30-313"><a href="#cb30-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-314"><a href="#cb30-314" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb116)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb30-315"><a href="#cb30-315" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-316"><a href="#cb30-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-319"><a href="#cb30-319" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-320"><a href="#cb30-320" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb115, jmb116)</span>
+<span id="cb30-321"><a href="#cb30-321" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-322"><a href="#cb30-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-323"><a href="#cb30-323" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `married` variable</span></span>
+<span id="cb30-324"><a href="#cb30-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-327"><a href="#cb30-327" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-328"><a href="#cb30-328" aria-hidden="true" tabindex="-1"></a>s17 <span class="ot">&lt;-</span> <span class="fu">coxph</span>(<span class="fu">Surv</span>(etime, event) <span class="sc">~</span> </span>
+<span id="cb30-329"><a href="#cb30-329" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">0</span> <span class="sc">+</span> <span class="co"># alcohol +</span></span>
+<span id="cb30-330"><a href="#cb30-330" aria-hidden="true" tabindex="-1"></a>                  bmi <span class="sc">+</span> </span>
+<span id="cb30-331"><a href="#cb30-331" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># bc_pills + </span></span>
+<span id="cb30-332"><a href="#cb30-332" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># children + </span></span>
+<span id="cb30-333"><a href="#cb30-333" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># edu + </span></span>
+<span id="cb30-334"><a href="#cb30-334" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># employed +</span></span>
+<span id="cb30-335"><a href="#cb30-335" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># health +</span></span>
+<span id="cb30-336"><a href="#cb30-336" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># married + </span></span>
+<span id="cb30-337"><a href="#cb30-337" aria-hidden="true" tabindex="-1"></a>                  phys_act <span class="sc">+</span> </span>
+<span id="cb30-338"><a href="#cb30-338" aria-hidden="true" tabindex="-1"></a>                  ethnic_black <span class="sc">+</span> ethnic_chine <span class="sc">+</span> ethnic_hispa <span class="sc">+</span> ethnic_japan <span class="sc">+</span> </span>
+<span id="cb30-339"><a href="#cb30-339" aria-hidden="true" tabindex="-1"></a>                  site_c <span class="sc">+</span> site_m <span class="sc">+</span> site_nj <span class="sc">+</span> site_p <span class="sc">+</span> site_ucd <span class="sc">+</span> site_ucla <span class="sc">+</span> </span>
+<span id="cb30-340"><a href="#cb30-340" aria-hidden="true" tabindex="-1"></a>                  smoke_current_smoker <span class="sc">+</span> smoke_past_only,</span>
+<span id="cb30-341"><a href="#cb30-341" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> swan_amh13, </span>
+<span id="cb30-342"><a href="#cb30-342" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb30-343"><a href="#cb30-343" aria-hidden="true" tabindex="-1"></a>                <span class="at">model =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-344"><a href="#cb30-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-345"><a href="#cb30-345" aria-hidden="true" tabindex="-1"></a>jmb117 <span class="ot">&lt;-</span> JMbayes2<span class="sc">::</span><span class="fu">jm</span>(<span class="at">Surv_object =</span> s17,</span>
+<span id="cb30-346"><a href="#cb30-346" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Mixed_objects =</span> lme1, </span>
+<span id="cb30-347"><a href="#cb30-347" aria-hidden="true" tabindex="-1"></a>                               <span class="at">time_var =</span> <span class="st">"time"</span>,</span>
+<span id="cb30-348"><a href="#cb30-348" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> jmcontrol) </span>
+<span id="cb30-349"><a href="#cb30-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-350"><a href="#cb30-350" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(jmb117)<span class="sc">$</span>Survival <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(<span class="fu">desc</span>(P)) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>)</span>
+<span id="cb30-351"><a href="#cb30-351" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-352"><a href="#cb30-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-355"><a href="#cb30-355" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-356"><a href="#cb30-356" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb116, jmb117)</span>
+<span id="cb30-357"><a href="#cb30-357" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb30-358"><a href="#cb30-358" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-359"><a href="#cb30-359" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dropping `phys_act` variable</span></span>
 <span id="cb30-360"><a href="#cb30-360" aria-hidden="true" tabindex="-1"></a></span>
@@ -2990,51 +2997,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb30-392"><a href="#cb30-392" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb118, jmb117)</span>
 <span id="cb30-393"><a href="#cb30-393" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb30-394"><a href="#cb30-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-395"><a href="#cb30-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-396"><a href="#cb30-396" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparison for models </span></span>
-<span id="cb30-397"><a href="#cb30-397" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-400"><a href="#cb30-400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-401"><a href="#cb30-401" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb111, jmb112, jmb113, jmb114, jmb115, jmb116, jmb117, jmb118)</span>
-<span id="cb30-402"><a href="#cb30-402" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-403"><a href="#cb30-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-395"><a href="#cb30-395" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparison for models</span></span>
+<span id="cb30-396"><a href="#cb30-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-399"><a href="#cb30-399" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb30-400"><a href="#cb30-400" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_jm</span>(jmb111, jmb112, jmb113, jmb114, jmb115, jmb116, jmb117, jmb118)</span>
+<span id="cb30-401"><a href="#cb30-401" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-402"><a href="#cb30-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-403"><a href="#cb30-403" aria-hidden="true" tabindex="-1"></a><span class="fu">## The final model</span></span>
 <span id="cb30-404"><a href="#cb30-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-405"><a href="#cb30-405" aria-hidden="true" tabindex="-1"></a><span class="fu">## The final model </span></span>
+<span id="cb30-405"><a href="#cb30-405" aria-hidden="true" tabindex="-1"></a>For Chapter10, we have the model with <span class="in">`bc_pills`</span> dropped from the new model.</span>
 <span id="cb30-406"><a href="#cb30-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-407"><a href="#cb30-407" aria-hidden="true" tabindex="-1"></a>For Chapter10, we have the model with <span class="in">`bc_pills`</span> dropped from the new model.</span>
-<span id="cb30-408"><a href="#cb30-408" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-409"><a href="#cb30-409" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb30-410"><a href="#cb30-410" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
-<span id="cb30-411"><a href="#cb30-411" aria-hidden="true" tabindex="-1"></a>  jmb117: &amp; <span class="sc">\\</span> </span>
-<span id="cb30-412"><a href="#cb30-412" aria-hidden="true" tabindex="-1"></a>  lme1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
-<span id="cb30-413"><a href="#cb30-413" aria-hidden="true" tabindex="-1"></a>  surv16: \ \ \ &amp; Surv(etime, event) \sim phys_act + (married) + bmi + factor(site) + <span class="sc">\\</span></span>
-<span id="cb30-414"><a href="#cb30-414" aria-hidden="true" tabindex="-1"></a>  &amp; factor(ethnic) + factor(smoke) + \pmb m(time)</span>
-<span id="cb30-415"><a href="#cb30-415" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
-<span id="cb30-416"><a href="#cb30-416" aria-hidden="true" tabindex="-1"></a>$$</span>
-<span id="cb30-417"><a href="#cb30-417" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-418"><a href="#cb30-418" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-419"><a href="#cb30-419" aria-hidden="true" tabindex="-1"></a><span class="in">s17 &lt;- coxph(Surv(etime, event) ~ </span></span>
-<span id="cb30-420"><a href="#cb30-420" aria-hidden="true" tabindex="-1"></a><span class="in">                  0 + # alcohol +</span></span>
-<span id="cb30-421"><a href="#cb30-421" aria-hidden="true" tabindex="-1"></a><span class="in">                  bmi + </span></span>
-<span id="cb30-422"><a href="#cb30-422" aria-hidden="true" tabindex="-1"></a><span class="in">                  # bc_pills + </span></span>
-<span id="cb30-423"><a href="#cb30-423" aria-hidden="true" tabindex="-1"></a><span class="in">                  # children + </span></span>
-<span id="cb30-424"><a href="#cb30-424" aria-hidden="true" tabindex="-1"></a><span class="in">                  # edu + </span></span>
-<span id="cb30-425"><a href="#cb30-425" aria-hidden="true" tabindex="-1"></a><span class="in">                  # employed +</span></span>
-<span id="cb30-426"><a href="#cb30-426" aria-hidden="true" tabindex="-1"></a><span class="in">                  # health +</span></span>
-<span id="cb30-427"><a href="#cb30-427" aria-hidden="true" tabindex="-1"></a><span class="in">                  # married + </span></span>
-<span id="cb30-428"><a href="#cb30-428" aria-hidden="true" tabindex="-1"></a><span class="in">                  phys_act + </span></span>
-<span id="cb30-429"><a href="#cb30-429" aria-hidden="true" tabindex="-1"></a><span class="in">                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + </span></span>
-<span id="cb30-430"><a href="#cb30-430" aria-hidden="true" tabindex="-1"></a><span class="in">                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + </span></span>
-<span id="cb30-431"><a href="#cb30-431" aria-hidden="true" tabindex="-1"></a><span class="in">                  smoke_current_smoker + smoke_past_only,</span></span>
-<span id="cb30-432"><a href="#cb30-432" aria-hidden="true" tabindex="-1"></a><span class="in">                data = swan_amh13, </span></span>
-<span id="cb30-433"><a href="#cb30-433" aria-hidden="true" tabindex="-1"></a><span class="in">                x = TRUE,</span></span>
-<span id="cb30-434"><a href="#cb30-434" aria-hidden="true" tabindex="-1"></a><span class="in">                model = TRUE)</span></span>
-<span id="cb30-435"><a href="#cb30-435" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-436"><a href="#cb30-436" aria-hidden="true" tabindex="-1"></a><span class="in">jmb117 &lt;- JMbayes2::jm(Surv_object = s17,</span></span>
-<span id="cb30-437"><a href="#cb30-437" aria-hidden="true" tabindex="-1"></a><span class="in">                               Mixed_objects = lme1, </span></span>
-<span id="cb30-438"><a href="#cb30-438" aria-hidden="true" tabindex="-1"></a><span class="in">                               time_var = "time",</span></span>
-<span id="cb30-439"><a href="#cb30-439" aria-hidden="true" tabindex="-1"></a><span class="in">                               control = jmcontrol) </span></span>
-<span id="cb30-440"><a href="#cb30-440" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-441"><a href="#cb30-441" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-407"><a href="#cb30-407" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb30-408"><a href="#cb30-408" aria-hidden="true" tabindex="-1"></a>\begin{split}</span>
+<span id="cb30-409"><a href="#cb30-409" aria-hidden="true" tabindex="-1"></a>  jmb117: &amp; <span class="sc">\\</span> </span>
+<span id="cb30-410"><a href="#cb30-410" aria-hidden="true" tabindex="-1"></a>  lme1: \ \ \  &amp; \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) <span class="sc">\\</span></span>
+<span id="cb30-411"><a href="#cb30-411" aria-hidden="true" tabindex="-1"></a>  surv16: \ \ \ &amp; Surv(etime, event) \sim phys_act + (married) + bmi + factor(site) + <span class="sc">\\</span></span>
+<span id="cb30-412"><a href="#cb30-412" aria-hidden="true" tabindex="-1"></a>  &amp; factor(ethnic) + factor(smoke) + \pmb m(time)</span>
+<span id="cb30-413"><a href="#cb30-413" aria-hidden="true" tabindex="-1"></a>\end{split}</span>
+<span id="cb30-414"><a href="#cb30-414" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb30-415"><a href="#cb30-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-416"><a href="#cb30-416" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
+<span id="cb30-417"><a href="#cb30-417" aria-hidden="true" tabindex="-1"></a><span class="in">s17 &lt;- coxph(Surv(etime, event) ~ </span></span>
+<span id="cb30-418"><a href="#cb30-418" aria-hidden="true" tabindex="-1"></a><span class="in">                  0 + # alcohol +</span></span>
+<span id="cb30-419"><a href="#cb30-419" aria-hidden="true" tabindex="-1"></a><span class="in">                  bmi + </span></span>
+<span id="cb30-420"><a href="#cb30-420" aria-hidden="true" tabindex="-1"></a><span class="in">                  # bc_pills + </span></span>
+<span id="cb30-421"><a href="#cb30-421" aria-hidden="true" tabindex="-1"></a><span class="in">                  # children + </span></span>
+<span id="cb30-422"><a href="#cb30-422" aria-hidden="true" tabindex="-1"></a><span class="in">                  # edu + </span></span>
+<span id="cb30-423"><a href="#cb30-423" aria-hidden="true" tabindex="-1"></a><span class="in">                  # employed +</span></span>
+<span id="cb30-424"><a href="#cb30-424" aria-hidden="true" tabindex="-1"></a><span class="in">                  # health +</span></span>
+<span id="cb30-425"><a href="#cb30-425" aria-hidden="true" tabindex="-1"></a><span class="in">                  # married + </span></span>
+<span id="cb30-426"><a href="#cb30-426" aria-hidden="true" tabindex="-1"></a><span class="in">                  phys_act + </span></span>
+<span id="cb30-427"><a href="#cb30-427" aria-hidden="true" tabindex="-1"></a><span class="in">                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + </span></span>
+<span id="cb30-428"><a href="#cb30-428" aria-hidden="true" tabindex="-1"></a><span class="in">                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + </span></span>
+<span id="cb30-429"><a href="#cb30-429" aria-hidden="true" tabindex="-1"></a><span class="in">                  smoke_current_smoker + smoke_past_only,</span></span>
+<span id="cb30-430"><a href="#cb30-430" aria-hidden="true" tabindex="-1"></a><span class="in">                data = swan_amh13, </span></span>
+<span id="cb30-431"><a href="#cb30-431" aria-hidden="true" tabindex="-1"></a><span class="in">                x = TRUE,</span></span>
+<span id="cb30-432"><a href="#cb30-432" aria-hidden="true" tabindex="-1"></a><span class="in">                model = TRUE)</span></span>
+<span id="cb30-433"><a href="#cb30-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-434"><a href="#cb30-434" aria-hidden="true" tabindex="-1"></a><span class="in">jmb117 &lt;- JMbayes2::jm(Surv_object = s17,</span></span>
+<span id="cb30-435"><a href="#cb30-435" aria-hidden="true" tabindex="-1"></a><span class="in">                               Mixed_objects = lme1, </span></span>
+<span id="cb30-436"><a href="#cb30-436" aria-hidden="true" tabindex="-1"></a><span class="in">                               time_var = "time",</span></span>
+<span id="cb30-437"><a href="#cb30-437" aria-hidden="true" tabindex="-1"></a><span class="in">                               control = jmcontrol) </span></span>
+<span id="cb30-438"><a href="#cb30-438" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb30-439"><a href="#cb30-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-440"><a href="#cb30-440" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

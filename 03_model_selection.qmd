@@ -8,7 +8,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE,
                       comment = "#>",
                       cache = TRUE,
-                      #results = "hide",
+                      # results = "hide",
                       digits = 4,
                       error = FALSE)
 
@@ -38,12 +38,14 @@ devtools::load_all()
 ```
 
 ```{css, "css-setup", echo=FALSE}
+
 .scroll-100 {
   max-height: 300px;
   max-width: 1000px;
   overflow-y: auto;
   background-color: inherit;
-}
+  }
+
 ```
 
 ## Goal for this chapter
@@ -69,6 +71,8 @@ devtools::load_all()
 -   [x] Summary of model comparisons
 
 -   [x] `JM` package cannot calculate individual AUC and ROC, and Brier Score.
+
+-   [x] `r praise::praise()`
 
 ## Model selelction
 
@@ -598,3 +602,6 @@ anova(jm.fit31, jm.fit31d, process = "Event")
 #| label: "anova_21d_31d"
 anova(jm.fit21d, jm.fit31d)
 ```
+
+
+-   [x] `r praise::praise()`

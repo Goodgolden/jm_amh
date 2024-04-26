@@ -53,6 +53,8 @@ here::set_here()
 
 -   [x] AUCs and Brier Scores
 
+-   [x] `r praise::praise()`
+
 ## Loading data and merge variables
 
 ```{r}
@@ -619,3 +621,5 @@ names(tbl_bs_base_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 #| label: "bs_base_rate"
 tbl_bs_base_rate %>% knitr::kable()
 ```
+
+-   [x] `r praise::praise()`

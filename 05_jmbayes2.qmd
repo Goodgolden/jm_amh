@@ -54,6 +54,8 @@ here::set_here()
 
 -   [x] `JMbayes2` for AUC, ROC, calibration plots, and the Brier Score
 
+-   [x] `r praise::praise()`
+
 ## No sites in the survival model
 
 Here we are working with survival model without site. I also include the site into the nested design random effect in the longitudinal model `lme.fit4`.
@@ -440,3 +442,5 @@ JMbayes2::tvBrier(jmbayes2.fit11.nosite,
                   Thoriz = 8)
 
 ```
+
+-   [x] `r praise::praise()`

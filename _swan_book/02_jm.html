@@ -285,9 +285,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <section id="goal-for-this-chapter" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="goal-for-this-chapter">
 <span class="header-section-number">2.1</span> Goal for this chapter</h2>
-<ul>
+<ul class="task-list">
 <li><p><input type="checkbox" disabled="" checked="">
-EDA for Longitudinal sub-model <code>lme</code> (Achohol usage and AMH levels by EJC)</p></li>
+EDA for Longitudinal sub-model <code>lme</code> (Alcohol usage and AMH levels by EJC)</p></li>
 <li><p><input type="checkbox" disabled="" checked="">
 EDA for survival sub-model (Kaplan-Meier plots for different variables by EJC)</p></li>
 <li><p><input type="checkbox" disabled="" checked="">
@@ -296,10 +296,18 @@ Transformation required for the AMH levels - log transformation <code>lamh = log
 Fit the longitudinal model with <code>lme()</code>, with random slope and random intercept (by EJC)</p></li>
 <li><p><input type="checkbox" disabled="" checked="">
 Fit the survival model with <code>coxph()</code> (by EJC)</p></li>
+<li>
+<p><input type="checkbox" disabled="" checked="">
+Fit the joint model with <code>JM</code> package (by EJC)</p>
+<ul class="task-list">
 <li><p><input type="checkbox" disabled="" checked="">
-Fit the joint model with <code>JM</code> package (by EJC)</p></li>
-<li><p>swan_amh0 is the longitudinal dataset</p></li>
-<li><p>swan_amh1 is the id dataset</p></li>
+swan_amh0 is the longitudinal dataset</p></li>
+<li><p><input type="checkbox" disabled="" checked="">
+swan_amh1 is the id dataset</p></li>
+</ul>
+</li>
+<li><p><input type="checkbox" disabled="" checked="">
+You are awesome!</p></li>
 </ul>
 <div class="cell" data-hash="02_jm_cache/html/loading data_1e29e30c5ecb080ea1d1cadebcba9d58">
 <details><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/swan_amh0.rda"</span><span class="op">)</span></span>
@@ -647,6 +655,11 @@ Fit the joint model with <code>JM</code> package (by EJC)</p></li>
 <details><summary>Code</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># summary(joint.fit.wei)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" checked="">
+You are awesome!</li>
+</ul>
 
 
 <!-- -->
@@ -859,7 +872,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal for this chapter</span></span>
 <span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[x]</span> EDA for Longitudinal sub-model <span class="in">`lme`</span> (Achohol usage and AMH levels by EJC)</span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[x]</span> EDA for Longitudinal sub-model <span class="in">`lme`</span> (Alcohol usage and AMH levels by EJC)</span>
 <span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[x]</span> EDA for survival sub-model (Kaplan-Meier plots for different variables by EJC)</span>
 <span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a></span>
@@ -871,11 +884,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[x]</span> Fit the joint model with <span class="in">`JM`</span> package (by EJC)</span>
 <span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>swan_amh0 is the longitudinal dataset</span>
-<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>swan_amh1 is the id dataset</span>
-<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span><span class="va">[x]</span> swan_amh0 is the longitudinal dataset</span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span><span class="va">[x]</span> swan_amh1 is the id dataset</span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 <span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: "loading data"</span></span>
@@ -1119,6 +1132,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb19-326"><a href="#cb19-326" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-327"><a href="#cb19-327" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(joint.fit.wei)</span></span>
 <span id="cb19-328"><a href="#cb19-328" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb19-329"><a href="#cb19-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-330"><a href="#cb19-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-331"><a href="#cb19-331" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="va">[x]</span> <span class="in">`r praise::praise()`</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -48,7 +48,7 @@ devtools::load_all()
 
 ## Goal for this chapter
 
-- [x] EDA for Longitudinal sub-model `lme` (Achohol usage and AMH levels by EJC)
+- [x] EDA for Longitudinal sub-model `lme` (Alcohol usage and AMH levels by EJC)
 
 - [x] EDA for survival sub-model (Kaplan-Meier plots for different variables by EJC)
 
@@ -60,11 +60,11 @@ devtools::load_all()
 
 - [x] Fit the joint model with `JM` package (by EJC)
 
+  - [x] swan_amh0 is the longitudinal dataset
 
--   swan_amh0 is the longitudinal dataset
+  - [x] swan_amh1 is the id dataset
 
--   swan_amh1 is the id dataset
-
+- [x] `r praise::praise()`
 
 ```{r}
 #| label: "loading data"
@@ -308,3 +308,6 @@ summary(joint.fit1)[[2]]
 
 # summary(joint.fit.wei)
 ```
+
+
+-   [x] `r praise::praise()`
