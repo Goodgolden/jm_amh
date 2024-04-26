@@ -51,7 +51,7 @@ here::set_here()
 
 -   [x] Rate Baseline model
 
-- [x] AUCs and Brier Scores
+-   [x] AUCs and Brier Scores
 
 ## Loading data and merge variables
 
@@ -244,8 +244,7 @@ compare_jm(jmb2.117.value, jmb2.117.value.rate, jmb2.117.base.rate)
 
 ```
 
-### AUC 
-
+### AUC
 
 #### AUC for Value model
 
@@ -308,9 +307,7 @@ names(tbl_auc_value) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 tbl_auc_value %>% knitr::kable()
 ```
 
-
 #### AUC for Value Rate model
-
 
 ```{r}
 #| label: "auc_value_rate"
@@ -373,10 +370,7 @@ tbl_auc_value_rate %>% knitr::kable()
 
 ```
 
-
-
 #### AUC for Baseline Rate model
-
 
 ```{r}
 #| label: "auc_base_rate"
@@ -438,7 +432,6 @@ names(tbl_auc_base_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 tbl_auc_base_rate %>% knitr::kable()
 ```
 
-
 ### Brier Scores
 
 #### Brier Scores: Value model
@@ -497,7 +490,6 @@ tbl_bs_value <- rbind(Tstart2,
 
 names(tbl_bs_value) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 ```
-
 
 ```{r}
 #| label: "bs_value"
@@ -627,4 +619,3 @@ names(tbl_bs_base_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 #| label: "bs_base_rate"
 tbl_bs_base_rate %>% knitr::kable()
 ```
-
