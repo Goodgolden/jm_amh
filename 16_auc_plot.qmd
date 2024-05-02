@@ -1,0 +1,335 @@
+---
+title: "AUC Plot"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(plyr, quietly = TRUE)
+library(JMbayes2, quietly = TRUE)
+library(auRoc, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## To-do list
+
+-   [x] confidence interval with the AUC
+
+-   [x] plot for AUC
+
+    -   [x] intervals individually
+
+    -   [x] combined figures
+
+-   [x] `r praise::praise()`
+
+```{r}
+load("results/jmbayes2_117_value_rate_auc_ci.RData")
+
+AUC2_ci <- map_dfc(AUC2, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975))) %>%
+  mutate(Tstart = 2)
+AUC3_ci <- map_dfc(AUC3, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 3)
+AUC4_ci <- map_dfc(AUC4, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 4)
+AUC5_ci <- map_dfc(AUC5, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 5)
+AUC6_ci <- map_dfc(AUC6, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 6)
+AUC8_ci <- map_dfc(AUC8, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 8)
+
+# AUC2_ci <- rbind(NA, AUC2_ci) %>%
+#   mutate(Tstart = 2)
+
+# View(AUC2_ci)
+
+AUC_final <- rbind(AUC2_ci, AUC3_ci,
+                   AUC4_ci, AUC5_ci, 
+                   AUC6_ci, AUC8_ci) %>%
+  mutate(Dt = c(2:5, rep(1:5, 5)))
+```
+
+## AUC and CI by Tstart
+
+```{r}
+
+## color codes for the palette
+# Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
+# Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
+# auc_plot <-
+AUC_final %>%
+  ggplot() +
+  geom_line(aes(x = Dt, y = `2.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Tstart),
+                fill = "#90e0ef",
+                alpha = 0.5) +
+  geom_line(aes(x = Dt, y = `5%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `95%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Tstart),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `10%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `90%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Tstart),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `25%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `75%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Tstart),
+                fill = "#03045e",
+                alpha = 0.5) +
+  geom_line(aes(x = Dt, y = `50%`, group = Tstart),
+              color = "#fdc500", 
+              linewidth = 0.5) +
+  facet_wrap(~Tstart,
+             labeller = labeller(
+               Tstart = c("2" = "Starting Time 2nd year",
+                          "3" = "Starting Time 3rd year",
+                          "4" = "Starting Time 4th year",
+                          "5" = "Starting Time 5th year",
+                          "6" = "Starting Time 6th year",
+                          "8" = "Starting Time 8th year"))) +
+  labs(title = "SWAN-AMH AUC and CIs (wrap by starting time)") +
+  theme_minimal() +
+  xlab("Length of Time Interval (years)") +
+  ylab("AUC") +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+```
+
+## AUC and CI by Dt
+
+```{r}
+# Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
+# Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
+# auc_plot <-
+AUC_final %>%
+  filter(Dt != 1) %>%
+  ggplot() +
+  geom_line(aes(x = Tstart, y = `2.5%`, group = Dt),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `97.5%`, group = Dt),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Dt),
+                fill = "#90e0ef",
+                alpha = 0.5) +
+  geom_line(aes(x = Tstart, y = `5%`, group = Dt),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `95%`, group = Dt),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Dt),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `10%`, group = Dt),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `90%`, group = Dt),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Dt),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `25%`, group = Dt),
+              color =  "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `75%`, group = Dt),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Dt),
+                fill = "#03045e",
+                alpha = 0.5) +
+  geom_line(aes(x = Tstart, y = `50%`, group = Dt),
+              color = "#ffd500", 
+              linewidth = 0.5) +
+  facet_wrap(~Dt,
+             labeller = labeller(
+               Dt = c("1" = "1-year Time Interval",
+                      "2" = "2-year Time Interval",
+                      "3" = "3-year Time Interval",
+                      "4" = "4-year Time Interval",
+                      "5" = "5-year Time Interval"))) +
+  labs(title = "SWAN-AMH AUC and CIs (wrap by time interval)") +
+  theme_minimal() +
+  xlab("Starting Time (year)") +
+  ylab("AUC") +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+```
+
+## AUC only
+
+```{r}
+#| label: auc_plot
+#| warning: false
+#| fig-cap: "AUC plot for SWAN-AMH Tstart"
+
+AUC_final %>%
+  mutate(Tstart = as.character(Tstart)) %>%
+  ggplot() +
+  geom_line(aes(x = Dt, y = `50%`,
+                group = Tstart, 
+                color = Tstart),
+              linewidth = 1) +
+  geom_point(aes(x = Dt, y = `50%`,
+                group = Tstart, 
+                color = Tstart),
+              size = 2.5) +
+  geom_point(aes(x = Dt, y = `50%`,
+                group = Tstart),
+              color = "white",
+              size = 1,
+             alpha = 0.5) +
+  labs(title = "SWAN-AMH AUC") +
+  theme_minimal() +
+  xlab("Length of Time Interval (years)") +
+  ylab("AUC") +
+  ggthemes::scale_colour_tableau("Jewel Bright") +
+  theme(legend.position = c(0.90, 0.66),
+        # legend.background = element_rect(fill = "#C9C9C9", 
+        #                           size = 0.5,
+        #                           color = "#C9C9C9"),
+        # plot.background = element_rect(fill = "#C9C9C9",
+        #                                color = "#C9C9C9"),
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+# c("c("#D9D9D9", "#C9C9C9", "#E5E5E5")", "#FFFFFF", "#FFFFFF")
+```
+
+```{r}
+#| label: auc_plot2
+#| warning: false
+#| fig-cap: "AUC plot for SWAN-AMH Dt"
+
+
+AUC_final %>%
+  mutate(Dt = as.character(Dt)) %>%
+  ggplot() +
+  geom_line(aes(x = Tstart, y = `50%`,
+                group = Dt, 
+                color = Dt),
+              linewidth = 1) +
+  geom_point(aes(x = Tstart, y = `50%`,
+                group = Dt, 
+                color = Dt),
+              size = 2.5) +
+  geom_point(aes(x = Tstart, y = `50%`,
+                group = Dt),
+              color = "white",
+              size = 1,
+             alpha = 0.5) +
+  labs(title = "SWAN-AMH AUC") +
+  theme_minimal() +
+  xlab("Start Time (year)") +
+  ylab("AUC") +
+  ggthemes::scale_colour_tableau("Jewel Bright") +
+  theme(legend.position = c(0.88, 0.60),
+        # legend.background = element_rect(fill = "#C9C9C9", 
+        #                           size = 0.5,
+        #                           color = "#C9C9C9"),
+        # plot.background = element_rect(fill = "#C9C9C9",
+        #                                color = "#C9C9C9"),
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+# c("c("#D9D9D9", "#C9C9C9", "#E5E5E5")", "#FFFFFF", "#FFFFFF")
+```
+
+-   [x] `r praise::praise()`

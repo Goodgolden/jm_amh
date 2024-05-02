@@ -8,7 +8,7 @@
 
 <meta name="author" content="Randy Jin, Elizabeth Juarez-Colunga">
 
-<title>SWAN AMH project analysis - 16&nbsp; Paper Review</title>
+<title>SWAN AMH project analysis - 18&nbsp; Paper Review</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -90,7 +90,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./references.html" rel="next">
-<link href="./15_auc_ci.html" rel="prev">
+<link href="./17_rate_estimate.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -139,7 +139,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Paper Review</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Paper Review</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -249,7 +249,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_review.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Paper Review</span></a>
+  <a href="./16_auc_plot.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">AUC Plot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17_rate_estimate.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Slope Estimate</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_review.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Paper Review</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -266,8 +276,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data" id="toc-paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data" class="nav-link active" data-scroll-target="#paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data"> <span class="header-section-number">16.1</span> Paper: Dynamic Predictions and Prospective Accuracy in Joint Models for Longitudinal and Time-to-Event Data</a></li>
-  <li><a href="#paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc" id="toc-paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc" class="nav-link" data-scroll-target="#paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc"> <span class="header-section-number">16.2</span> Paper: The R Package JMbayes for Fitting Joint Models for Longitudinal and Time-to-Event Data Using MCMC</a></li>
+  <li><a href="#paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data" id="toc-paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data" class="nav-link active" data-scroll-target="#paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data"> <span class="header-section-number">18.1</span> Paper: Dynamic Predictions and Prospective Accuracy in Joint Models for Longitudinal and Time-to-Event Data</a></li>
+  <li><a href="#paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc" id="toc-paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc" class="nav-link" data-scroll-target="#paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc"> <span class="header-section-number">18.2</span> Paper: The R Package JMbayes for Fitting Joint Models for Longitudinal and Time-to-Event Data Using MCMC</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/Goodgolden/jm_amh/edit/main/05_review.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
@@ -276,7 +286,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Paper Review</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Paper Review</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -290,8 +300,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data" class="level2" data-number="16.1">
-<h2 data-number="16.1" class="anchored" data-anchor-id="paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data"><span class="header-section-number">16.1</span> Paper: Dynamic Predictions and Prospective Accuracy in Joint Models for Longitudinal and Time-to-Event Data</h2>
+<section id="paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="paper-dynamic-predictions-and-prospective-accuracy-in-joint-models-for-longitudinal-and-time-to-event-data"><span class="header-section-number">18.1</span> Paper: Dynamic Predictions and Prospective Accuracy in Joint Models for Longitudinal and Time-to-Event Data</h2>
 <p>Authors: Dimitris Rizopoulos Journal: Biometrics 67, 819–829, September 2011</p>
 <p>Framework: Explores the joint modeling of longitudinal and time-to-event data, focuses on assessing the predictive power of longitudinal markers for future event occurrences.</p>
 <p>Motivating Example: Used real data on HIV infected patients’ CD4 cell count measurements.</p>
@@ -304,8 +314,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The ability of CD4 cell count to discriminate between patients using ROC curves is also explored and it is found that CD4 cell count has moderate discrimination power and there are minimal differences between the different time windows.</p>
 <p>Discussions: Model misspecification could affect accuracy estimates, but the joint models tend to be robust against certain types of misspecifications. Further flexibility in model components, like the baseline risk function and error distribution, could enhance robustness. Models can be overfitted due to complexity of the models. Bootstrap approaches can be used to correct the overfitting. While the paper has focused on discrimination primarily, the authors acknowledged the importance of calibration in joint models.</p>
 </section>
-<section id="paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc" class="level2" data-number="16.2">
-<h2 data-number="16.2" class="anchored" data-anchor-id="paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc"><span class="header-section-number">16.2</span> Paper: The R Package JMbayes for Fitting Joint Models for Longitudinal and Time-to-Event Data Using MCMC</h2>
+<section id="paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="paper-the-r-package-jmbayes-for-fitting-joint-models-for-longitudinal-and-time-to-event-data-using-mcmc"><span class="header-section-number">18.2</span> Paper: The R Package JMbayes for Fitting Joint Models for Longitudinal and Time-to-Event Data Using MCMC</h2>
 <p>Authors: Dimitris Rizopoulos Journal: Journal of Statistical Software, August 2016, Volume 72, Issue 7</p>
 <p>Framework: The paper introduces the R package JMbayes for fitting joint models for longitudinal and time-to-event data under a Bayesian approach using Markov chain Monte Carlo algorithms.</p>
 <p>Idea in new approach: The paper introduces several features that distinguish JMbayes from other software implementations for joint models. The package can handle different types of longitudinal outcomes, such as continuous, categorical, or censored, and provides various options for modeling the association between the longitudinal and survival processes. The package also offers tools for deriving and validating dynamic predictions for both outcomes. The paper discusses how to use JMbayes to derive individualized predictions for both the longitudinal and the event time outcomes and discusses about the techniques to combine predictions from different models using Bayesian model averaging.</p>
@@ -470,8 +480,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./15_auc_ci.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">AUC CI</span></span>
+      <a href="./17_rate_estimate.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Slope Estimate</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

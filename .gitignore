@@ -50,3 +50,6 @@ rsconnect/
 .json
 .js
 /site_libs/
+
+*.js
+*.css

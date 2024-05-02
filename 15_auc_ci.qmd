@@ -458,13 +458,11 @@ colnames(AUC_final) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 
 For the final table each column is different `Dt` time window for predicting in $1, 2, 3, 4, 5$ years; each row is the `Tstart` time window for starting from the $2, 3, 4, 5, 6, 8$-th years. each cell is the AUC with 95% CI in the parenthesis `median (95% CI)`.
 
-
 ```{r}
 AUC_final %>% 
   knitr::kable() %>%
   kableExtra::kable_styling(font_size = 8)
 
 ```
-
 
 -   [x] `r praise::praise()`
