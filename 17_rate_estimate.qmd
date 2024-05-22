@@ -105,7 +105,7 @@ save(jmb2.117.value.rate,
 
 -   `gelman_diag()`: Calculates the potential scale reduction factor for the estimated parameters in a fitted joint model, together with the upper confidence limits.
 
-We only use the ggtraceplot
+We only use the ggtraceplot for the alpha terms
 
 ```{r fig.show="hold", out.width="100%"}
 #| layout-ncol: 2
