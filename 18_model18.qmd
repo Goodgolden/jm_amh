@@ -85,14 +85,14 @@ swan_amh13 <- swan_amh13 %>%
 
 # levels(swan_amh13$alcohol)
 # levels(swan_amh13$edu)
-table(swan_amh13$bmi_cat)
-table(swan_amh03$bmi_cat)
+# table(swan_amh13$bmi_cat)
+# table(swan_amh03$bmi_cat)
 ```
 
 ```{r}
 control = lmeControl(opt = "optim")
-jmcontrol <- list(n_iter = 500000, 
-                  n_burnin = 100000, 
+jmcontrol <- list(n_iter = 50000, 
+                  n_burnin = 10000, 
                   n_thin = 2,
                   n_chains = 1,
                   save_random_effects = TRUE,
@@ -152,9 +152,24 @@ save(jmb2.118.value.rate,
 ## Traceplot
 
 ```{r}
+#| layout-ncol: 2
+#|  fig.show: "hold"
+#|  out.width: "100%"
+
 load("results/jmbayes2_118_2M.Rdata")
 
 summary118.value.rate 
+
+# ggdensityplot(jmb2.117.value.rate,
+#               parm = "alphas", 
+#               grid = TRUE)
+# 
+# ggtraceplot(jmb2.117.value.rate,
+#             parm = "alphas", 
+#             grid = TRUE)
+
+JMbayes2::traceplot(jmb2.117.value.rate,
+            parm = "alphas")
 ```
 
 ### SD Calculation posterior
