@@ -20,9 +20,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ## load packages
 library(here, quietly = TRUE)
 library(tidyverse, quietly = TRUE)
-library(plyr, quietly = TRUE)
 library(JMbayes2, quietly = TRUE)
-library(auRoc, quietly = TRUE)
 devtools::load_all()
 
 ## check the directory for the file
@@ -50,17 +48,14 @@ here::set_here()
 
 ## Model
 
-Pull out the MCMC for the random slope term from the joint model.
-Calculate the posterior standard deviation for the random slope term.
-Then take a mean value of the standard deviation for the random slope
-
+Pull out the MCMC for the random slope term from the joint model. Calculate the posterior standard deviation for the random slope term. Then take a mean value of the standard deviation for the random slope
 
 ```{r}
 #| eval: false
 
 control = lmeControl(opt = "optim")
 jmcontrol <- list(n_iter = 200000, 
-                  n_burnin = 100000, 
+                  n_burnin = 50000, 
                   n_thin = 5,
                   n_chains = 4,
                   save_random_effects = TRUE,
@@ -95,30 +90,24 @@ jmb2.117.value.rate <- JMbayes2::jm(Surv_object = surv17,
                                   control = jmcontrol) 
 
 save(jmb2.117.value.rate,
-     file = "results/jmbayes2_117_10k_4.Rdata")
+     file = "results/jmbayes2_117_2M_4.Rdata")
 
 ```
 
-
-
 ## Estimates
 
-- `ggtraceplot()`:
-Plots the evolution of the estimated parameter vs. iterations in a fitted joint model using ggplot2.
+-   `ggtraceplot()`: Plots the evolution of the estimated parameter vs. iterations in a fitted joint model using ggplot2.
 
-- `gelman_diag()`: 
-Calculates the potential scale reduction factor for the estimated parameters in a fitted joint model, together with the upper confidence limits.
+-   `gelman_diag()`: Calculates the potential scale reduction factor for the estimated parameters in a fitted joint model, together with the upper confidence limits.
 
-- `ggtraceplot()`: 
-Plots the evolution of the estimated parameter vs. iterations in a fitted joint model using ggplot2.
+-   `ggtraceplot()`: Plots the evolution of the estimated parameter vs. iterations in a fitted joint model using ggplot2.
 
-- `gelman_diag()`: 
-Calculates the potential scale reduction factor for the estimated parameters in a fitted joint model, together with the upper confidence limits.
+-   `gelman_diag()`: Calculates the potential scale reduction factor for the estimated parameters in a fitted joint model, together with the upper confidence limits.
 
 ```{r}
 #| eval: false
 
-load("results/jmbayes2_117_10k_4.Rdata")
+load("results/jmbayes2_117_2M_4.Rdata")
 
 ggdensityplot(jmb2.117.value.rate,
               parm = "alphas", 
@@ -126,6 +115,10 @@ ggdensityplot(jmb2.117.value.rate,
 
 ggtraceplot(jmb2.117.value.rate,
             parm = "alphas", 
+            grid = TRUE)
+
+
+ggtraceplot(jmb2.117.value.rate,
             grid = TRUE)
 
 JMbayes2::traceplot(jmb2.117.value.rate,
@@ -136,9 +129,9 @@ JMbayes2::traceplot(jmb2.117.value.rate,
 #          grid = TRUE)
 ```
 
-
 ```{r}
-load("results/jmbayes2_117_10k_4.Rdata")
+# load("results/jmbayes2_117_10k_4.Rdata")
+load("results/jmbayes2_117_2M_4.Rdata")
 # View(jmb2.117.value.rate$mcmc)
 random <- jmb2.117.value.rate$mcmc$b[[1]]
 
@@ -170,14 +163,11 @@ cat("The mean of SD(random_slope)",
 
 ```
 
-
-
 ```{r fig.show="hold", out.width="50%"}
 #| layout-ncol: 2
 hist(random_int_sd)
 hist(random_slope_sd)
 ```
-
 
 ```{r}
 summary(jmb2.117.value.rate)
@@ -185,42 +175,14 @@ summary(jmb2.117.value.rate)
 cat("The fixed effect of slope has posterior mean -0.5878543 and SD 0.01045003;\n")
 ```
 
-Hence,  we have the final results for the variability of the slope term.
+Hence, we have the final results for the variability of the slope term.
 
-- The random effect slope term based on MCMC is $\sigma_{\beta_1}$ = `r mean(random_slope_sd)`; 
+-   The random effect slope term based on MCMC is $\sigma_{\beta_1}$ = `r mean(random_slope_sd)`;
 
-- The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.117.value.rate)$Outcome[2, 2]`; 
+-   The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.117.value.rate)$Outcome[2, 2]`;
 
-- We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.117.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
+-   We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.117.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
 
-- The 95% CI for the slope term is (`r mean(random_slope_sd) - 1.96 * sqrt(summary(jmb2.117.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r mean(random_slope_sd) + 1.96 * sqrt(summary(jmb2.117.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
+-   The 95% CI for the slope term is (`r mean(random_slope_sd) - 1.96 * sqrt(summary(jmb2.117.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r mean(random_slope_sd) + 1.96 * sqrt(summary(jmb2.117.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
 
-
--  [x]  `r praise::praise()`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-   [x] `r praise::praise()`
