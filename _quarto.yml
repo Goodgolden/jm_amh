@@ -43,6 +43,8 @@ book:
     - 15_auc_ci.qmd
     - 16_auc_plot.qmd
     - 17_rate_estimate.qmd
+    - 18_model18.qmd
+    - 20_testing.qmd
     - 05_review.qmd
     - references.qmd
 

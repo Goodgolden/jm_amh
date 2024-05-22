@@ -377,7 +377,7 @@ $$
 \begin{split}
   jmb117: & \\ 
   lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
-  surv16: \ \ \ & Surv(etime, event) \sim phys_act + (married) + bmi + factor(site) + \\
+  surv16: \ \ \ & Surv(etime, event) \sim phys_act + bmi + factor(site) + \\
   & factor(ethnic) + factor(smoke) + \pmb m(time)
 \end{split}
 $$

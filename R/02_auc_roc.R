@@ -164,6 +164,18 @@ tvAUC <- function (object, newdata, Tstart, ...) {
 
 ## tvAUC_CI --------------------------------------------------------------------
 
+#' Title tvAUC_CI
+#'
+#' @param object
+#' @param newdata
+#' @param Tstart
+#' @param Thoriz
+#' @param Dt
+#' @param iter
+#' @param ...
+#'
+#' @return
+#' @export
 tvAUC_CI <- function (object,
                       newdata,
                       Tstart,

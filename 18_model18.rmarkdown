@@ -1,0 +1,1091 @@
+---
+title: "Model 18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(plyr)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+
+## To-do list
+
+-   [x] Change `bmi` into categorical variable
+
+-   [x] Fit the joint model Value-Rate model
+
+-   [x] The sample range for Rate in SurvModel
+
+-   [x] AUCs and Brier Scores
+
+-   [x] AUC confidence interval
+
+-   [x] Plots for AUC by `Tstart` and `Dt`
+
+-   [x] `r praise::praise()`
+
+## Loading data and merge variables
+
+
+```{r}
+load("data/swan_amh03.rda")
+load("data/swan_amh13.rda")
+
+swan_amh04 <- swan_amh03 %>%
+  group_by(id) %>%
+  arrange(time) %>%
+  slice(1L) %>%
+  dplyr::select(id, lamh0 = lamh) %>%
+  mutate(id = as.character(id))
+
+swan_amh03 <- swan_amh03 %>%
+  mutate(id = as.character(id)) %>%
+  full_join(swan_amh04, by = "id") %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
+
+swan_amh13 <- swan_amh13 %>%
+  full_join(swan_amh04, by = "id") %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
+
+# levels(swan_amh13$alcohol)
+# levels(swan_amh13$edu)
+
+```
+
+```{r}
+control = lmeControl(opt = "optim")
+jmcontrol <- list(n_iter = 50000, 
+                  n_burnin = 10000, 
+                  n_thin = 2,
+                  n_chains = 1,
+                  save_random_effects = TRUE,
+                  seed = 55555,
+                  cores = 1)
+
+```
+
+
+## Value + Rate model
+
+$$
+\begin{split}
+  jmb2.118.value.rate: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time,\\
+  & \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \ \  random = time| id) \\
+  surv18: \ \ \ & Surv(etime, event) \sim  bmi + site + ethnic + smoke \\
+  & \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ + \pmb m(time) + \pmb m'(time) 
+\end{split}
+$$
+
+
+```{r}
+#| eval: false
+lme1 <- lme(lamh ~ time,
+                data = swan_amh03,
+                control = control,
+                random = ~ time| id)
+
+surv18 <- coxph(Surv(etime, event) ~ 
+                  0 + # alcohol +
+                  bmi_cat + # bc_pills + 
+                  # children +
+                  # edu + 
+                  # employed +
+                  # health +
+                  # married + 
+                  # phys_act + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.118.value.rate <- JMbayes2::jm(Surv_object = surv18,
+                                  Mixed_objects = lme1, 
+                                  functional_forms = list("lamh" = ~ value(lamh) + slope(lamh)),
+                                  time_var = "time",
+                                  control = jmcontrol) 
+
+# summary118.value.rate <- summary(jmb2.118.value.rate)$Survival 
+# summary118.value.rate %>% knitr::kable(digits = 4)
+save(jmb2.118.value.rate,
+     file = "results/jmbayes2_118_2M.Rdata")
+
+```
+
+
+
+### SD Calculation with posterior distributions
+
+
+```{r}
+load("results/jmbayes2_118_2M.Rdata")
+
+random_intercept <- cbind(jmb2.118.value.rate$mcmc$b[[1]][, 1, ]) 
+                          # jmb2.118.value.rate$mcmc$b[[2]][, 1, ], 
+                          # jmb2.118.value.rate$mcmc$b[[3]][, 1, ], 
+                          # jmb2.118.value.rate$mcmc$b[[4]][, 1, ])
+fixed_intercept <- cbind(t(jmb2.118.value.rate$mcmc$betas1[[1]][, 1]))
+                         # t(jmb2.118.value.rate$mcmc$betas1[[2]][, 1]), 
+                         # t(jmb2.118.value.rate$mcmc$betas1[[3]][, 1]), 
+                         # t(jmb2.118.value.rate$mcmc$betas1[[4]][, 1]))
+
+# random_intercept <- random[, 1, ] 
+
+random_slope <- cbind(jmb2.118.value.rate$mcmc$b[[1]][, 2, ])
+                      # jmb2.118.value.rate$mcmc$b[[2]][, 2, ], 
+                      # jmb2.118.value.rate$mcmc$b[[3]][, 2, ], 
+                      # jmb2.118.value.rate$mcmc$b[[4]][, 2, ])
+fixed_slope <- cbind(t(jmb2.118.value.rate$mcmc$betas1[[1]][, 2]))
+                     # t(jmb2.118.value.rate$mcmc$betas1[[2]][, 2]), 
+                     # t(jmb2.118.value.rate$mcmc$betas1[[3]][, 2]), 
+                     # t(jmb2.118.value.rate$mcmc$betas1[[4]][, 2]))
+
+# View(fixed_slope)
+# dim(random_slope)
+# dim(fixed_slope)
+
+both_intercept <- random_intercept + as.vector(fixed_intercept)
+both_slope <- random_slope + as.vector(fixed_slope)
+
+# dim(both_slope)
+# dim(both_intercept)
+```
+
+```{r}
+both_int_sd <- apply(both_intercept, 1, sd)
+both_slope_sd <- apply(both_slope, 1, sd)
+
+both_int_mu <- apply(both_intercept, 1, mean)
+both_slope_mu <- apply(both_slope, 1, mean)
+
+# cat("The mean of mu(both_int)", 
+#     mean(both_int_mu), ";\n")
+# 
+# cat("The mean of SD(both_int)", 
+#     mean(both_int_sd), 
+#     ";\n the median of SD(both_int)",
+#     median(both_int_sd), "\n")
+# 
+# 
+# cat("The mean of mu(both_slope)",
+#     mean(both_slope_mu), ";\n")
+# 
+# cat("The mean of SD(both_slope)",
+#     mean(both_slope_sd), 
+#     ";\n the median of SD(both_slope)",
+#     median(both_slope_sd), "\n")
+# 
+# # quantile(both_slope, c(0.025,0.5, 0.975))
+# 
+# mean(both_slope_mu) - 1.96 * mean(both_slope_sd)
+# mean(both_slope_mu) + 1.96 * mean(both_slope_sd)
+```
+
+
+-   The 95% CI for the slope term is (`r mean(both_slope_mu) - 1.96 * mean(both_slope_sd)`, `r mean(both_slope_mu) + 1.96 * mean(both_slope_sd)`)
+
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+hist(both_int_mu)
+hist(both_slope_mu)
+```
+
+
+### SD Calculation with summation
+
+
+```{r}
+random_int_sd <- apply(random_intercept, 1, sd)
+random_slope_sd <- apply(random_slope, 1, sd)
+
+random_int_mu <- apply(random_intercept, 1, mean)
+random_slope_mu <- apply(random_slope, 1, mean)
+
+# cat("The mean of mu(random_int)", 
+#     mean(random_int_mu), ";\n")
+# 
+# cat("The mean of mu(random_slope)",
+#     mean(random_slope_mu), ";\n")
+# 
+# 
+# cat("The mean of SD(random_int)", 
+#     mean(random_int_sd), 
+#     ";\n the median of SD(random_int)",
+#     median(random_int_sd), "\n")
+# 
+# cat("The mean of SD(random_slope)",
+#     mean(random_slope_sd), 
+#     ";\n the median of SD(random_slope)",
+#     median(random_slope_sd), "\n")
+
+```
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+hist(random_int_sd)
+hist(random_slope_sd)
+```
+
+```{r}
+# summary(jmb2.118.value.rate)
+```
+
+
+Hence, we have the final results for the variability of the slope term.
+
+-   The random effect slope term based on MCMC is $\sigma_{\beta_1}$ = `r mean(random_slope_sd)`;
+
+-   The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.118.value.rate)$Outcome[2, 2]`;
+
+-   We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.118.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
+
+-   The 95% CI for the slope term is (`r summary(jmb2.118.value.rate)$Outcome[2, 1]- 1.96 * sqrt(summary(jmb2.118.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r summary(jmb2.118.value.rate)$Outcome[2, 1] + 1.96 * sqrt(summary(jmb2.118.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
+
+-   [x] `r praise::praise()`
+
+## AUC
+
+
+```{r}
+#| label: "auc_value_rate"
+#| warning: false
+#| eval: false
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(AUC2, "auc") %>% as.character()
+Tstart3 = map(AUC3, "auc") %>% as.character()
+Tstart4 = map(AUC4, "auc") %>% as.character()
+Tstart5 = map(AUC5, "auc") %>% as.character()
+Tstart6 = map(AUC6, "auc") %>% as.character()
+Tstart8 = map(AUC8, "auc") %>% as.character()
+
+tbl_auc_value_rate <- rbind(Tstart2, 
+                            Tstart3,
+                            Tstart4,
+                            Tstart5,
+                            Tstart6, 
+                            Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8, tbl_auc_value_rate,
+     file = "results/jmbayes2_118_value_rate_auc_only.RData")
+
+```
+
+```{r}
+load("results/jmbayes2_118_value_rate_auc_only.RData")
+tbl_auc_value_rate %>% knitr::kable()
+```
+
+
+## Brier Scores
+
+
+```{r}
+#| label: "bs_table_value_rate"
+#| warning: false
+#| eval: false
+
+Brier2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(Brier2, "Brier") %>% as.character()
+Tstart3 = map(Brier3, "Brier") %>% as.character()
+Tstart4 = map(Brier4, "Brier") %>% as.character()
+Tstart5 = map(Brier5, "Brier") %>% as.character()
+Tstart6 = map(Brier6, "Brier") %>% as.character()
+Tstart8 = map(Brier8, "Brier") %>% as.character()
+
+tbl_bs_value_rate <- rbind(Tstart2,
+                Tstart3,
+                Tstart4,
+                Tstart5,
+                Tstart6,
+                Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+save(Brier2, Brier3, Brier4, Brier5, Brier6, Brier8, tbl_bs_value_rate,
+     file = "results/jmbayes2_118_value_rate_brier.RData")
+```
+
+```{r}
+#| label: "bs_value_rate"
+
+load("results/jmbayes2_118_value_rate_brier.RData")
+tbl_bs_value_rate %>% knitr::kable()
+```
+
+
+### Function for AUC CI
+
+This is function modified from Dimitris Rizopoulos' `tvAUC.jm()` function. The function is used to calculate the AUC and its confidence interval. The function is modified to work with the `jm` object from the `JMbayes2` package.
+
+The function is conditional on the `Tstart` and `Dt` arguments for each setup. After we set up the `Tstart` and `Dt`, the new dataset will be generated to include the individuals who have not experienced the event yet but having longitudinal outcomes before the `Tstart` + `Dt`. We pull out every single iteration of `mcmc` object from the `predict()` function and calculate the AUC for that iteration.
+
+argument `iter` is the number of iterations to calculate the AUC.
+
+Then we can calculate the quantiles of the resampleing AUCs to get the confidence interval.
+
+
+```{r}
+tvAUC_CI <- function (object, 
+                      newdata, 
+                      Tstart,
+                      Thoriz = NULL, 
+                      Dt = NULL, 
+                      iter = 1000L,
+                      ...) {
+  
+  if (!inherits(object, "jm"))
+    stop("Use only with 'jm' objects.\n")
+  if (!is.data.frame(newdata) || nrow(newdata) == 0)
+    stop("'newdata' must be a data.frame 
+         with more than one rows.\n")
+  if (is.null(Thoriz) && is.null(Dt))
+    stop("either 'Thoriz' or 
+         'Dt' must be non null.\n")
+  if (!is.null(Thoriz) && Thoriz <= Tstart)
+    stop("'Thoriz' must be larger than 'Tstart'.")
+  if (is.null(Thoriz))
+    Thoriz <- Tstart + Dt
+
+  ## start of the dataset {{{---------------------------------------------------
+  type_censoring <- object$model_info$type_censoring
+  
+  if (object$model_info$CR_MS)
+    stop("'tvROC()' currently only works for right censored data.")
+  
+  Tstart <- Tstart + 1e-06
+  Thoriz <- Thoriz + 1e-06
+  id_var <- object$model_info$var_names$idVar
+  time_var <- object$model_info$var_names$time_var
+  Time_var <- object$model_info$var_names$Time_var
+  event_var <- object$model_info$var_names$event_var
+  
+  if (is.null(newdata[[id_var]]))
+    stop("cannot find the '", 
+         id_var,
+         "' variable in newdata.",
+         sep = "")
+  if (is.null(newdata[[time_var]]))
+    stop("cannot find the '",
+         time_var, 
+         "' variable in newdata.",
+         sep = "")
+  if (any(sapply(Time_var, 
+                 function (nmn) is.null(newdata[[nmn]]))))
+    stop("cannot find the '", 
+         paste(Time_var, 
+               collapse = ", "),
+         "' variable(s) in newdata.", 
+         sep = "")
+  if (is.null(newdata[[event_var]]))
+    stop("cannot find the '", 
+         event_var, 
+         "' variable in newdata.", 
+         sep = "")
+  
+  ## Need to find the newdata after the Tstart but 
+  ## before the ind has any event yet
+  newdata <- newdata[order(newdata[[Time_var]]), ]
+  newdata <- newdata[newdata[[Time_var]] > Tstart, ]
+  newdata <- newdata[newdata[[time_var]] <= Tstart, ]
+  newdata[[id_var]] <- newdata[[id_var]][, drop = TRUE]
+  test1 <- newdata[[Time_var]] < Thoriz & newdata[[event_var]] == 1
+  
+  if (!any(test1))
+    stop("it seems that there are no events 
+         in the interval [Tstart, Thoriz).")
+  
+  ## only predict for the people who does not 
+  ## have any event yet but still has the 
+  ## longitudinal outcomes before Tstart 
+  newdata2 <- newdata
+  newdata2[[Time_var]] <- Tstart
+  newdata2[[event_var]] <- 0
+  ## end of the dataset }}} ----------------------------------------------------
+  
+  
+  ## prediction {{{-------------------------------------------------------------
+  prediction.jm <- predict(object, 
+                           newdata = newdata2, 
+                           process = "event",
+                           times = Thoriz, 
+                           return_mcmc = TRUE,
+                           n_samples = iter,
+                           seed = 555L)
+  
+  data <- prediction.jm[["mcmc"]] %>% 
+    as.data.frame()
+  ## }}}------------------------------------------------------------------------
+  
+  preds_auc <- function(preds,
+                        ...) {
+    si_u_t <- 1 - preds
+    names(si_u_t) <- prediction.jm$id
+    si_u_t <- si_u_t[prediction.jm$times > Tstart]
+    
+    id <- newdata[[id_var]]
+    Time <- newdata[[Time_var]]
+    event <- newdata[[event_var]]
+    f <- factor(id, levels = unique(id))
+    
+    ## time is the time for observation
+    Time <- tapply(Time, f, tail, 1L)
+    ## the event of the observation
+    event <- tapply(event, f, tail, 1L)
+    
+    names(Time) <- names(event) <-  as.character(unique(id))
+    
+    if (any(dupl <- duplicated(Time))) {
+      Time[dupl] <- Time[dupl] + 
+        runif(length(Time[dupl]),
+              1e-07,
+              1e-06)}
+    
+    if (!all(names(si_u_t) == names(Time)))
+      stop("mismatch between 'Time' variable names and
+           survival probabilities names.")
+    
+    auc <- if (length(Time) > 1L) {
+      ## why do you need pairs?
+      pairs <- combn(as.character(unique(id)), 2)
+      Ti <- Time[pairs[1, ]]
+      Tj <- Time[pairs[2, ]]
+      di <- event[pairs[1, ]]
+      dj <- event[pairs[2, ]]
+      si_u_t_i <- si_u_t[pairs[1, ]]
+      si_u_t_j <- si_u_t[pairs[2, ]]
+      
+      
+      ind1 <- (Ti <= Thoriz & di == 1) & Tj > Thoriz
+      ind2 <- (Ti <= Thoriz & di == 0) & Tj > Thoriz
+      ind3 <- (Ti <= Thoriz & di == 1) & (Tj <= Thoriz & dj == 0)
+      ind4 <- (Ti <= Thoriz & di == 0) & (Tj <= Thoriz & dj == 0)
+      
+      names(ind1) <- 
+        names(ind2) <- 
+        names(ind3) <- 
+        names(ind4) <-
+        paste(names(Ti), 
+              names(Tj),
+              sep = "_")
+      
+      ind <- ind1 | ind2 | ind3 | ind4
+      
+      if (any(ind2)) {
+        nams <- strsplit(names(ind2[ind2]), "_")
+        nams_i <- sapply(nams, "[", 1)
+        unq_nams_i <- unique(nams_i)
+        preds2 <- predict(object, 
+                          newdata = newdata[id %in% unq_nams_i, ],
+                          process = "event", 
+                          times = Thoriz, 
+                          ...)
+        pi_u_t <- preds2$pred
+        f <- factor(preds2$id, levels = unique(preds2$id))
+        names(pi_u_t) <- f
+        pi_u_t <- tapply(pi_u_t, f, tail, 1)
+        ind[ind2] <- ind[ind2] * pi_u_t[nams_i]
+      }
+      
+      if (any(ind3)) {
+        nams <- strsplit(names(ind3[ind3]), "_")
+        nams_j <- sapply(nams, "[", 2)
+        unq_nams_j <- unique(nams_j)
+        preds3 <- predict(object,
+                          newdata = newdata[id %in% unq_nams_j, ],
+                          process = "event", 
+                          times = Thoriz)
+        qi_u_t <- preds3$pred
+        f <- factor(preds3$id, 
+                    levels = unique(preds3$id))
+        names(qi_u_t) <- f
+        qi_u_t <- 1 - tapply(qi_u_t,
+                             f,
+                             tail,
+                             1)
+        
+        ind[ind3] <- ind[ind3] * qi_u_t[nams_j]
+      }
+      
+      if (any(ind4)) {
+        nams <- strsplit(names(ind4[ind4]), "_")
+        nams_i <- sapply(nams, "[", 1)
+        nams_j <- sapply(nams, "[", 2)
+        unq_nams_i <- unique(nams_i)
+        unq_nams_j <- unique(nams_j)
+        preds4_i <- predict(object,
+                            newdata = newdata[id %in% unq_nams_i, ],
+                            process = "event", 
+                            times = Thoriz, ...)
+        pi_u_t <- preds4_i$pred
+        f <- factor(preds4_i$id, 
+                    levels = unique(preds4_i$id))
+        names(pi_u_t) <- f
+        pi_u_t <- tapply(pi_u_t, f, tail, 1)
+        
+        preds4_j <- predict(object, 
+                            newdata = newdata[id %in% unq_nams_j, ],
+                            process = "event", 
+                            times = Thoriz, ...)
+        qi_u_t <- preds4_j$pred
+        f <- factor(preds4_j$id, 
+                    levels = unique(preds4_j$id))
+        names(qi_u_t) <- f
+        qi_u_t <- 1 - tapply(qi_u_t, 
+                             f, 
+                             tail, 1)
+        ind[ind4] <- ind[ind4] * pi_u_t[nams_i] * qi_u_t[nams_j]
+      }
+      sum((si_u_t_i < si_u_t_j) *
+            c(ind), na.rm = TRUE) / 
+        sum(ind, na.rm = TRUE)
+    } else { NA }
+    
+    return(auc)
+  }
+  
+  preds1 <- map(data, 
+                ~preds_auc(preds = .x),
+                .progress = TRUE)
+
+  out <- list(auc = unlist(preds1),
+              Tstart = Tstart, 
+              Thoriz = Thoriz,
+              # nr = length(unique(id)),
+              classObject = class(object), 
+              nameObject = deparse(substitute(object)))
+  
+  return(out)
+}
+```
+
+```{r}
+#| eval: false
+#| include: true
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.118.value.rate,
+                           swan_amh03,
+                           Tstart = 2,
+                           Dt = .x)))
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.118.value.rate,
+                           swan_amh03,
+                           Tstart = 3,
+                           Dt = .x)))
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.118.value.rate,
+                           swan_amh03,
+                           Tstart = 4,
+                           Dt = .x)))
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.118.value.rate,
+                           swan_amh03,
+                           Tstart = 5,
+                           Dt = .x)))
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.118.value.rate,
+                           swan_amh03,
+                           Tstart = 6,
+                           Dt = .x)))
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.118.value.rate,
+                           swan_amh03,
+                           Tstart = 8,
+                           Dt = .x)))
+
+save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8,
+     file = "results/jmbayes2_118_value_rate_auc_ci.RData")
+```
+
+
+## AUC CI
+
+
+```{r}
+load("results/jmbayes2_118_value_rate_auc_ci.RData")
+
+AUC2_ci <- map_dfc(AUC2, "auc") %>% 
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>% 
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC3_ci <- map_dfc(AUC3, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC4_ci <- map_dfc(AUC4, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC5_ci <- map_dfc(AUC5, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC6_ci <- map_dfc(AUC6, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC8_ci <- map_dfc(AUC8, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+```
+
+```{r}
+AUC2_ci <- rbind(NA, AUC2_ci)
+
+AUC_final <- cbind(AUC2_ci, AUC3_ci,
+                   AUC4_ci, AUC5_ci, 
+                   AUC6_ci, AUC8_ci) 
+colnames(AUC_final) <- c("Tstart2", "Tstart3", "Tstart4", "Tstart5", "Tstart6", "Tstart8")
+
+AUC_final <- t(AUC_final)
+
+colnames(AUC_final) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+```
+
+
+For the final table each column is different `Dt` time window for predicting in $1, 2, 3, 4, 5$ years; each row is the `Tstart` time window for starting from the $2, 3, 4, 5, 6, 8$-th years. each cell is the AUC with 95% CI in the parenthesis `median (95% CI)`.
+
+
+```{r}
+AUC_final %>% 
+  knitr::kable() %>%
+  kableExtra::kable_styling(font_size = 8)
+
+```
+
+
+-   [x] `r praise::praise()`
+
+## AUC plot
+
+
+```{r}
+AUC2_ci <- map_dfc(AUC2, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975))) %>%
+  mutate(Tstart = 2)
+AUC3_ci <- map_dfc(AUC3, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 3)
+AUC4_ci <- map_dfc(AUC4, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 4)
+AUC5_ci <- map_dfc(AUC5, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 5)
+AUC6_ci <- map_dfc(AUC6, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 6)
+AUC8_ci <- map_dfc(AUC8, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 8)
+
+# AUC2_ci <- rbind(NA, AUC2_ci) %>%
+#   mutate(Tstart = 2)
+
+# View(AUC2_ci)
+
+AUC_final <- rbind(AUC2_ci, AUC3_ci,
+                   AUC4_ci, AUC5_ci, 
+                   AUC6_ci, AUC8_ci) %>%
+  mutate(Dt = c(2:5, rep(1:5, 5)))
+```
+
+
+### AUC and CI by Tstart
+
+
+```{r}
+#| fig.height: 6
+#| fig.width: 9
+## color codes for the palette
+# Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
+# Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
+# auc_plot <-
+AUC_final %>%
+  ggplot() +
+  geom_line(aes(x = Dt, y = `2.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Tstart),
+                fill = "#90e0ef",
+                alpha = 0.5) +
+  geom_line(aes(x = Dt, y = `5%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `95%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Tstart),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `10%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `90%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Tstart),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `25%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `75%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Tstart),
+                fill = "#03045e",
+                alpha = 0.5) +
+  geom_line(aes(x = Dt, y = `50%`, group = Tstart),
+              color = "#fdc500", 
+              linewidth = 0.5) +
+  facet_wrap(~Tstart,
+             labeller = labeller(
+               Tstart = c("2" = "Starting Time 2nd year",
+                          "3" = "Starting Time 3rd year",
+                          "4" = "Starting Time 4th year",
+                          "5" = "Starting Time 5th year",
+                          "6" = "Starting Time 6th year",
+                          "8" = "Starting Time 8th year"))) +
+  labs(title = "SWAN-AMH AUC and CIs (wrap by starting time)") +
+  theme_minimal() +
+  xlab("Length of Time Interval (years)") +
+  ylab("AUC") +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+```
+
+
+### AUC and CI by Dt
+
+
+```{r}
+#| fig.height: 6
+#| fig.width: 6
+# Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
+# Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
+# auc_plot <-
+AUC_final %>%
+  filter(Dt != 1) %>%
+  ggplot() +
+  geom_line(aes(x = Tstart, y = `2.5%`, group = Dt),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `97.5%`, group = Dt),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Dt),
+                fill = "#90e0ef",
+                alpha = 0.5) +
+  geom_line(aes(x = Tstart, y = `5%`, group = Dt),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `95%`, group = Dt),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Dt),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `10%`, group = Dt),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `90%`, group = Dt),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Dt),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `25%`, group = Dt),
+              color =  "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `75%`, group = Dt),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Dt),
+                fill = "#03045e",
+                alpha = 0.5) +
+  geom_line(aes(x = Tstart, y = `50%`, group = Dt),
+              color = "#ffd500", 
+              linewidth = 0.5) +
+  facet_wrap(~Dt,
+             labeller = labeller(
+               Dt = c("1" = "1-year Time Interval",
+                      "2" = "2-year Time Interval",
+                      "3" = "3-year Time Interval",
+                      "4" = "4-year Time Interval",
+                      "5" = "5-year Time Interval"))) +
+  labs(title = "SWAN-AMH AUC and CIs (wrap by time interval)") +
+  theme_minimal() +
+  xlab("Starting Time (year)") +
+  ylab("AUC") +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+```
+
+
+### AUC only
+
+
+```{r}
+#| label: auc_plot
+#| warning: false
+#| fig-cap: "AUC plot for SWAN-AMH Tstart"
+
+auc_tstart <- AUC_final %>%
+  mutate(Tstart = as.character(Tstart)) %>%
+  ggplot() +
+  geom_line(aes(x = Dt, y = `50%`,
+                group = Tstart, 
+                color = Tstart),
+              linewidth = 1) +
+  geom_point(aes(x = Dt, y = `50%`,
+                group = Tstart, 
+                color = Tstart),
+              size = 2.5) +
+  geom_point(aes(x = Dt, y = `50%`,
+                group = Tstart),
+              color = "white",
+              size = 1,
+             alpha = 0.5) +
+  labs(title = "SWAN-AMH AUC") +
+  theme_minimal() +
+  xlab("Length of Time Interval (years)") +
+  ylab("AUC") +
+  ggthemes::scale_colour_tableau("Jewel Bright") +
+  theme(legend.position = c(0.90, 0.66),
+        # legend.background = element_rect(fill = "#C9C9C9", 
+        #                           size = 0.5,
+        #                           color = "#C9C9C9"),
+        # plot.background = element_rect(fill = "#C9C9C9",
+        #                                color = "#C9C9C9"),
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+# c("c("#D9D9D9", "#C9C9C9", "#E5E5E5")", "#FFFFFF", "#FFFFFF")
+```
+
+```{r}
+#| label: auc_plot2
+#| warning: false
+#| fig-cap: "AUC plot for SWAN-AMH Dt"
+
+
+auc_dt <- AUC_final %>%
+  mutate(Dt = as.character(Dt)) %>%
+  ggplot() +
+  geom_line(aes(x = Tstart, y = `50%`,
+                group = Dt, 
+                color = Dt),
+              linewidth = 1) +
+  geom_point(aes(x = Tstart, y = `50%`,
+                group = Dt, 
+                color = Dt),
+              size = 2.5) +
+  geom_point(aes(x = Tstart, y = `50%`,
+                group = Dt),
+              color = "white",
+              size = 1,
+             alpha = 0.5) +
+  labs(title = "SWAN-AMH AUC") +
+  theme_minimal() +
+  xlab("Start Time (year)") +
+  ylab("AUC") +
+  ggthemes::scale_colour_tableau("Jewel Bright") +
+  theme(legend.position = c(0.88, 0.60),
+        # legend.background = element_rect(fill = "#C9C9C9", 
+        #                           size = 0.5,
+        #                           color = "#C9C9C9"),
+        # plot.background = element_rect(fill = "#C9C9C9",
+        #                                color = "#C9C9C9"),
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+# c("c("#D9D9D9", "#C9C9C9", "#E5E5E5")", "#FFFFFF", "#FFFFFF")
+```
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+auc_tstart
+auc_dt
+```
+
+
+
+## Comparison for `jm117.value.rate` to `jm118.value.rate`
+
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+knitr::include_graphics("figure/Q16_jm117_value_rate_auc_plot.png")
+knitr::include_graphics("figure/Q18_jm118_value_rate_auc_plot.png")
+```
+
