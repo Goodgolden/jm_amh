@@ -1,0 +1,243 @@
+---
+title: "Testing data"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+## clean the R environment
+graphics.off()
+rm(list = ls())
+freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+# library(plyr, quietly = TRUE)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## To-do list
+
+-   [x] Testing dataset cleaning
+
+-   [x] Table1 for testing dataset
+
+-   [x] `r praise::praise()`
+
+## Cleaning and Renameing
+
+$$
+\begin{split}
+  jmb118: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time, \ random = \sim time| id) \\
+  surv18: \ \ \ & Surv(etime, event) \sim + bmi + factor(site) + \\
+  & factor(ethnic) + factor(smoke) + \pmb m(time) + \pmb m'(time)
+\end{split}
+$$
+
+```{r}
+test0 <- sas7bdat::read.sas7bdat("data/testing_240213.sas7bdat",
+                                 debug = TRUE) %>%
+  janitor::clean_names() %>% 
+  dplyr::select(amh = ansh_picoamh,
+                tv_employed = employed,
+                tv_bmi = bmi_phys,
+                phys_act = totscr1_0,
+                tv_physical = totscr1,
+                meno = menopause,
+                train = training,
+                alcohol = alc4cat0,
+                alcoholt = alc4cat,
+                employed = employed0,
+                health = final_health0,
+                smoke = smokestatus0,
+                married = final_married0,
+                bc_pills = hormever,
+                bmi = final_bmi0,
+                age0 = final_age0, everything()) %>%
+  dplyr::select(id, order(colnames(.)))
+# nrow(test0) # [1] 4647
+
+## Here we need to check whether there are any missing values
+## for at least one observation
+## 
+## phys.act, bmi, site, ethnic, smoke
+## 
+# names(test0)
+# names(swan_amh0)
+
+test1 <- test0 %>% 
+  group_by(id) %>%
+  fill(bmi, ethnic, phys_act, site, smoke) %>%
+  ungroup() %>% 
+  subset(!is.na(bmi) &
+           # !is.na(edu) &
+           !is.na(ethnic) &
+           !is.na(phys_act) &
+           !is.na(site) &
+           !is.na(smoke),
+         select = c(id, train, site, visit,
+                    age, amh, fmp_age, ethnic,
+                    edu, alcohol, employed,
+                    health, smoke, married,
+                    bc_pills, children, bmi,
+                    phys_act, age0)) %>%
+  group_by(id) %>%
+  mutate(start_time = age0 - 42,
+         train = 0,
+         event = 1,
+         time = age - 42,
+         etime = fmp_age - 42,
+         parity = recode(children,
+                         "0" = 0, "1" = 1,
+                         "2" = 2, "3" = 3,
+                         "4" = 4, "5" = 4,
+                         "6" = 4, "7" = 4,
+                         "8" = 4, "9" = 4,
+                         "12" = 4),
+        ethnic = factor(ethnic, 
+                        levels = c("CAUCA","BLACK", "CHINE",
+                                    "HISPA", "JAPAN")),
+        alcohol = factor(alcohol,
+                          levels = c(0, 1, 2, 3),
+                          labels = c("None","<1/wk", "1-7/wk", ">7/wk")),
+        
+        edu = factor(edu,
+                      levels = c(1, 2, 3),
+                      labels = c("High School or Less",
+                                 "Some College",
+                                 "College degree or higher")),
+        employed = factor(employed,
+                           levels = c(0, 1),
+                           labels = c("Unemployed",
+                                      "Employed")),
+        health = factor(health,
+                         levels = c(1, 2, 3, 4),
+                         labels = c("Excellent",
+                                    "Very Good",
+                                    "Good",
+                                    "Fair/Poor")),
+        smoke = factor(smoke,
+                        levels = c(1, 2, 3),
+                        labels = c("Never Smoked",
+                                   "Past Only",
+                                   "Current Smoker")),
+        married = factor(married,
+                          levels = c(0,1),
+                          labels = c("Not Married/Partnered",
+                                     "Married/Partnered")),
+        bc_pills = factor(bc_pills,
+                           levels = c(0, 1),
+                           labels = c("Never",
+                                      "Ever use BC pills")))
+
+test_na <- test0 %>%
+  group_by(id) %>%
+  fill(bmi, ethnic, phys_act, site, smoke) %>%
+  ungroup() %>% 
+  filter(is.na(bmi) |
+          is.na(ethnic) |
+          is.na(site) |
+          is.na(smoke))
+test_na$id %>% unique()
+
+# nrow(test1) # [1] 4498
+# test0$id %>% unique() %>% length() # [1] 311
+# length(unique(test1$id)) # [1] 301
+```
+
+There are total only "1301962" "1603741" people with at least one observation of amh;
+
+Those are the patients with missing values: "1103575", "1104736", "1105919", "1200915", "1203509", "1300461", "1301962", "1404295", "1404375", "1603741" with extra missing phy_act.
+
+### AMH missing values
+
+Here are the summary table for the non-missing values of AMH; there are some of the people do not have AMH values at the beginning of the study, not missing continuously; **pay attentions for this, the JMbayes2 package will automatically remove all the missings.**
+
+```{r, class.output="scroll-100"}
+
+question1 <- test1 %>% 
+  group_by(id) %>%
+  summarise(non_na = sum(ifelse(is.na(amh), 1, 0)),
+            amh_na = sum(ifelse(is.na(amh), 0, 1)),
+            time0 = min(time, na.rm = TRUE),
+            total = n()) %>%
+  arrange(desc(time0))
+
+question1
+
+```
+
+```{r}
+hist(question1$time0)
+```
+
+```{r, class.output="scroll-100"}
+question2 <- test1 %>% 
+  mutate(visit = row_number()) %>%
+  filter(!is.na(amh)) %>% 
+  group_by(id) %>%
+  summarise(# time_amh0 = min(time),
+            time0 = min(time, na.rm = TRUE),
+            total = n()) 
+question2
+```
+
+```{r}
+hist(question2$time0)
+table(question2$time0)
+```
+
+
+
+```{r}
+#| eval: false
+test1id <- test1[!duplicated(test1$id),]
+
+test_amh0 <- test1 %>% dplyr::select(id, order(colnames(test1)))
+test_amh1 <- test1id %>% dplyr::select(id, order(colnames(test1id)))
+
+write_csv(test_amh0, "data-raw/test_amh0.csv")
+write_csv(test_amh1, "data-raw/test_amh1.csv")
+
+usethis::use_data(test_amh0, overwrite = TRUE)
+usethis::use_data(test_amh1, overwrite = TRUE)
+```
+
+## Final datasets
+
+Here are the clean datasets for the testing dataset. Need to use dummy variable for the final model.
+
+```{r}
+test_amh0
+
+test_amh1
+```

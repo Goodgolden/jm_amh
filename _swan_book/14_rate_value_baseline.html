@@ -2,19 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.0.37">
+<meta name="generator" content="quarto-1.4.553">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Randy Jin, Elizabeth Juarez-Colunga">
 <title>SWAN AMH project analysis - 14&nbsp; Rate Value Baseline</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-span.underline{text-decoration: underline;}
-div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -39,43 +45,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -101,7 +77,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -110,174 +92,247 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
-}</script><script async="" src="https://hypothes.is/embed.js"></script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+}</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script><link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 </head>
 <body class="nav-sidebar floating nav-fixed">
 
-
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <a class="navbar-brand" href="./index.html">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">SWAN AMH project analysis</span>
-  </a>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+    <a href="https://github.com/Goodgolden/jm_amh" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
           <div id="quarto-search" class="" title="Search"></div>
       </div> <!-- /container-fluid -->
-    </nav><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">
-<span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rate Value Baseline</span>
-</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14_rate_value_baseline.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rate Value Baseline</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
+        </div>
         <div class="sidebar-tools-collapse tools-wide">
-    <a href="https://github.com/Goodgolden/jm_amh" title="" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
-    <a href="" title="" class="sidebar-tool px-1"><i class="bi bi-share"></i></a>
-    <a href="https://coloradosph.cuanschutz.edu/education/departments/biostatistics-informatics" title="" class="sidebar-tool px-1"><i class="bi bi-hospital"></i></a>
+    <a href="https://github.com/Goodgolden/jm_amh" title="" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
+    <a href="" title="" class="quarto-navigation-tool px-1" aria-label="Email"><i class="bi bi-share"></i></a>
+    <a href="https://coloradosph.cuanschutz.edu/education/departments/biostatistics-informatics" title="" class="quarto-navigation-tool px-1" aria-label="CU Anschutz"><i class="bi bi-hospital"></i></a>
 </div>
-      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">Working log</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Working log</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01_table1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Table1</span></a>
+  <a href="./01_table1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Table1</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02_jm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">JM</span></a>
+  <a href="./02_jm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">JM</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03_model_selection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model selection</span></a>
+  <a href="./03_model_selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Model selection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04_jmbayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">JMBayes</span></a>
+  <a href="./04_jmbayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">JMBayes</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_jmbayes2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">JMbayes2</span></a>
+  <a href="./05_jmbayes2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">JMbayes2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06_jm_model_selection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JM Model Selection</span></a>
+  <a href="./06_jm_model_selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">JM Model Selection</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_value_auc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Value model</span></a>
+  <a href="./07_value_auc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Value model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08_rate_auc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Rate model</span></a>
+  <a href="./08_rate_auc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Rate model</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09_table1_publication.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Table1 (for publication)</span></a>
+  <a href="./09_table1_publication.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Table1 (for publication)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10_final_model.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Final model (for publication)</span></a>
+  <a href="./10_final_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Final model (for publication)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./11_convergence.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Convergence</span></a>
+  <a href="./11_convergence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Convergence</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./12_model_selection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Model Selection I - Dummy</span></a>
+  <a href="./12_model_selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Model Selection I - Dummy</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_model_selection_2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Model Selection II - Factor</span></a>
+  <a href="./13_model_selection_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Model Selection II - Factor</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_rate_value_baseline.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rate Value Baseline</span></a>
+  <a href="./14_rate_value_baseline.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rate Value Baseline</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15_auc_ci.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">AUC CI</span></a>
+  <a href="./15_auc_ci.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">AUC CI</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./16_auc_plot.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">AUC Plot</span></a>
+  <a href="./16_auc_plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">AUC Plot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./17_rate_estimate.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Slope Estimate</span></a>
+  <a href="./17_rate_estimate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Slope Estimate</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_review.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Paper Review</span></a>
+  <a href="./18_model18.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Model 18</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  <a href="./20_testing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Testing data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Paper Review</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
 </div>
-</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc"><h2 id="toc-title">Table of contents</h2>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#to-do-list" id="toc-to-do-list" class="nav-link active" data-scroll-target="#to-do-list"> <span class="header-section-number">14.1</span> To-do list</a></li>
-  <li><a href="#loading-data-and-merge-variables" id="toc-loading-data-and-merge-variables" class="nav-link" data-scroll-target="#loading-data-and-merge-variables"> <span class="header-section-number">14.2</span> Loading data and merge variables</a></li>
-  <li><a href="#value-only-model" id="toc-value-only-model" class="nav-link" data-scroll-target="#value-only-model"> <span class="header-section-number">14.3</span> Value only model</a></li>
-  <li><a href="#value-rate-model" id="toc-value-rate-model" class="nav-link" data-scroll-target="#value-rate-model"> <span class="header-section-number">14.4</span> Value + Rate model</a></li>
-  <li><a href="#rate-baseline-model" id="toc-rate-baseline-model" class="nav-link" data-scroll-target="#rate-baseline-model"> <span class="header-section-number">14.5</span> Rate + Baseline model</a></li>
-  <li><a href="#comparison-of-the-models" id="toc-comparison-of-the-models" class="nav-link" data-scroll-target="#comparison-of-the-models"> <span class="header-section-number">14.6</span> Comparison of the models</a></li>
+<li><a href="#to-do-list" id="toc-to-do-list" class="nav-link active" data-scroll-target="#to-do-list"><span class="header-section-number">14.1</span> To-do list</a></li>
+  <li><a href="#loading-data-and-merge-variables" id="toc-loading-data-and-merge-variables" class="nav-link" data-scroll-target="#loading-data-and-merge-variables"><span class="header-section-number">14.2</span> Loading data and merge variables</a></li>
+  <li><a href="#value-only-model" id="toc-value-only-model" class="nav-link" data-scroll-target="#value-only-model"><span class="header-section-number">14.3</span> Value only model</a></li>
+  <li><a href="#value-rate-model" id="toc-value-rate-model" class="nav-link" data-scroll-target="#value-rate-model"><span class="header-section-number">14.4</span> Value + Rate model</a></li>
+  <li><a href="#rate-baseline-model" id="toc-rate-baseline-model" class="nav-link" data-scroll-target="#rate-baseline-model"><span class="header-section-number">14.5</span> Rate + Baseline model</a></li>
+  <li><a href="#comparison-of-the-models" id="toc-comparison-of-the-models" class="nav-link" data-scroll-target="#comparison-of-the-models"><span class="header-section-number">14.6</span> Comparison of the models</a></li>
   <li>
-<a href="#model-comparison" id="toc-model-comparison" class="nav-link" data-scroll-target="#model-comparison"> <span class="header-section-number">14.7</span> Model Comparison</a>
+<a href="#model-comparison" id="toc-model-comparison" class="nav-link" data-scroll-target="#model-comparison"><span class="header-section-number">14.7</span> Model Comparison</a>
   <ul class="collapse">
-<li><a href="#dic-and-waic" id="toc-dic-and-waic" class="nav-link" data-scroll-target="#dic-and-waic"> <span class="header-section-number">14.7.1</span> DIC and WAIC</a></li>
-  <li><a href="#auc" id="toc-auc" class="nav-link" data-scroll-target="#auc"> <span class="header-section-number">14.7.2</span> AUC</a></li>
-  <li><a href="#brier-scores" id="toc-brier-scores" class="nav-link" data-scroll-target="#brier-scores"> <span class="header-section-number">14.7.3</span> Brier Scores</a></li>
+<li><a href="#dic-and-waic" id="toc-dic-and-waic" class="nav-link" data-scroll-target="#dic-and-waic"><span class="header-section-number">14.7.1</span> DIC and WAIC</a></li>
+  <li><a href="#auc" id="toc-auc" class="nav-link" data-scroll-target="#auc"><span class="header-section-number">14.7.2</span> AUC</a></li>
+  <li><a href="#brier-scores" id="toc-brier-scores" class="nav-link" data-scroll-target="#brier-scores"><span class="header-section-number">14.7.3</span> Brier Scores</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/Goodgolden/jm_amh/edit/main/14_rate_value_baseline.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/Goodgolden/jm_amh/edit/main/14_rate_value_baseline.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block">
+<div class="quarto-title-block"><div><h1 class="title">
 <span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Rate Value Baseline</span>
 </h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
@@ -287,9 +342,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title-meta">
 
     
+  
     
   </div>
   
+
 
 </header><div class="cell" data-hash="14_rate_value_baseline_cache/html/css-setup_0004c9a86b9169b89948ff62c28a53e7">
 <style type="text/css">
@@ -304,24 +361,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="to-do-list" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="to-do-list">
 <span class="header-section-number">14.1</span> To-do list</h2>
 <ul class="task-list">
-<li><p><input type="checkbox" disabled="" checked="">
-Merge the levels of the variables <code>edu</code>, <code>alcohol</code>, and <code>lamh_baseline</code></p></li>
-<li><p><input type="checkbox" disabled="" checked="">
-Fit the joint model based on model selection</p></li>
-<li><p><input type="checkbox" disabled="" checked="">
-Value model</p></li>
-<li><p><input type="checkbox" disabled="" checked="">
-Value Rate model</p></li>
-<li><p><input type="checkbox" disabled="" checked="">
-Rate Baseline model</p></li>
-<li><p><input type="checkbox" disabled="" checked="">
-AUCs and Brier Scores</p></li>
-<li><p><input type="checkbox" disabled="" checked="">
-You are peachy!</p></li>
+<li><p><label><input type="checkbox" checked="">Merge the levels of the variables <code>edu</code>, <code>alcohol</code>, and <code>lamh_baseline</code></label></p></li>
+<li><p><label><input type="checkbox" checked="">Fit the joint model based on model selection</label></p></li>
+<li><p><label><input type="checkbox" checked="">Value model</label></p></li>
+<li><p><label><input type="checkbox" checked="">Value Rate model</label></p></li>
+<li><p><label><input type="checkbox" checked="">Rate Baseline model</label></p></li>
+<li><p><label><input type="checkbox" checked="">AUCs and Brier Scores</label></p></li>
+<li><p><label><input type="checkbox" checked="">You are peachy!</label></p></li>
 </ul></section><section id="loading-data-and-merge-variables" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="loading-data-and-merge-variables">
 <span class="header-section-number">14.2</span> Loading data and merge variables</h2>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/unnamed-chunk-1_0ec1c21b22009bbd7cea5ec82302689c">
-<details><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/swan_amh03.rda"</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/swan_amh03.rda"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/swan_amh13.rda"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">swan_amh04</span> <span class="op">&lt;-</span> <span class="va">swan_amh03</span> <span class="op">%&gt;%</span></span>
@@ -350,7 +400,7 @@ You are peachy!</p></li>
 </details>
 </div>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/unnamed-chunk-2_c8d06ad51dd5d4b7d45806e263a95502">
-<details><summary>Code</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">control</span> <span class="op">=</span> <span class="fu">lmeControl</span><span class="op">(</span>opt <span class="op">=</span> <span class="st">"optim"</span><span class="op">)</span></span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">control</span> <span class="op">=</span> <span class="fu">lmeControl</span><span class="op">(</span>opt <span class="op">=</span> <span class="st">"optim"</span><span class="op">)</span></span>
 <span><span class="va">jmcontrol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>n_iter <span class="op">=</span> <span class="fl">5000</span>, </span>
 <span>                  n_burnin <span class="op">=</span> <span class="fl">1000</span>, </span>
 <span>                  n_chains <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -369,7 +419,7 @@ You are peachy!</p></li>
 \end{split}
 \]</span></p>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/unnamed-chunk-3_8f52e34dc68f1207c5fcc89939b8b8f1">
-<details><summary>Code</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lme1</span> <span class="op">&lt;-</span> <span class="fu">lme</span><span class="op">(</span><span class="va">lamh</span> <span class="op">~</span> <span class="va">time</span>,</span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lme1</span> <span class="op">&lt;-</span> <span class="fu">lme</span><span class="op">(</span><span class="va">lamh</span> <span class="op">~</span> <span class="va">time</span>,</span>
 <span>                data <span class="op">=</span> <span class="va">swan_amh03</span>,</span>
 <span>                control <span class="op">=</span> <span class="va">control</span>,</span>
 <span>                random <span class="op">=</span> <span class="op">~</span> <span class="va">time</span><span class="op">|</span> <span class="va">id</span><span class="op">)</span></span>
@@ -399,7 +449,7 @@ You are peachy!</p></li>
 <span></span>
 <span><span class="va">summary117.value</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <colgroup>
 <col style="width: 31%">
 <col style="width: 12%">
@@ -569,7 +619,7 @@ You are peachy!</p></li>
 \end{split}
 \]</span></p>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/unnamed-chunk-4_836585d01777aa5e00ac0d8b6535911e">
-<details><summary>Code</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">jmb2.117.value.rate</span> <span class="op">&lt;-</span> <span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/jm.html">jm</a></span><span class="op">(</span>Surv_object <span class="op">=</span> <span class="va">surv17</span>,</span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">jmb2.117.value.rate</span> <span class="op">&lt;-</span> <span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/jm.html">jm</a></span><span class="op">(</span>Surv_object <span class="op">=</span> <span class="va">surv17</span>,</span>
 <span>                                  Mixed_objects <span class="op">=</span> <span class="va">lme1</span>, </span>
 <span>                                  functional_forms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"lamh"</span> <span class="op">=</span> <span class="op">~</span> <span class="fu">value</span><span class="op">(</span><span class="va">lamh</span><span class="op">)</span> <span class="op">+</span> <span class="fu">slope</span><span class="op">(</span><span class="va">lamh</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                  time_var <span class="op">=</span> <span class="st">"time"</span>,</span>
@@ -579,7 +629,7 @@ You are peachy!</p></li>
 <span></span>
 <span><span class="va">summary117.value.rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <colgroup>
 <col style="width: 30%">
 <col style="width: 13%">
@@ -758,7 +808,7 @@ You are peachy!</p></li>
 \end{split}
 \]</span></p>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/unnamed-chunk-5_82359dc0583ceb0f67ba082b372e6989">
-<details><summary>Code</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">surv17.base</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">etime</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">surv17.base</span> <span class="op">&lt;-</span> <span class="fu">coxph</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">etime</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> </span>
 <span>                  <span class="fl">0</span> <span class="op">+</span> <span class="co"># alcohol +</span></span>
 <span>                  <span class="va">bmi</span> <span class="op">+</span> <span class="co"># bc_pills + </span></span>
 <span>                  <span class="co"># children +</span></span>
@@ -785,7 +835,7 @@ You are peachy!</p></li>
 <span></span>
 <span><span class="va">summary117.base.rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <colgroup>
 <col style="width: 30%">
 <col style="width: 12%">
@@ -956,7 +1006,7 @@ You are peachy!</p></li>
 </section><section id="comparison-of-the-models" class="level2" data-number="14.6"><h2 data-number="14.6" class="anchored" data-anchor-id="comparison-of-the-models">
 <span class="header-section-number">14.6</span> Comparison of the models</h2>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/unnamed-chunk-6_c8c2d9f1b2246aae9916bff9494daf8f">
-<details><summary>Code</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod_sum</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">summary117.value</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod_sum</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">summary117.value</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">summary117.value.rate</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>, </span>
 <span>      by <span class="op">=</span> <span class="st">"row.names"</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">column_to_rownames</span><span class="op">(</span><span class="st">"Row.names"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
@@ -972,7 +1022,7 @@ You are peachy!</p></li>
 #&gt; [13] "site_ucla"            "slope(lamh)"          "smoke_current_smoker"
 #&gt; [16] "smoke_past_only"      "value(lamh)"</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">mod_sum</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"bmi"</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">mod_sum</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"bmi"</span>, </span>
 <span>                        <span class="st">'ethnic_black'</span>, <span class="st">'ethnic_chine'</span>, <span class="st">'ethnic_hispa'</span>, <span class="st">'ethnic_japan'</span>, </span>
 <span>                        <span class="st">'lamh_baseline'</span>, </span>
 <span>                        <span class="co"># 'married Married/Partnered', </span></span>
@@ -990,7 +1040,7 @@ You are peachy!</p></li>
 <span><span class="va">mod_sum</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">mod_sum</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <colgroup>
 <col style="width: 19%">
 <col style="width: 7%">
@@ -1172,7 +1222,7 @@ You are peachy!</p></li>
 <section id="dic-and-waic" class="level3" data-number="14.7.1"><h3 data-number="14.7.1" class="anchored" data-anchor-id="dic-and-waic">
 <span class="header-section-number">14.7.1</span> DIC and WAIC</h3>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/compare_jm_5a7ce168d19f188f60813effb27b6ec6">
-<details><summary>Code</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">compare_jm</span><span class="op">(</span><span class="va">jmb2.117.value</span>, <span class="va">jmb2.117.value.rate</span>, <span class="va">jmb2.117.base.rate</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">compare_jm</span><span class="op">(</span><span class="va">jmb2.117.value</span>, <span class="va">jmb2.117.value.rate</span>, <span class="va">jmb2.117.base.rate</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>#&gt; 
 #&gt;                           DIC     WAIC      LPML
@@ -1188,7 +1238,7 @@ You are peachy!</p></li>
 <section id="auc-for-value-model" class="level4" data-number="14.7.2.1"><h4 data-number="14.7.2.1" class="anchored" data-anchor-id="auc-for-value-model">
 <span class="header-section-number">14.7.2.1</span> AUC for Value model</h4>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/auc_value_74fb6d803593abdc8c6f3a653b6a4a66">
-<details><summary>Code</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvAUC</a></span><span class="op">(</span><span class="va">jmb2.117.value</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1197,7 +1247,7 @@ You are peachy!</p></li>
 <pre><code>#&gt; Error in tvROC.jm(object, newdata, Tstart, Thoriz, Dt, ...) : 
 #&gt;   it seems that there are no events in the interval [Tstart, Thoriz).</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvAUC</a></span><span class="op">(</span><span class="va">jmb2.117.value</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -1244,9 +1294,9 @@ You are peachy!</p></li>
 </details>
 </div>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/tbl_auc_table_value_4a6249fac20975f74dcf92b59f04d7dd">
-<details><summary>Code</summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_auc_value</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_auc_value</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;"></th>
 <th style="text-align: right;">Dt1</th>
@@ -1311,7 +1361,7 @@ You are peachy!</p></li>
 </section><section id="auc-for-value-rate-model" class="level4" data-number="14.7.2.2"><h4 data-number="14.7.2.2" class="anchored" data-anchor-id="auc-for-value-rate-model">
 <span class="header-section-number">14.7.2.2</span> AUC for Value Rate model</h4>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/auc_value_rate_eaa1fb4a7e5c0c5d3a8b5da68340b2eb">
-<details><summary>Code</summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvAUC</a></span><span class="op">(</span><span class="va">jmb2.117.value.rate</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1320,7 +1370,7 @@ You are peachy!</p></li>
 <pre><code>#&gt; Error in tvROC.jm(object, newdata, Tstart, Thoriz, Dt, ...) : 
 #&gt;   it seems that there are no events in the interval [Tstart, Thoriz).</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvAUC</a></span><span class="op">(</span><span class="va">jmb2.117.value.rate</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -1367,9 +1417,9 @@ You are peachy!</p></li>
 </details>
 </div>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/auc_table_value_rate_5076928af2b775c03f5cb0564fb85126">
-<details><summary>Code</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_auc_value_rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_auc_value_rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;"></th>
 <th style="text-align: right;">Dt1</th>
@@ -1434,7 +1484,7 @@ You are peachy!</p></li>
 </section><section id="auc-for-baseline-rate-model" class="level4" data-number="14.7.2.3"><h4 data-number="14.7.2.3" class="anchored" data-anchor-id="auc-for-baseline-rate-model">
 <span class="header-section-number">14.7.2.3</span> AUC for Baseline Rate model</h4>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/auc_base_rate_1e31da325008dddcdc136b7cb9a9d547">
-<details><summary>Code</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvAUC</a></span><span class="op">(</span><span class="va">jmb2.117.base.rate</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1443,7 +1493,7 @@ You are peachy!</p></li>
 <pre><code>#&gt; Error in tvROC.jm(object, newdata, Tstart, Thoriz, Dt, ...) : 
 #&gt;   it seems that there are no events in the interval [Tstart, Thoriz).</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">AUC3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvAUC</a></span><span class="op">(</span><span class="va">jmb2.117.base.rate</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -1490,9 +1540,9 @@ You are peachy!</p></li>
 </details>
 </div>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/auc_table_base_rate_3a82855dc70ab355323dff5bfd7a796c">
-<details><summary>Code</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_auc_base_rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_auc_base_rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;"></th>
 <th style="text-align: right;">Dt1</th>
@@ -1559,7 +1609,7 @@ You are peachy!</p></li>
 <section id="brier-scores-value-model" class="level4" data-number="14.7.3.1"><h4 data-number="14.7.3.1" class="anchored" data-anchor-id="brier-scores-value-model">
 <span class="header-section-number">14.7.3.1</span> Brier Scores: Value model</h4>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/bs_table_value_2c258d973c4a03f3fc87ec955db1d29f">
-<details><summary>Code</summary><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvBrier</a></span><span class="op">(</span><span class="va">jmb2.117.value</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1568,7 +1618,7 @@ You are peachy!</p></li>
 <pre><code>#&gt; Error in br(Thoriz) : 
 #&gt;   it seems that there are no events in the interval [2.000001, 3).</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvBrier</a></span><span class="op">(</span><span class="va">jmb2.117.value</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -1615,9 +1665,9 @@ You are peachy!</p></li>
 </details>
 </div>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/bs_value_9f05fb59f60ebbf70918ec83b531e3b6">
-<details><summary>Code</summary><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_bs_value</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_bs_value</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;"></th>
 <th style="text-align: right;">Dt1</th>
@@ -1682,7 +1732,7 @@ You are peachy!</p></li>
 </section><section id="brier-scores-value-rate-model" class="level4" data-number="14.7.3.2"><h4 data-number="14.7.3.2" class="anchored" data-anchor-id="brier-scores-value-rate-model">
 <span class="header-section-number">14.7.3.2</span> Brier Scores: Value Rate model</h4>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/bs_table_value_rate_a5b0d33025c1d327de5d7e59cb66db50">
-<details><summary>Code</summary><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvBrier</a></span><span class="op">(</span><span class="va">jmb2.117.value.rate</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1691,7 +1741,7 @@ You are peachy!</p></li>
 <pre><code>#&gt; Error in br(Thoriz) : 
 #&gt;   it seems that there are no events in the interval [2.000001, 3).</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvBrier</a></span><span class="op">(</span><span class="va">jmb2.117.value.rate</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -1738,9 +1788,9 @@ You are peachy!</p></li>
 </details>
 </div>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/bs_value_rate_b985d9f443418bdf658a5dc0298a3404">
-<details><summary>Code</summary><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_bs_value_rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_bs_value_rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;"></th>
 <th style="text-align: right;">Dt1</th>
@@ -1805,7 +1855,7 @@ You are peachy!</p></li>
 </section><section id="brier-scores-baseline-rate-model" class="level4" data-number="14.7.3.3"><h4 data-number="14.7.3.3" class="anchored" data-anchor-id="brier-scores-baseline-rate-model">
 <span class="header-section-number">14.7.3.3</span> Brier Scores: Baseline Rate model</h4>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/bs_table_base_rate_da532681ce36e5547715af9967001c66">
-<details><summary>Code</summary><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier2</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvBrier</a></span><span class="op">(</span><span class="va">jmb2.117.base.rate</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -1814,7 +1864,7 @@ You are peachy!</p></li>
 <pre><code>#&gt; Error in br(Thoriz) : 
 #&gt;   it seems that there are no events in the interval [2.000001, 3).</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Brier3</span>  <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, </span>
 <span>                 <span class="op">~</span><span class="kw"><a href="https://rdrr.io/r/base/try.html">try</a></span><span class="op">(</span><span class="fu">JMbayes2</span><span class="fu">::</span><span class="fu"><a href="https://drizopoulos.github.io/JMbayes2/reference/accuracy.html">tvBrier</a></span><span class="op">(</span><span class="va">jmb2.117.base.rate</span>,</span>
 <span>                                      <span class="va">swan_amh03</span>,</span>
 <span>                                      Tstart <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -1861,9 +1911,9 @@ You are peachy!</p></li>
 </details>
 </div>
 <div class="cell" data-hash="14_rate_value_baseline_cache/html/bs_base_rate_2bc91410e4482046b40b5843b8761a35">
-<details><summary>Code</summary><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_bs_base_rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tbl_bs_base_rate</span> <span class="op">%&gt;%</span> <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <thead><tr class="header">
 <th style="text-align: left;"></th>
 <th style="text-align: right;">Dt1</th>
@@ -1926,9 +1976,7 @@ You are peachy!</p></li>
 </div>
 </div>
 <ul class="task-list">
-<li>
-<input type="checkbox" disabled="" checked="">
-You are peachy!</li>
+<li><label><input type="checkbox" checked="">You are peachy!</label></li>
 </ul>
 
 
@@ -1961,9 +2009,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1975,7 +2037,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -2033,10 +2112,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -2046,48 +2142,312 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      let href = ref.getAttribute('href');
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./13_model_selection_2.html" class="pagination-link">
+      <a href="./13_model_selection_2.html" class="pagination-link" aria-label="Model Selection II - Factor">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Model Selection II - Factor</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./15_auc_ci.html" class="pagination-link">
+      <a href="./15_auc_ci.html" class="pagination-link" aria-label="AUC CI">
         <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">AUC CI</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2097,40 +2457,40 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">warnings =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">message =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">comment =</span> <span class="st">"#&gt;"</span>,</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">cache =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>                      <span class="co">#results = "hide",</span></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>                      <span class="at">digits =</span> <span class="dv">4</span>,</span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>                      <span class="at">error =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="in">knitr::opts_chunk$set(echo = TRUE,</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="in">                      warnings = FALSE,</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="in">                      message = FALSE,</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="in">                      comment = "#&gt;",</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="in">                      cache = TRUE,</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="in">                      #results = "hide",</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="in">                      digits = 4,</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="in">                      error = FALSE)</span></span>
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ## clean the R environment</span></span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="co"># graphics.off()</span></span>
-<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="co"># rm(list = ls())</span></span>
-<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="co"># freshr::freshr()</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="in"># ## clean the R environment</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="in"># graphics.off()</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="in"># rm(list = ls())</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="in"># freshr::freshr()</span></span>
 <span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="do">## load packages</span></span>
-<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plyr)</span>
-<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JMbayes2, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">load_all</span>()</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="in">## load packages</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="in">library(here, quietly = TRUE)</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a><span class="in">library(tidyverse, quietly = TRUE)</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a><span class="in">library(plyr)</span></span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a><span class="in">library(JMbayes2, quietly = TRUE)</span></span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a><span class="in">devtools::load_all()</span></span>
 <span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a><span class="do">## check the directory for the file</span></span>
-<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a><span class="co"># here::dr_here()</span></span>
-<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">set_here</span>()</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a><span class="in">## check the directory for the file</span></span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a><span class="in"># here::dr_here()</span></span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a><span class="in">here::set_here()</span></span>
 <span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{css, "css-setup", echo=FALSE}</span></span>
-<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">scroll</span><span class="dv">-100</span> <span class="op">{</span></span>
-<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>height<span class="op">:</span> 300px<span class="op">;</span></span>
-<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>  max<span class="op">-</span>width<span class="op">:</span> 1000px<span class="op">;</span></span>
-<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>  overflow<span class="op">-</span>y<span class="op">:</span> auto<span class="op">;</span></span>
-<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a>  background<span class="op">-</span>color<span class="op">:</span> inherit<span class="op">;</span></span>
-<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a><span class="in">.scroll-100 {</span></span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a><span class="in">  max-height: 300px;</span></span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a><span class="in">  max-width: 1000px;</span></span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a><span class="in">  overflow-y: auto;</span></span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a><span class="in">  background-color: inherit;</span></span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## To-do list</span></span>
@@ -2158,7 +2518,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb35-66"><a href="#cb35-66" aria-hidden="true" tabindex="-1"></a>swan_amh04 <span class="ot">&lt;-</span> swan_amh03 <span class="sc">%&gt;%</span></span>
 <span id="cb35-67"><a href="#cb35-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
 <span id="cb35-68"><a href="#cb35-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(time) <span class="sc">%&gt;%</span></span>
-<span id="cb35-69"><a href="#cb35-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(1L) <span class="sc">%&gt;%</span></span>
+<span id="cb35-69"><a href="#cb35-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>L) <span class="sc">%&gt;%</span></span>
 <span id="cb35-70"><a href="#cb35-70" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(id, <span class="at">lamh0 =</span> lamh) <span class="sc">%&gt;%</span></span>
 <span id="cb35-71"><a href="#cb35-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="fu">as.character</span>(id))</span>
 <span id="cb35-72"><a href="#cb35-72" aria-hidden="true" tabindex="-1"></a></span>
@@ -2722,4 +3082,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Goodgolden/jm_amh/edit/main/14_rate_value_baseline.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer></body></html>

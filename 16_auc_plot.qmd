@@ -88,7 +88,8 @@ AUC_final <- rbind(AUC2_ci, AUC3_ci,
 ## AUC and CI by Tstart
 
 ```{r}
-
+#| fig.height: 6
+#| fig.width: 9
 ## color codes for the palette
 # Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
 # Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
@@ -170,6 +171,8 @@ AUC_final %>%
 ## AUC and CI by Dt
 
 ```{r}
+#| fig.height: 6
+#| fig.width: 6
 # Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
 # Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
 # auc_plot <-
@@ -254,7 +257,7 @@ AUC_final %>%
 #| warning: false
 #| fig-cap: "AUC plot for SWAN-AMH Tstart"
 
-AUC_final %>%
+auc_tstart <- AUC_final %>%
   mutate(Tstart = as.character(Tstart)) %>%
   ggplot() +
   geom_line(aes(x = Dt, y = `50%`,
@@ -296,7 +299,7 @@ AUC_final %>%
 #| fig-cap: "AUC plot for SWAN-AMH Dt"
 
 
-AUC_final %>%
+auc_dt <- AUC_final %>%
   mutate(Dt = as.character(Dt)) %>%
   ggplot() +
   geom_line(aes(x = Tstart, y = `50%`,
@@ -330,6 +333,12 @@ AUC_final %>%
         strip.text = element_text(hjust = 0.5,
                                   lineheight = 0.1))
 # c("c("#D9D9D9", "#C9C9C9", "#E5E5E5")", "#FFFFFF", "#FFFFFF")
+```
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+auc_tstart
+auc_dt
 ```
 
 -   [x] `r praise::praise()`
