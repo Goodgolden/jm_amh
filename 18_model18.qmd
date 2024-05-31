@@ -1,5 +1,5 @@
 ---
-title: "Model 18"
+title: "Model 19"
 ---
 
 ```{r setup, include=FALSE}
@@ -90,25 +90,37 @@ swan_amh13 <- swan_amh13 %>%
 ```
 
 ```{r}
-control = lmeControl(opt = "optim")
-jmcontrol <- list(n_iter = 50000, 
-                  n_burnin = 10000, 
-                  n_thin = 2,
-                  n_chains = 1,
-                  save_random_effects = TRUE,
-                  seed = 55555,
-                  cores = 1)
+iteration <- 70000
+burnin <- 20000
+thin <- 50
+chain <- 3
 
+control = lmeControl(opt = "optim")
+jmcontrol <- list(n_iter = iteration, 
+                  n_burnin = burnin, 
+                  n_thin = thin,
+                  n_chains = chain,
+                  save_random_effects = TRUE,
+                  seed = 555,
+                  cores = chain)
+
+total <- (iteration - burnin) / thin * chain
+
+filename <- paste0("chain", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k")
+filename
 ```
 
 ## Value + Rate model
 
 $$
 \begin{split}
-  jmb2.118.value.rate: & \\ 
+  jmb2.119.value.rate: & \\ 
   lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time,\\
   & \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \ \  random = time| id) \\
-  surv18: \ \ \ & Surv(etime, event) \sim  factor(bmi) + site + ethnic + smoke \\
+  surv19: \ \ \ & Surv(etime, event) \sim  factor(bmi) + site + ethnic + smoke \\
   & \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ + \pmb m(time) + \pmb m'(time) 
 \end{split}
 $$
@@ -120,7 +132,7 @@ lme1 <- lme(lamh ~ time,
                 control = control,
                 random = ~ time| id)
 
-surv18 <- coxph(Surv(etime, event) ~ 
+surv19 <- coxph(Surv(etime, event) ~ 
                   0 + # alcohol +
                   as.factor(bmi_cat) + # bc_pills + 
                   # children +
@@ -136,64 +148,53 @@ surv18 <- coxph(Surv(etime, event) ~
                 x = TRUE,
                 model = TRUE)
 
-jmb2.118.value.rate <- JMbayes2::jm(Surv_object = surv18,
+jmb2.119.value.rate <- JMbayes2::jm(Surv_object = surv19,
                                   Mixed_objects = lme1, 
-                                  functional_forms = list("lamh" = ~ value(lamh) + slope(lamh)),
+                                  functional_forms = list("lamh" = ~value(lamh) + slope(lamh)),
                                   time_var = "time",
                                   control = jmcontrol) 
 
-summary118.value.rate <- summary(jmb2.118.value.rate)$Survival 
+summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
 
-save(jmb2.118.value.rate,
-     file = "results/jmbayes2_118_2M.Rdata")
+save(jmb2.119.value.rate,
+     file = paste0("results/jmbayes2_", filename, ".Rdata"))
 
 ```
 
 ## Traceplot
 
 ```{r}
-#| layout-ncol: 2
-#|  fig.show: "hold"
-#|  out.width: "100%"
+load("results/jmbayes2_119_fbmi_2M.Rdata")
 
-load("results/jmbayes2_118_2M.Rdata")
+summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
 
-summary118.value.rate 
-
-# ggdensityplot(jmb2.117.value.rate,
-#               parm = "alphas", 
-#               grid = TRUE)
-# 
-# ggtraceplot(jmb2.117.value.rate,
-#             parm = "alphas", 
-#             grid = TRUE)
-
-JMbayes2::traceplot(jmb2.117.value.rate,
-            parm = "alphas")
+summary119.value.rate
+# JMbayes2::traceplot(jmb2.119.value.rate,
+#             parm = "alphas")
 ```
 
 ### SD Calculation posterior
 
 ```{r}
-random_intercept <- cbind(jmb2.118.value.rate$mcmc$b[[1]][, 1, ]) 
-                          # jmb2.118.value.rate$mcmc$b[[2]][, 1, ], 
-                          # jmb2.118.value.rate$mcmc$b[[3]][, 1, ], 
-                          # jmb2.118.value.rate$mcmc$b[[4]][, 1, ])
-fixed_intercept <- cbind(t(jmb2.118.value.rate$mcmc$betas1[[1]][, 1]))
-                         # t(jmb2.118.value.rate$mcmc$betas1[[2]][, 1]), 
-                         # t(jmb2.118.value.rate$mcmc$betas1[[3]][, 1]), 
-                         # t(jmb2.118.value.rate$mcmc$betas1[[4]][, 1]))
+random_intercept <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 1, ]) 
+                          # jmb2.119.value.rate$mcmc$b[[2]][, 1, ], 
+                          # jmb2.119.value.rate$mcmc$b[[3]][, 1, ], 
+                          # jmb2.119.value.rate$mcmc$b[[4]][, 1, ])
+fixed_intercept <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 1]))
+                         # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 1]), 
+                         # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 1]), 
+                         # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 1]))
 
 # random_intercept <- random[, 1, ] 
 
-random_slope <- cbind(jmb2.118.value.rate$mcmc$b[[1]][, 2, ])
-                      # jmb2.118.value.rate$mcmc$b[[2]][, 2, ], 
-                      # jmb2.118.value.rate$mcmc$b[[3]][, 2, ], 
-                      # jmb2.118.value.rate$mcmc$b[[4]][, 2, ])
-fixed_slope <- cbind(t(jmb2.118.value.rate$mcmc$betas1[[1]][, 2]))
-                     # t(jmb2.118.value.rate$mcmc$betas1[[2]][, 2]), 
-                     # t(jmb2.118.value.rate$mcmc$betas1[[3]][, 2]), 
-                     # t(jmb2.118.value.rate$mcmc$betas1[[4]][, 2]))
+random_slope <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 2, ])
+                      # jmb2.119.value.rate$mcmc$b[[2]][, 2, ], 
+                      # jmb2.119.value.rate$mcmc$b[[3]][, 2, ], 
+                      # jmb2.119.value.rate$mcmc$b[[4]][, 2, ])
+fixed_slope <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 2]))
+                     # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 2]), 
+                     # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 2]), 
+                     # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 2]))
 
 # View(fixed_slope)
 # dim(random_slope)
@@ -278,19 +279,16 @@ hist(random_int_sd)
 hist(random_slope_sd)
 ```
 
-```{r}
-# summary(jmb2.118.value.rate)
-```
 
 Hence, we have the final results for the variability of the slope term.
 
 -   The random effect slope term based on MCMC is $\sigma_{\beta_1}$ = `r mean(random_slope_sd)`;
 
--   The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.118.value.rate)$Outcome[2, 2]`;
+-   The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.119.value.rate)$Outcome[2, 2]`;
 
--   We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.118.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
+-   We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
 
--   The 95% CI for the slope term is (`r summary(jmb2.118.value.rate)$Outcome[2, 1]- 1.96 * sqrt(summary(jmb2.118.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r summary(jmb2.118.value.rate)$Outcome[2, 1] + 1.96 * sqrt(summary(jmb2.118.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
+-   The 95% CI for the slope term is (`r summary(jmb2.119.value.rate)$Outcome[2, 1]- 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r summary(jmb2.119.value.rate)$Outcome[2, 1] + 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
 
 -   [x] `r praise::praise()`
 
@@ -301,32 +299,32 @@ Hence, we have the final results for the variability of the slope term.
 #| warning: false
 #| eval: false
 AUC2  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 2,
                                       Dt = .x)))
 AUC3  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 3,
                                       Dt = .x)))
 AUC4  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 4,
                                       Dt = .x)))
 AUC5  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 5,
                                       Dt = .x)))
 AUC6  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 6,
                                       Dt = .x)))
 AUC8  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvAUC(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 8,
                                       Dt = .x)))
@@ -351,12 +349,12 @@ tbl_auc_value_rate <- rbind(Tstart2,
 names(tbl_auc_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 
 save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8, tbl_auc_value_rate,
-     file = "results/jmbayes2_118_value_rate_auc_only.RData")
+     file = "results/jmbayes2_119_fbmi_value_rate_auc_only.RData")
 
 ```
 
 ```{r}
-load("results/jmbayes2_118_value_rate_auc_only.RData")
+load("results/jmbayes2_119_fbmi_value_rate_auc_only.RData")
 tbl_auc_value_rate %>% knitr::kable()
 ```
 
@@ -368,32 +366,32 @@ tbl_auc_value_rate %>% knitr::kable()
 #| eval: false
 
 Brier2  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 2,
                                       Dt = .x)))
 Brier3  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 3,
                                       Dt = .x)))
 Brier4  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 4,
                                       Dt = .x)))
 Brier5  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 5,
                                       Dt = .x)))
 Brier6  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 6,
                                       Dt = .x)))
 Brier8  <- map(c(1, 2, 3, 4, 5), 
-                 ~try(JMbayes2::tvBrier(jmb2.118.value.rate,
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
                                       swan_amh03,
                                       Tstart = 8,
                                       Dt = .x)))
@@ -417,13 +415,13 @@ tbl_bs_value_rate <- rbind(Tstart2,
 
 names(tbl_bs_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 save(Brier2, Brier3, Brier4, Brier5, Brier6, Brier8, tbl_bs_value_rate,
-     file = "results/jmbayes2_118_value_rate_brier.RData")
+     file = "results/jmbayes2_119_fbmi_value_rate_brier.RData")
 ```
 
 ```{r}
 #| label: "bs_value_rate"
 
-load("results/jmbayes2_118_value_rate_brier.RData")
+load("results/jmbayes2_119_fbmi_value_rate_brier.RData")
 tbl_bs_value_rate %>% knitr::kable()
 ```
 
@@ -674,82 +672,82 @@ tvAUC_CI <- function (object,
 ```{r}
 #| eval: false
 #| include: true
-AUC2  <- map(c(1, 2, 3, 4, 5), 
-             ~try(tvAUC_CI(jmb2.118.value.rate,
+AUCs2  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 2,
                            Dt = .x)))
-AUC3  <- map(c(1, 2, 3, 4, 5), 
-             ~try(tvAUC_CI(jmb2.118.value.rate,
+AUCs3  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 3,
                            Dt = .x)))
-AUC4  <- map(c(1, 2, 3, 4, 5), 
-             ~try(tvAUC_CI(jmb2.118.value.rate,
+AUCs4  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 4,
                            Dt = .x)))
-AUC5  <- map(c(1, 2, 3, 4, 5), 
-             ~try(tvAUC_CI(jmb2.118.value.rate,
+AUCs5  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 5,
                            Dt = .x)))
-AUC6  <- map(c(1, 2, 3, 4, 5), 
-             ~try(tvAUC_CI(jmb2.118.value.rate,
+AUCs6  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 6,
                            Dt = .x)))
-AUC8  <- map(c(1, 2, 3, 4, 5), 
-             ~try(tvAUC_CI(jmb2.118.value.rate,
+AUCs8  <- map(c(1, 2, 3, 4, 5), 
+             ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 8,
                            Dt = .x)))
 
-save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8,
-     file = "results/jmbayes2_118_value_rate_auc_ci.RData")
+save(AUCs2, AUCs3, AUCs4, AUCs5, AUCs6, AUCs8,
+     file = "results/jmbayes2_119_fbmi_value_rate_auc_ci.RData")
 ```
 
 ## AUC CI
 
 ```{r}
-load("results/jmbayes2_118_value_rate_auc_ci.RData")
+load("results/jmbayes2_119_fbmi_value_rate_auc_ci.RData")
 
-AUC2_ci <- map_dfc(AUC2, "auc") %>% 
+AUC2_ci <- map_dfc(AUCs2, "auc") %>% 
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>% 
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC3_ci <- map_dfc(AUC3, "auc") %>%
+AUC3_ci <- map_dfc(AUCs3, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC4_ci <- map_dfc(AUC4, "auc") %>%
+AUC4_ci <- map_dfc(AUCs4, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC5_ci <- map_dfc(AUC5, "auc") %>%
+AUC5_ci <- map_dfc(AUCs5, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC6_ci <- map_dfc(AUC6, "auc") %>%
+AUC6_ci <- map_dfc(AUCs6, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC8_ci <- map_dfc(AUC8, "auc") %>%
+AUC8_ci <- map_dfc(AUCs8, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
@@ -1072,12 +1070,12 @@ auc_dt
 ```
 
 
-## Comparison for `jm117.value.rate` to `jm118.value.rate`
+## Comparison for `jm117.value.rate` to `jm119.value.rate`
 
 ```{r fig.show="hold", out.width="100%"}
 #| layout-ncol: 2
 knitr::include_graphics("figure/Q16_jm117_value_rate_auc_plot.png")
-knitr::include_graphics("figure/Q18_jm118_value_rate_auc_plot.png")
+knitr::include_graphics("figure/Q19_jm119_value_rate_auc_plot.png")
 ```
 
 
