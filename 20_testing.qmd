@@ -159,6 +159,16 @@ test1 <- test0 %>%
                            labels = c("Never",
                                       "Ever use BC pills")))
 
+test2 <- test1 |>
+  filter(!is.na(amh)) |> 
+  group_by(id) |>
+  summarize(tstart = min(time),
+            tend = min(etime)) 
+View(test2)
+
+hist(as.numeric(test2$tstart))
+hist(as.numeric(test2$tend))
+
 test_na <- test0 %>%
   group_by(id) %>%
   fill(bmi, ethnic, phys_act, site, smoke) %>%
@@ -215,8 +225,6 @@ question2
 hist(question2$time0)
 table(question2$time0)
 ```
-
-
 
 ```{r}
 #| eval: false

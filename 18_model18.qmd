@@ -1,5 +1,5 @@
 ---
-title: "Model 18"
+title: "Model 19"
 ---
 
 ```{r setup, include=FALSE}
@@ -90,6 +90,7 @@ swan_amh13 <- swan_amh13 %>%
 ```
 
 ```{r}
+<<<<<<< HEAD
 iteration <- 700000
 burnin <- 200000
 thin <- 50
@@ -110,7 +111,29 @@ filename <- paste0("chain", chain, "_it",
                     iteration/1000 - burnin/1000, 
                     "k_thin", thin, 
                     "_total", total/1000, "k")
+=======
+iteration <- 70000
+burnin <- 20000
+thin <- 50
+chain <- 3
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 
+control = lmeControl(opt = "optim")
+jmcontrol <- list(n_iter = iteration, 
+                  n_burnin = burnin, 
+                  n_thin = thin,
+                  n_chains = chain,
+                  save_random_effects = TRUE,
+                  seed = 555,
+                  cores = chain)
+
+total <- (iteration - burnin) / thin * chain
+
+filename <- paste0("chain", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k")
+filename
 ```
 
 ## Value + Rate model
@@ -150,19 +173,24 @@ surv19 <- coxph(Surv(etime, event) ~
 
 jmb2.119.value.rate <- JMbayes2::jm(Surv_object = surv19,
                                   Mixed_objects = lme1, 
-                                  functional_forms = list("lamh" = ~ value(lamh) + slope(lamh)),
+                                  functional_forms = list("lamh" = ~value(lamh) + slope(lamh)),
                                   time_var = "time",
                                   control = jmcontrol) 
 
 summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
 
 save(jmb2.119.value.rate,
+<<<<<<< HEAD
      file = paset0("results/jmbayes2_", filename, ".Rdata"))
+=======
+     file = paste0("results/jmbayes2_", filename, ".Rdata"))
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 
 ```
 
 ## Traceplot
 
+<<<<<<< HEAD
 ```{r fig.show: "hold", out.width: "100%"}
 #| layout-ncol: 4
 
@@ -183,6 +211,16 @@ JMbayes2::traceplot(jmb2.119.value.rate,
 
 JMbayes2::traceplot(jmb2.119.value.rate,
             parm = "gammas")
+=======
+```{r}
+load("results/jmbayes2_119_fbmi_2M.Rdata")
+
+summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
+
+summary119.value.rate
+# JMbayes2::traceplot(jmb2.119.value.rate,
+#             parm = "alphas")
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 ```
 
 ### SD Calculation posterior
@@ -291,9 +329,12 @@ hist(random_int_sd)
 hist(random_slope_sd)
 ```
 
+<<<<<<< HEAD
 ```{r}
 summary(jmb2.119.value.rate)
 ```
+=======
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 
 Hence, we have the final results for the variability of the slope term.
 
@@ -364,12 +405,20 @@ tbl_auc_value_rate <- rbind(Tstart2,
 names(tbl_auc_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 
 save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8, tbl_auc_value_rate,
+<<<<<<< HEAD
      file = "results/jmbayes2_119_value_rate_auc_only.RData")
+=======
+     file = "results/jmbayes2_119_fbmi_value_rate_auc_only.RData")
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 
 ```
 
 ```{r}
+<<<<<<< HEAD
 load("results/jmbayes2_119_value_rate_auc_only.RData")
+=======
+load("results/jmbayes2_119_fbmi_value_rate_auc_only.RData")
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 tbl_auc_value_rate %>% knitr::kable()
 ```
 
@@ -430,13 +479,21 @@ tbl_bs_value_rate <- rbind(Tstart2,
 
 names(tbl_bs_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 save(Brier2, Brier3, Brier4, Brier5, Brier6, Brier8, tbl_bs_value_rate,
+<<<<<<< HEAD
      file = "results/jmbayes2_119_value_rate_brier.RData")
+=======
+     file = "results/jmbayes2_119_fbmi_value_rate_brier.RData")
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 ```
 
 ```{r}
 #| label: "bs_value_rate"
 
+<<<<<<< HEAD
 load("results/jmbayes2_119_value_rate_brier.RData")
+=======
+load("results/jmbayes2_119_fbmi_value_rate_brier.RData")
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 tbl_bs_value_rate %>% knitr::kable()
 ```
 
@@ -687,82 +744,115 @@ tvAUC_CI <- function (object,
 ```{r}
 #| eval: false
 #| include: true
+<<<<<<< HEAD
 AUC2  <- map(c(1, 2, 3, 4, 5), 
+=======
+AUCs2  <- map(c(1, 2, 3, 4, 5), 
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
              ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 2,
                            Dt = .x)))
+<<<<<<< HEAD
 AUC3  <- map(c(1, 2, 3, 4, 5), 
+=======
+AUCs3  <- map(c(1, 2, 3, 4, 5), 
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
              ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 3,
                            Dt = .x)))
+<<<<<<< HEAD
 AUC4  <- map(c(1, 2, 3, 4, 5), 
+=======
+AUCs4  <- map(c(1, 2, 3, 4, 5), 
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
              ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 4,
                            Dt = .x)))
+<<<<<<< HEAD
 AUC5  <- map(c(1, 2, 3, 4, 5), 
+=======
+AUCs5  <- map(c(1, 2, 3, 4, 5), 
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
              ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 5,
                            Dt = .x)))
+<<<<<<< HEAD
 AUC6  <- map(c(1, 2, 3, 4, 5), 
+=======
+AUCs6  <- map(c(1, 2, 3, 4, 5), 
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
              ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 6,
                            Dt = .x)))
+<<<<<<< HEAD
 AUC8  <- map(c(1, 2, 3, 4, 5), 
+=======
+AUCs8  <- map(c(1, 2, 3, 4, 5), 
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
              ~try(tvAUC_CI(jmb2.119.value.rate,
                            swan_amh03,
                            Tstart = 8,
                            Dt = .x)))
 
+<<<<<<< HEAD
 save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8,
      file = "results/jmbayes2_119_value_rate_auc_ci.RData")
+=======
+save(AUCs2, AUCs3, AUCs4, AUCs5, AUCs6, AUCs8,
+     file = "results/jmbayes2_119_fbmi_value_rate_auc_ci.RData")
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 ```
 
 ## AUC CI
 
 ```{r}
+<<<<<<< HEAD
 load("results/jmbayes2_119_value_rate_auc_ci.RData")
+=======
+load("results/jmbayes2_119_fbmi_value_rate_auc_ci.RData")
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 
-AUC2_ci <- map_dfc(AUC2, "auc") %>% 
+AUC2_ci <- map_dfc(AUCs2, "auc") %>% 
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>% 
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC3_ci <- map_dfc(AUC3, "auc") %>%
+AUC3_ci <- map_dfc(AUCs3, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC4_ci <- map_dfc(AUC4, "auc") %>%
+AUC4_ci <- map_dfc(AUCs4, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC5_ci <- map_dfc(AUC5, "auc") %>%
+AUC5_ci <- map_dfc(AUCs5, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC6_ci <- map_dfc(AUC6, "auc") %>%
+AUC6_ci <- map_dfc(AUCs6, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
 
-AUC8_ci <- map_dfc(AUC8, "auc") %>%
+AUC8_ci <- map_dfc(AUCs8, "auc") %>%
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
   round(digit = 3) %>%
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
@@ -1084,10 +1174,18 @@ auc_tstart
 auc_dt
 ```
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 ## Comparison for `jm117.value.rate` to `jm119.value.rate`
 
 ```{r fig.show="hold", out.width="100%"}
 #| layout-ncol: 2
 knitr::include_graphics("figure/Q16_jm117_value_rate_auc_plot.png")
+<<<<<<< HEAD
 knitr::include_graphics("figure/Q18_jm119_value_rate_auc_plot.png")
+=======
+knitr::include_graphics("figure/Q19_jm119_value_rate_auc_plot.png")
+>>>>>>> 89e10977da336d5d04a9f260986962ba5196991d
 ```

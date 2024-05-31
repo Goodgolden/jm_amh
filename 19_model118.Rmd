@@ -1,0 +1,590 @@
+---
+title: "model 118"
+author: "randy"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	error = FALSE,
+	message = FALSE,
+	comment = "#>",
+	digits = 4,
+	warnings = FALSE
+)
+## clean the R environment
+graphics.off()
+rm(list = ls())
+freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+## FBMI
+
+```{r}
+load("results/118/jmbayes2_118_fbmi_value_rate_auc_only.RData")
+tbl_auc_value_rate
+```
+
+
+```{r}
+load("results/118/jmbayes2_118_fbmi_value_rate_auc_ci.RData")
+
+AUC2_ci <- map_dfc(AUC2, "auc") %>% 
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>% 
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC3_ci <- map_dfc(AUC3, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC4_ci <- map_dfc(AUC4, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC5_ci <- map_dfc(AUC5, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC6_ci <- map_dfc(AUC6, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC8_ci <- map_dfc(AUC8, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+```
+
+```{r}
+AUC2_ci <- rbind(NA, AUC2_ci)
+
+AUC_final <- cbind(AUC2_ci, AUC3_ci,
+                   AUC4_ci, AUC5_ci, 
+                   AUC6_ci, AUC8_ci) 
+colnames(AUC_final) <- c("Tstart2", "Tstart3", "Tstart4", "Tstart5", "Tstart6", "Tstart8")
+
+AUC_final <- t(AUC_final)
+
+colnames(AUC_final) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+```
+
+For the final table each column is different `Dt` time window for predicting in $1, 2, 3, 4, 5$ years; each row is the `Tstart` time window for starting from the $2, 3, 4, 5, 6, 8$-th years. each cell is the AUC with 95% CI in the parenthesis `median (95% CI)`.
+
+```{r}
+AUC_final %>% 
+  knitr::kable() %>%
+  kableExtra::kable_styling(font_size = 8)
+
+```
+
+
+## AUC plot
+
+```{r}
+AUC2_ci <- map_dfc(AUC2, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975))) %>%
+  mutate(Tstart = 2)
+AUC3_ci <- map_dfc(AUC3, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 3)
+AUC4_ci <- map_dfc(AUC4, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 4)
+AUC5_ci <- map_dfc(AUC5, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 5)
+AUC6_ci <- map_dfc(AUC6, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 6)
+AUC8_ci <- map_dfc(AUC8, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 8)
+
+# AUC2_ci <- rbind(NA, AUC2_ci) %>%
+#   mutate(Tstart = 2)
+
+# View(AUC2_ci)
+
+AUC_final <- rbind(AUC2_ci, AUC3_ci,
+                   AUC4_ci, AUC5_ci, 
+                   AUC6_ci, AUC8_ci) %>%
+  mutate(Dt = c(2:5, rep(1:5, 5)))
+```
+
+### AUC and CI by Tstart
+
+```{r}
+#| fig.height: 6
+#| fig.width: 9
+## color codes for the palette
+# Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
+# Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
+# auc_plot <-
+AUC_final %>%
+  ggplot() +
+  geom_line(aes(x = Dt, y = `2.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Tstart),
+                fill = "#90e0ef",
+                alpha = 0.5) +
+  geom_line(aes(x = Dt, y = `5%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `95%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Tstart),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `10%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `90%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Tstart),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `25%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `75%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Tstart),
+                fill = "#03045e",
+                alpha = 0.5) +
+  geom_line(aes(x = Dt, y = `50%`, group = Tstart),
+              color = "#fdc500", 
+              linewidth = 0.5) +
+  facet_wrap(~Tstart,
+             labeller = labeller(
+               Tstart = c("2" = "Starting Time 2nd year",
+                          "3" = "Starting Time 3rd year",
+                          "4" = "Starting Time 4th year",
+                          "5" = "Starting Time 5th year",
+                          "6" = "Starting Time 6th year",
+                          "8" = "Starting Time 8th year"))) +
+  labs(title = "SWAN-AMH AUC and CIs (wrap by starting time)") +
+  theme_minimal() +
+  xlab("Length of Time Interval (years)") +
+  ylab("AUC") +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+```
+
+### AUC and CI by Dt
+
+```{r}
+#| fig.height: 6
+#| fig.width: 6
+# Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
+# Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
+# auc_plot <-
+AUC_final %>%
+  filter(Dt != 1) %>%
+  ggplot() +
+  geom_line(aes(x = Tstart, y = `2.5%`, group = Dt),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `97.5%`, group = Dt),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Dt),
+                fill = "#90e0ef",
+                alpha = 0.5) +
+  geom_line(aes(x = Tstart, y = `5%`, group = Dt),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `95%`, group = Dt),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Dt),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `10%`, group = Dt),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `90%`, group = Dt),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Dt),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `25%`, group = Dt),
+              color =  "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `75%`, group = Dt),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Dt),
+                fill = "#03045e",
+                alpha = 0.5) +
+  geom_line(aes(x = Tstart, y = `50%`, group = Dt),
+              color = "#ffd500", 
+              linewidth = 0.5) +
+  facet_wrap(~Dt,
+             labeller = labeller(
+               Dt = c("1" = "1-year Time Interval",
+                      "2" = "2-year Time Interval",
+                      "3" = "3-year Time Interval",
+                      "4" = "4-year Time Interval",
+                      "5" = "5-year Time Interval"))) +
+  labs(title = "SWAN-AMH AUC and CIs (wrap by time interval)") +
+  theme_minimal() +
+  xlab("Starting Time (year)") +
+  ylab("AUC") +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+```
+
+
+## CBMI
+
+```{r}
+load("results/118/jmbayes2_118_cbmi_value_rate_auc_only.RData")
+tbl_auc_value_rate
+```
+
+
+```{r}
+load("results/118/jmbayes2_118_cbmi_value_rate_auc_ci.RData")
+
+AUC2_ci <- map_dfc(AUC2, "auc") %>% 
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>% 
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC3_ci <- map_dfc(AUC3, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC4_ci <- map_dfc(AUC4, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC5_ci <- map_dfc(AUC5, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC6_ci <- map_dfc(AUC6, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+
+AUC8_ci <- map_dfc(AUC8, "auc") %>%
+  map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
+  round(digit = 3) %>%
+  unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
+  mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
+  unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 
+```
+
+```{r}
+AUC2_ci <- rbind(NA, AUC2_ci)
+
+AUC_final <- cbind(AUC2_ci, AUC3_ci,
+                   AUC4_ci, AUC5_ci, 
+                   AUC6_ci, AUC8_ci) 
+colnames(AUC_final) <- c("Tstart2", "Tstart3", "Tstart4", "Tstart5", "Tstart6", "Tstart8")
+
+AUC_final <- t(AUC_final)
+
+colnames(AUC_final) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+```
+
+For the final table each column is different `Dt` time window for predicting in $1, 2, 3, 4, 5$ years; each row is the `Tstart` time window for starting from the $2, 3, 4, 5, 6, 8$-th years. each cell is the AUC with 95% CI in the parenthesis `median (95% CI)`.
+
+```{r}
+AUC_final %>% 
+  knitr::kable() %>%
+  kableExtra::kable_styling(font_size = 8)
+
+```
+
+
+## AUC plot
+
+```{r}
+AUC2_ci <- map_dfc(AUC2, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975))) %>%
+  mutate(Tstart = 2)
+AUC3_ci <- map_dfc(AUC3, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 3)
+AUC4_ci <- map_dfc(AUC4, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 4)
+AUC5_ci <- map_dfc(AUC5, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 5)
+AUC6_ci <- map_dfc(AUC6, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 6)
+AUC8_ci <- map_dfc(AUC8, "auc") %>%
+  map_dfr(~ quantile(.x, c(0.5, 0.025, 0.05, 0.1, 0.25, 0.75, 0.9, 0.95, 0.975)))%>%
+  mutate(Tstart = 8)
+
+# AUC2_ci <- rbind(NA, AUC2_ci) %>%
+#   mutate(Tstart = 2)
+
+# View(AUC2_ci)
+
+AUC_final <- rbind(AUC2_ci, AUC3_ci,
+                   AUC4_ci, AUC5_ci, 
+                   AUC6_ci, AUC8_ci) %>%
+  mutate(Dt = c(2:5, rep(1:5, 5)))
+```
+
+### AUC and CI by Tstart
+
+```{r}
+#| fig.height: 6
+#| fig.width: 9
+## color codes for the palette
+# Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
+# Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
+# auc_plot <-
+AUC_final %>%
+  ggplot() +
+  geom_line(aes(x = Dt, y = `2.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Tstart),
+                fill = "#90e0ef",
+                alpha = 0.5) +
+  geom_line(aes(x = Dt, y = `5%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `95%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Tstart),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `10%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `90%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Tstart),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `25%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `75%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Tstart),
+                fill = "#03045e",
+                alpha = 0.5) +
+  geom_line(aes(x = Dt, y = `50%`, group = Tstart),
+              color = "#fdc500", 
+              linewidth = 0.5) +
+  facet_wrap(~Tstart,
+             labeller = labeller(
+               Tstart = c("2" = "Starting Time 2nd year",
+                          "3" = "Starting Time 3rd year",
+                          "4" = "Starting Time 4th year",
+                          "5" = "Starting Time 5th year",
+                          "6" = "Starting Time 6th year",
+                          "8" = "Starting Time 8th year"))) +
+  labs(title = "SWAN-AMH AUC and CIs (wrap by starting time)") +
+  theme_minimal() +
+  xlab("Length of Time Interval (years)") +
+  ylab("AUC") +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+```
+
+### AUC and CI by Dt
+
+```{r}
+#| fig.height: 6
+#| fig.width: 6
+# Hex Codes: #355070 // #6d597a // #b56576 // #e56b6f // #eaac8b
+# Hex Codes: #03045e // #0077b6 // #00b4d8 // #90e0ef // #caf0f8
+# auc_plot <-
+AUC_final %>%
+  filter(Dt != 1) %>%
+  ggplot() +
+  geom_line(aes(x = Tstart, y = `2.5%`, group = Dt),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `97.5%`, group = Dt),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Dt),
+                fill = "#90e0ef",
+                alpha = 0.5) +
+  geom_line(aes(x = Tstart, y = `5%`, group = Dt),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `95%`, group = Dt),
+              color = "#00b4d8", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Dt),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `10%`, group = Dt),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `90%`, group = Dt),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Dt),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `25%`, group = Dt),
+              color =  "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Tstart, y = `75%`, group = Dt),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Tstart, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Dt),
+                fill = "#03045e",
+                alpha = 0.5) +
+  geom_line(aes(x = Tstart, y = `50%`, group = Dt),
+              color = "#ffd500", 
+              linewidth = 0.5) +
+  facet_wrap(~Dt,
+             labeller = labeller(
+               Dt = c("1" = "1-year Time Interval",
+                      "2" = "2-year Time Interval",
+                      "3" = "3-year Time Interval",
+                      "4" = "4-year Time Interval",
+                      "5" = "5-year Time Interval"))) +
+  labs(title = "SWAN-AMH AUC and CIs (wrap by time interval)") +
+  theme_minimal() +
+  xlab("Starting Time (year)") +
+  ylab("AUC") +
+  theme(legend.position = "none",
+        # panel.grid = element_blank(),
+        # plot.margin = margin(t = 20, b = 8),
+        # axis.text = element_blank(),
+        # axis.title = element_blank(),
+        strip.text = element_text(hjust = 0.5,
+                                  lineheight = 0.1))
+```
