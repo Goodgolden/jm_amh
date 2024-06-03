@@ -92,7 +92,7 @@ swan_amh13 <- swan_amh13 %>%
 ```{r}
 iteration <- 700000
 burnin <- 200000
-thin <- 50
+thin <- 100
 chain <- 5
 
 control = lmeControl(opt = "optim")
@@ -106,10 +106,10 @@ jmcontrol <- list(n_iter = iteration,
 
 total <- (iteration - burnin) / thin * chain
 
-filename <- paste0("chain", chain, "_it", 
+filename <- paste0("results/jmbayes2_chain", chain, "_it", 
                     iteration/1000 - burnin/1000, 
                     "k_thin", thin, 
-                    "_total", total/1000, "k")
+                    "_total", total/1000, "k.Rdata")
 filename
 ```
 
@@ -157,12 +157,11 @@ jmb2.119.value.rate <- JMbayes2::jm(Surv_object = surv19,
 summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
 
 save(jmb2.119.value.rate,
-     file = paset0("results/jmbayes2_", filename, ".Rdata"))
+     file = filename)
 
 ```
 
 ## Traceplot
-
 
 ```{r fig.show: "hold", out.width: "100%"}
 #| layout-ncol: 4
@@ -289,7 +288,6 @@ random_slope_mu <- apply(random_slope, 1, mean)
 hist(random_int_sd)
 hist(random_slope_sd)
 ```
-
 
 Hence, we have the final results for the variability of the slope term.
 
@@ -1093,7 +1091,6 @@ auc_dt <- AUC_final %>%
 auc_tstart
 auc_dt
 ```
-
 
 ## Comparison for `jm117.value.rate` to `jm119.value.rate`
 

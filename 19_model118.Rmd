@@ -43,7 +43,6 @@ load("results/118/jmbayes2_118_fbmi_value_rate_auc_only.RData")
 tbl_auc_value_rate
 ```
 
-
 ```{r}
 load("results/118/jmbayes2_118_fbmi_value_rate_auc_ci.RData")
 
@@ -112,7 +111,6 @@ AUC_final %>%
   kableExtra::kable_styling(font_size = 8)
 
 ```
-
 
 ## AUC plot
 
@@ -312,14 +310,12 @@ AUC_final %>%
                                   lineheight = 0.1))
 ```
 
-
 ## CBMI
 
 ```{r}
 load("results/118/jmbayes2_118_cbmi_value_rate_auc_only.RData")
 tbl_auc_value_rate
 ```
-
 
 ```{r}
 load("results/118/jmbayes2_118_cbmi_value_rate_auc_ci.RData")
@@ -389,7 +385,6 @@ AUC_final %>%
   kableExtra::kable_styling(font_size = 8)
 
 ```
-
 
 ## AUC plot
 
