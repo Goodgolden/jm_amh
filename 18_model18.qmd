@@ -106,11 +106,7 @@ jmcontrol <- list(n_iter = iteration,
 
 total <- (iteration - burnin) / thin * chain
 
-filename <- paste0("results/jmbayes2_chain", chain, "_it", 
-                    iteration/1000 - burnin/1000, 
-                    "k_thin", thin, 
-                    "_total", total/1000, "k.Rdata")
-filename
+
 ```
 
 ## Value + Rate model
@@ -155,6 +151,12 @@ jmb2.119.value.rate <- JMbayes2::jm(Surv_object = surv19,
                                   control = jmcontrol) 
 
 summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
+
+filename <- paste0("results/jmbayes2_chain", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata")
+
 
 save(jmb2.119.value.rate,
      file = filename)
