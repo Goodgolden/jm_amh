@@ -1,0 +1,167 @@
+---
+title: "Final Table1"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+## clean the R environment
+graphics.off()
+rm(list = ls())
+freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+# library(plyr, quietly = TRUE)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## To-do list
+
+-   [x] Table1 for testing dataset
+
+-   [x] `r praise::praise()`
+
+## Final Table1
+
+```{r}
+
+swan_amh0 <- read_csv("data-raw/swan_amh0.csv") %>%
+  mutate(alcohol = factor(alcohol,
+                          levels = c(0, 1, 2, 3),
+                          labels = c("None","<1/wk", "1-7/wk", ">7/wk")),
+        
+        edu = factor(edu,
+                      levels = c(1, 2, 3),
+                      labels = c("High School or Less",
+                                 "Some College",
+                                 "College degree or higher")),
+        employed = factor(employed,
+                           levels = c(0, 1),
+                           labels = c("Unemployed",
+                                      "Employed")),
+        health = factor(health,
+                         levels = c(1, 2, 3, 4),
+                         labels = c("Excellent",
+                                    "Very Good",
+                                    "Good",
+                                    "Fair/Poor")),
+        smoke = factor(smoke,
+                        levels = c(1, 2, 3),
+                        labels = c("Never Smoked",
+                                   "Past Only",
+                                   "Current Smoker")),
+        married = factor(married,
+                          levels = c(0,1),
+                          labels = c("Not Married/Partnered",
+                                     "Married/Partnered")),
+        bc_pills = factor(bc_pills,
+                           levels = c(0, 1),
+                           labels = c("Never",
+                                      "Ever use BC pills")),
+        bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
+  
+
+all_amh0 <- test_amh0 %>% 
+  mutate(id = as.integer(id),
+         lamh = log(amh)) %>%
+  rbind(swan_amh0) %>% 
+  mutate(group = factor(train, levels = c(1, 0),
+                        labels = c("0Training", "1Testing"))) %>% 
+  filter(!is.na(time))
+
+all_amh1 <- all_amh0 %>%
+  group_by(id) %>%
+  summarize(tn = max(time),
+            t0 = min(time),
+            dt = tn - t0,
+            visitn = n()) 
+
+all_amh2 <- all_amh0 %>%
+  dplyr::select(id, age, ethnic, married,
+                alcohol, smoke, bc_pills,
+                bmi, health, phys_act, amh,
+                # parity, children,
+                group,
+                etime,
+                employed, edu, site)  %>%
+  mutate(site = case_when(site == "11" ~ "M",
+                          site == "12" ~ "B",
+                          site =="13" ~ "C",
+                          site =="14" ~ "UCD",
+                          site =="15" ~ "UCLA",
+                          site =="16" ~ "NJ",
+                          site =="17" ~ "P")) %>%
+  group_by(id) %>%
+  slice(1L) %>%
+  ungroup() %>%
+  full_join(all_amh1, by = "id")
+
+
+
+table1_final <- all_amh2 %>%
+  ungroup() %>%
+  dplyr::select(-id) %>%
+  tbl_summary(by = group,
+              missing = "ifany",
+              label = list(c("age") ~ "Baseline Age (years)",
+                           c("ethnic") ~ "Ethnicity / Race",
+                           c("married") ~ "Marital Status",
+                           c("alcohol") ~ "Alcohol Use",
+                           c("smoke") ~ "Smoking History",
+                           c("bc_pills") ~ "Ever use of BC Pills",
+                           c("bmi") ~ "BMI",
+                           c("health") ~ "Overall Health",
+                           c("phys_act") ~ "Physical Activity Score",
+                           c("amh") ~ "Baseline AMH",
+                           c("etime") ~ "Event Time",
+                           # c("parity") ~ "Parity",
+                           # c("children") ~ "Children",
+                           c("employed") ~ "Employment Status",
+                           c("edu") ~ "Educational Attainment"),
+              type = list(all_continuous() ~ "continuous2"),
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median}",
+                                                    "[{min}, {max}]"),
+                               all_categorical() ~ "{n} / {N} ({p}%)")) %>%
+  modify_header(label = "**Characteristics**") %>%
+  # update the column header
+  bold_labels() %>%
+  add_overall() %>%
+  italicize_labels()
+```
+
+```{r}
+table1_final
+```

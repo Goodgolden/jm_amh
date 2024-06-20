@@ -1,0 +1,461 @@
+---
+title: "Model 119 (25k)"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(plyr)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## To-do list
+
+-   [x] Change `bmi` into categorical variable
+
+-   [x] Fit the joint model Value-Rate model
+
+-   [x] The sample range for Rate in SurvModel
+
+-   [x] AUCs and Brier Scores
+
+-   [x] AUC confidence interval
+
+-   [x] Plots for AUC by `Tstart` and `Dt`
+
+-   [x] `r praise::praise()`
+
+## Loading data and merge variables
+
+```{r}
+load("data/swan_amh03.rda")
+load("data/swan_amh13.rda")
+
+swan_amh04 <- swan_amh03 %>%
+  group_by(id) %>%
+  arrange(time) %>%
+  slice(1L) %>%
+  dplyr::select(id, lamh0 = lamh) %>%
+  mutate(id = as.character(id))
+
+swan_amh03 <- swan_amh03 %>%
+  mutate(id = as.character(id)) %>%
+  full_join(swan_amh04, by = "id") %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
+
+swan_amh13 <- swan_amh13 %>%
+  full_join(swan_amh04, by = "id") %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
+
+# levels(swan_amh13$alcohol)
+# levels(swan_amh13$edu)
+# table(swan_amh13$bmi_cat)
+# table(swan_amh03$bmi_cat)
+```
+
+```{r}
+iteration <- 700000
+burnin <- 200000
+thin <- 100
+chain <- 5
+
+control = lmeControl(opt = "optim")
+jmcontrol <- list(n_iter = iteration, 
+                  n_burnin = burnin, 
+                  n_thin = thin,
+                  n_chains = chain,
+                  save_random_effects = TRUE,
+                  seed = 555,
+                  cores = chain)
+
+total <- (iteration - burnin) / thin * chain
+
+
+```
+
+## Value + Rate model
+
+$$
+\begin{split}
+  jmb2.119.value.rate: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time,\\
+  & \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \ \  random = time| id) \\
+  surv19: \ \ \ & Surv(etime, event) \sim  factor(bmi) + site + ethnic + smoke \\
+  & \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ + \pmb m(time) + \pmb m'(time) 
+\end{split}
+$$
+
+```{r}
+#| eval: false
+lme1 <- lme(lamh ~ time,
+                data = swan_amh03,
+                control = control,
+                random = ~ time| id)
+
+surv19 <- coxph(Surv(etime, event) ~ 
+                  0 + # alcohol +
+                  as.factor(bmi_cat) + # bc_pills + 
+                  # children +
+                  # edu + 
+                  # employed +
+                  # health +
+                  # married + 
+                  # phys_act + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = swan_amh13, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.119.value.rate <- JMbayes2::jm(Surv_object = surv19,
+                                  Mixed_objects = lme1, 
+                                  functional_forms = list("lamh" = ~value(lamh) + slope(lamh)),
+                                  time_var = "time",
+                                  control = jmcontrol) 
+
+summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
+
+filename <- paste0("results/jmb2_119_chain", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata")
+
+
+save(jmb2.119.value.rate,
+     file = filename)
+
+```
+
+## Summarization
+
+```{r}
+load("results/jmb2_119_chain5_it500k_thin50_total50k.Rdata")
+
+summary(jmb2.119.value.rate)
+```
+
+## Traceplot
+
+```{r fig.show: "hold", out.width: "100%"}
+#| layout-ncol: 2
+#| fig_cap: "Traceplot for the Value-Rate model"
+#| fig-subcap: 
+#|   - "Value"
+#|   - "Rate"
+
+# ggdensityplot(jmb2.117.value.rate,
+#               parm = "alphas", 
+#               grid = TRUE)
+# 
+# ggtraceplot(jmb2.119.value.rate,
+#             parm = "alphas",
+#             grid = TRUE)
+# 
+# JMbayes2::traceplot(jmb2.119.value.rate,
+#                     parm = "alphas")
+
+knitr::include_graphics(c("figure/jmb2_119_trace_value_chain5_it500k_thin100_total25k.png",
+                          "figure/jmb2_119_trace_rate_chain5_it500k_thin100_total25k.png"))
+
+```
+
+### SD Calculation posterior
+
+```{r}
+random_intercept <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 1, ]) 
+                          # jmb2.119.value.rate$mcmc$b[[2]][, 1, ], 
+                          # jmb2.119.value.rate$mcmc$b[[3]][, 1, ], 
+                          # jmb2.119.value.rate$mcmc$b[[4]][, 1, ])
+fixed_intercept <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 1]))
+                         # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 1]), 
+                         # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 1]), 
+                         # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 1]))
+
+# random_intercept <- random[, 1, ] 
+
+random_slope <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 2, ])
+                      # jmb2.119.value.rate$mcmc$b[[2]][, 2, ], 
+                      # jmb2.119.value.rate$mcmc$b[[3]][, 2, ], 
+                      # jmb2.119.value.rate$mcmc$b[[4]][, 2, ])
+fixed_slope <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 2]))
+                     # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 2]), 
+                     # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 2]), 
+                     # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 2]))
+
+# View(fixed_slope)
+# dim(random_slope)
+# dim(fixed_slope)
+
+both_intercept <- random_intercept + as.vector(fixed_intercept)
+both_slope <- random_slope + as.vector(fixed_slope)
+
+# dim(both_slope)
+# dim(both_intercept)
+```
+
+```{r}
+both_int_sd <- apply(both_intercept, 1, sd)
+both_slope_sd <- apply(both_slope, 1, sd)
+
+both_int_mu <- apply(both_intercept, 1, mean)
+both_slope_mu <- apply(both_slope, 1, mean)
+
+# cat("The mean of mu(both_int)", 
+#     mean(both_int_mu), ";\n")
+# 
+# cat("The mean of SD(both_int)", 
+#     mean(both_int_sd), 
+#     ";\n the median of SD(both_int)",
+#     median(both_int_sd), "\n")
+# 
+# 
+# cat("The mean of mu(both_slope)",
+#     mean(both_slope_mu), ";\n")
+# 
+# cat("The mean of SD(both_slope)",
+#     mean(both_slope_sd), 
+#     ";\n the median of SD(both_slope)",
+#     median(both_slope_sd), "\n")
+# 
+# quantile(both_slope, c(0.025,0.5, 0.975))
+# 
+# mean(both_slope_mu) - 1.96 * mean(both_slope_sd)
+# mean(both_slope_mu) + 1.96 * mean(both_slope_sd)
+```
+
+-   The 95% CI for the slope term is (`r mean(both_slope_mu) - 1.96 * mean(both_slope_sd)`, `r mean(both_slope_mu) + 1.96 * mean(both_slope_sd)`)
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+hist(both_int_mu)
+hist(both_slope_mu)
+```
+
+### SD Calculation with summation
+
+```{r}
+random_int_sd <- apply(random_intercept, 1, sd)
+random_slope_sd <- apply(random_slope, 1, sd)
+
+random_int_mu <- apply(random_intercept, 1, mean)
+random_slope_mu <- apply(random_slope, 1, mean)
+
+# cat("The mean of mu(random_int)", 
+#     mean(random_int_mu), ";\n")
+# 
+# cat("The mean of mu(random_slope)",
+#     mean(random_slope_mu), ";\n")
+# 
+# 
+# cat("The mean of SD(random_int)", 
+#     mean(random_int_sd), 
+#     ";\n the median of SD(random_int)",
+#     median(random_int_sd), "\n")
+# 
+# cat("The mean of SD(random_slope)",
+#     mean(random_slope_sd), 
+#     ";\n the median of SD(random_slope)",
+#     median(random_slope_sd), "\n")
+
+```
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+hist(random_int_sd)
+hist(random_slope_sd)
+```
+
+Hence, we have the final results for the variability of the slope term.
+
+-   The random effect slope term based on MCMC is $\sigma_{\beta_1}$ = `r mean(random_slope_sd)`;
+
+-   The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.119.value.rate)$Outcome[2, 2]`;
+
+-   We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
+
+-   The 95% CI for the slope term is (`r summary(jmb2.119.value.rate)$Outcome[2, 1]- 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r summary(jmb2.119.value.rate)$Outcome[2, 1] + 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
+
+-   [x] `r praise::praise()`
+
+## AUC
+
+```{r}
+#| label: "auc_value_rate"
+#| warning: false
+#| eval: false
+
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(AUC2, "auc") %>% as.character()
+Tstart3 = map(AUC3, "auc") %>% as.character()
+Tstart4 = map(AUC4, "auc") %>% as.character()
+Tstart5 = map(AUC5, "auc") %>% as.character()
+Tstart6 = map(AUC6, "auc") %>% as.character()
+Tstart8 = map(AUC8, "auc") %>% as.character()
+
+tbl_auc_value_rate <- rbind(Tstart2, 
+                            Tstart3,
+                            Tstart4,
+                            Tstart5,
+                            Tstart6, 
+                            Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8, tbl_auc_value_rate,
+     file = paste0("results/jmb2_119_auc_chain", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
+
+```
+
+```{r}
+
+load("results/jmb2_119_auc_chain5_it500k_thin100_total25k.Rdata")
+
+tbl_auc_value_rate %>% knitr::kable()
+```
+
+## Brier Scores
+
+```{r}
+#| label: "bs_table_value_rate"
+#| warning: false
+#| eval: false
+
+Brier2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(Brier2, "Brier") %>% as.character()
+Tstart3 = map(Brier3, "Brier") %>% as.character()
+Tstart4 = map(Brier4, "Brier") %>% as.character()
+Tstart5 = map(Brier5, "Brier") %>% as.character()
+Tstart6 = map(Brier6, "Brier") %>% as.character()
+Tstart8 = map(Brier8, "Brier") %>% as.character()
+
+tbl_bs_value_rate <- rbind(Tstart2,
+                Tstart3,
+                Tstart4,
+                Tstart5,
+                Tstart6,
+                Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+save(Brier2, Brier3, Brier4, Brier5, Brier6, Brier8, tbl_bs_value_rate,
+     file = paste0("results/jmb2_119_brier_chain", 
+                   chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
+```
+
+```{r}
+#| label: "bs_value_rate"
+
+load("results/jmb2_119_brier_chain5_it500k_thin100_total25k.Rdata")
+
+tbl_bs_value_rate %>% knitr::kable()
+```

@@ -603,5 +603,4 @@ anova(jm.fit31, jm.fit31d, process = "Event")
 anova(jm.fit21d, jm.fit31d)
 ```
 
-
 -   [x] `r praise::praise()`

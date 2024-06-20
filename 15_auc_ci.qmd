@@ -61,11 +61,12 @@ $$
 
 ```{r}
 control = lmeControl(opt = "optim")
-jmcontrol <- list(n_iter = 5000, 
-                  n_burnin = 1000, 
-                  n_chains = 2,
+jmcontrol <- list(n_iter = 50000, 
+                  n_burnin = 20000, 
+                  n_chains = 1,
+                  n_thin = 10,
                   seed = 55555,
-                  cores = 2)
+                  cores = 1)
 
 lme1 <- lme(lamh ~ time,
                 data = swan_amh03,
@@ -352,6 +353,7 @@ AUC_s4_d2 <- tvAUC_CI(jmb2.117.value.rate,
                       Dt = 2,
                       iter = 1000L)
 
+
 AUC_s4_d2$auc %>% quantile(seq(0, 1, 0.05))
 
 ```
@@ -393,15 +395,15 @@ AUC8  <- map(c(1, 2, 3, 4, 5),
                            Dt = .x)))
 
 save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8,
-     file = "results/jmbayes2_117_value_rate_auc_ci.RData")
+     file = "results/jmbayes2_119_value_rate_auc_ci.RData")
 ```
 
 ```{r}
-load("results/jmbayes2_117_value_rate_auc_ci.RData")
+load("results/jmbayes2_119_value_rate_auc_ci.RData")
 
-AUC2_ci <- map_dfc(AUC2, "auc") %>%
+AUC2_ci <- map_dfc(AUC2, "AUC") %>% View()
   map_dfr(~quantile(.x, c(0.5, 0.025, 0.975))) %>%
-  round(digit = 3) %>%
+  round(digit = 3) %>% 
   unite(col = "95% CI", c("2.5%", "97.5%"), sep = " , ") %>%
   mutate(`95% CI` = paste0("(", `95% CI`, ")")) %>%
   unite(col = "AUC", c("50%", "95% CI"), sep = "  ") 

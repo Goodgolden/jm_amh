@@ -1,0 +1,491 @@
+---
+title: "Final Report"
+author: "randy"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: yes
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      eval = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+library(JMbayes2)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+\newpage
+
+## Goal of the analysis
+
+-   [x] Fit the final joint model with rate with `JMbayes2` based on model selection results
+
+-   [x] Table1
+
+-   [x] Life Tables for Training and Testing datasets
+
+-   [x] Dynamic prediction for the joint model
+
+-   [x] Training dataset
+
+    -   [x] Calculate the AUC for the joint model for $Dt = 1, 2, 3, 4, 5$ (year)
+
+    -   [x] Calculate the Brier score for the joint model for $Dt = 1, 2, 3, 4, 5$ (year)
+
+-   [x] Testing dataset
+
+    -   [x] Calculate the AUC for the joint model for $Dt = 1, 2, 3, 4, 5$ (year)
+
+    -   [x] Calculate the Brier score for the joint model for $Dt = 1, 2, 3, 4, 5$ (year)
+
+\newpage
+
+## Final Table1
+
+```{r}
+
+swan_amh0 <- read_csv("data-raw/swan_amh0.csv") %>%
+  mutate(alcohol = factor(alcohol,
+                          levels = c(0, 1, 2, 3),
+                          labels = c("None","<1/wk", "1-7/wk", ">7/wk")),
+        
+        edu = factor(edu,
+                      levels = c(1, 2, 3),
+                      labels = c("High School or Less",
+                                 "Some College",
+                                 "College degree or higher")),
+        employed = factor(employed,
+                           levels = c(0, 1),
+                           labels = c("Unemployed",
+                                      "Employed")),
+        health = factor(health,
+                         levels = c(1, 2, 3, 4),
+                         labels = c("Excellent",
+                                    "Very Good",
+                                    "Good",
+                                    "Fair/Poor")),
+        meno = factor(meno,
+                      levels = c(0, 1, 2, 3),
+                      labels = c('Pre', 'Early Peri', 'Late Peri', 'Post')),
+        smoke = factor(smoke,
+                        levels = c(1, 2, 3),
+                        labels = c("Never Smoked",
+                                   "Past Only",
+                                   "Current Smoker")),
+        married = factor(married,
+                          levels = c(0,1),
+                          labels = c("Not Married/Partnered",
+                                     "Married/Partnered")),
+        bc_pills = factor(bc_pills,
+                           levels = c(0, 1),
+                           labels = c("Never",
+                                      "Ever use BC pills")),
+        bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
+  
+
+all_amh0 <- test_amh0 %>% 
+  filter(!is.na(amh)) %>%
+  mutate(id = as.integer(id),
+         lamh = log(amh)) %>%
+  rbind(swan_amh0) %>% 
+  mutate(group = factor(train, levels = c(1, 0),
+                        labels = c("0Training", "1Testing"))) %>% 
+  filter(!is.na(time))
+
+all_amh1 <- all_amh0 %>%
+  group_by(id) %>%
+  summarize(# tn = max(time),
+            # t0 = min(time),
+            # dt = tn - t0,
+            visitn = n()) 
+
+all_amh2 <- all_amh0 %>%
+  dplyr::select(id, age, ethnic, married,
+                alcohol, smoke, bc_pills,
+                bmi, health, phys_act, amh,
+                meno, 
+                # parity, children,
+                group,
+                etime,
+                employed, edu, site)  %>%
+  mutate(site = case_when(site == "11" ~ "M",
+                          site == "12" ~ "B",
+                          site =="13" ~ "C",
+                          site =="14" ~ "UCD",
+                          site =="15" ~ "UCLA",
+                          site =="16" ~ "NJ",
+                          site =="17" ~ "P")) %>%
+  group_by(id) %>%
+  slice(1L) %>%
+  ungroup() %>%
+  full_join(all_amh1, by = "id")
+
+
+table1_final <- all_amh2 %>%
+  mutate(visitn = as.numeric(visitn)) %>% 
+  ungroup() %>%
+  dplyr::select(-id) %>%
+  tbl_summary(by = group,
+              missing = "ifany",
+              label = list(c("age") ~ "Baseline Age (years)",
+                           c("ethnic") ~ "Ethnicity / Race",
+                           c("married") ~ "Marital Status",
+                           c("alcohol") ~ "Alcohol Use",
+                           c("smoke") ~ "Smoking History",
+                           c("bc_pills") ~ "Ever use of BC Pills",
+                           c("bmi") ~ "BMI",
+                           c("health") ~ "Overall Health",
+                           c("phys_act") ~ "Physical Activity Score",
+                           c("amh") ~ "Baseline AMH",
+                           c("etime") ~ "Event Time",
+                           c("meno") ~ "Menopausal Status",
+                           # c("parity") ~ "Parity",
+                           # c("children") ~ "Children",
+                           c("employed") ~ "Employment Status",
+                           c("edu") ~ "Educational Attainment",
+                           c("site") ~ "Study Site",
+                           c("visitn") ~ "Visiting Numbers"),
+              type = list(all_continuous() ~ "continuous2",
+                          "visitn" ~ "continuous2"),
+              statistic = list(all_continuous() ~ c("{mean} ({sd})",
+                                                    "{median}",
+                                                    "[{min}, {max}]"),
+                               all_categorical() ~ "{n} / {N} ({p}%)")) %>%
+  modify_header(label = "**Characteristics**") %>%
+  # update the column header
+  bold_labels() %>%
+  add_overall() %>%
+  italicize_labels()
+```
+
+For testing dataset there are missings for `amh` and the visit numbers are different from the training.
+
+```{r}
+table1_final
+```
+
+## Contingency Table
+
+### Training
+
+```{r}
+swan_amh1 <- read_csv("data-raw/swan_amh1.csv")
+
+## pullout the life tbl for the test_amh1
+sfit <- survfit(Surv(etime, event) ~ 1, data = swan_amh1)
+
+## aggregate the life table by every year
+## the number of events in each stratified time 
+## intervals
+
+ltbl <- function(step) {
+  periods <- seq(0, 22, step)
+  
+  data <- data.frame(sfit$time, sfit$n.event, sfit$n.risk) %>%
+    rbind(c(3, 0, max(sfit$n.risk)+min(sfit$n.risk)),
+          c(2, 0, max(sfit$n.risk)+min(sfit$n.risk)),
+          c(1, 0, max(sfit$n.risk)+min(sfit$n.risk)),
+          c(0, 0, max(sfit$n.risk)+min(sfit$n.risk))) %>%
+    arrange(sfit.time)
+  
+  tbl <- data %>%
+    mutate(groups = cut(as.numeric(data$sfit.time), 
+                        breaks = periods, 
+                        labels = periods[-1])) %>%
+    group_by(groups) %>%
+    summarise(n.event = sum(sfit.n.event),
+              n.risk = max(sfit.n.risk)) %>%
+    mutate(Tstart = as.numeric(as.character(groups)) - step,
+           Tend = as.numeric(as.character(groups))) %>%
+    dplyr::select(Tstart, Tend, Events = n.event, AtRisks = n.risk) %>%
+    filter(!is.na(Tstart))
+
+  return(tbl)
+}
+
+tbl_train <- map(list(1, 2, 3, 4, 5), ltbl)
+```
+
+### 1 Year Interval
+
+```{r}
+knitr::kable(tbl_train[1])
+```
+
+### 2 Year Interval
+
+```{r}
+knitr::kable(tbl_train[2])
+```
+
+### 3 Year Interval
+
+```{r}
+knitr::kable(tbl_train[3])
+```
+
+### 4 Year Interval
+
+```{r}
+knitr::kable(tbl_train[4])
+```
+
+### 5 Year Interval
+
+```{r}
+knitr::kable(tbl_train[5])
+```
+
+\newpage
+
+### Testing
+
+```{r}
+test_amh1 <- read_csv("data-raw/test_amh1.csv") %>% 
+  mutate(event = 1)
+
+## pullout the life tbl for the test_amh1
+sfit <- survfit(Surv(etime, event) ~ 1, data = test_amh1)
+
+tbl_tests <-  map(list(1, 2, 3, 4, 5), ltbl)
+
+```
+
+### 1 Year Interval
+
+```{r}
+knitr::kable(tbl_tests[1])
+```
+
+### 2 Year Interval
+
+```{r}
+knitr::kable(tbl_tests[2])
+```
+
+### 3 Year Interval
+
+```{r}
+knitr::kable(tbl_tests[3])
+```
+
+### 4 Year Interval
+
+```{r}
+knitr::kable(tbl_tests[4])
+```
+
+### 5 Year Interval
+
+```{r}
+knitr::kable(tbl_tests[5])
+```
+
+\newpage
+
+## Final Model
+
+### Value + Rate model
+
+$$
+\begin{split}
+  jmb2.119.value.rate: & \\ 
+  lme1: \ \ \  & \pmb m(time) = (fixed = lamh \sim time,\\
+  & \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \ \  random = time| id) \\
+  surv19: \ \ \ & Surv(etime, event) \sim  factor(bmi) + site + ethnic + smoke \\
+  & \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ + \pmb m(time) + \pmb m'(time) 
+\end{split}
+$$
+
+Fitting the model with:
+
+-   Chain 5
+-   Iteration 500k
+-   Thinning 50
+-   Total iterations of 50k
+
+\newpage
+
+### Summarization
+
+```{r}
+load("results/jmb2_119_chain5_it500k_thin50_total50k.Rdata")
+
+summary(jmb2.119.value.rate)
+```
+
+\newpage
+
+### SD Calculation for slope term
+
+```{r}
+random_intercept <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 1, ]) 
+                          # jmb2.119.value.rate$mcmc$b[[2]][, 1, ], 
+                          # jmb2.119.value.rate$mcmc$b[[3]][, 1, ], 
+                          # jmb2.119.value.rate$mcmc$b[[4]][, 1, ])
+fixed_intercept <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 1]))
+                         # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 1]), 
+                         # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 1]), 
+                         # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 1]))
+
+# random_intercept <- random[, 1, ] 
+
+random_slope <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 2, ])
+                      # jmb2.119.value.rate$mcmc$b[[2]][, 2, ], 
+                      # jmb2.119.value.rate$mcmc$b[[3]][, 2, ], 
+                      # jmb2.119.value.rate$mcmc$b[[4]][, 2, ])
+fixed_slope <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 2]))
+                     # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 2]), 
+                     # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 2]), 
+                     # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 2]))
+
+# View(fixed_slope)
+# dim(random_slope)
+# dim(fixed_slope)
+
+both_intercept <- random_intercept + as.vector(fixed_intercept)
+both_slope <- random_slope + as.vector(fixed_slope)
+
+# dim(both_slope)
+# dim(both_intercept)
+```
+
+```{r}
+both_int_sd <- apply(both_intercept, 1, sd)
+both_slope_sd <- apply(both_slope, 1, sd)
+
+both_int_mu <- apply(both_intercept, 1, mean)
+both_slope_mu <- apply(both_slope, 1, mean)
+
+# cat("The mean of mu(both_int)", 
+#     mean(both_int_mu), ";\n")
+# 
+# cat("The mean of SD(both_int)", 
+#     mean(both_int_sd), 
+#     ";\n the median of SD(both_int)",
+#     median(both_int_sd), "\n")
+# 
+# 
+# cat("The mean of mu(both_slope)",
+#     mean(both_slope_mu), ";\n")
+# 
+# cat("The mean of SD(both_slope)",
+#     mean(both_slope_sd), 
+#     ";\n the median of SD(both_slope)",
+#     median(both_slope_sd), "\n")
+# 
+# quantile(both_slope, c(0.025,0.5, 0.975))
+# 
+# mean(both_slope_mu) - 1.96 * mean(both_slope_sd)
+# mean(both_slope_mu) + 1.96 * mean(both_slope_sd)
+```
+
+```{r}
+random_int_sd <- apply(random_intercept, 1, sd)
+random_slope_sd <- apply(random_slope, 1, sd)
+
+random_int_mu <- apply(random_intercept, 1, mean)
+random_slope_mu <- apply(random_slope, 1, mean)
+
+# cat("The mean of mu(random_int)", 
+#     mean(random_int_mu), ";\n")
+# 
+# cat("The mean of mu(random_slope)",
+#     mean(random_slope_mu), ";\n")
+# 
+# 
+# cat("The mean of SD(random_int)", 
+#     mean(random_int_sd), 
+#     ";\n the median of SD(random_int)",
+#     median(random_int_sd), "\n")
+# 
+# cat("The mean of SD(random_slope)",
+#     mean(random_slope_sd), 
+#     ";\n the median of SD(random_slope)",
+#     median(random_slope_sd), "\n")
+
+```
+
+Hence, we have the final results for the variability of the slope term.
+
+-   The mean value for both slopes : `r random_slope` + `r as.vector(fixed_slope)` = `r both_slope`;
+
+-   The random effect slope term based on MCMC is $\sigma_{\beta_1}$ = `r mean(random_slope_sd)`;
+
+-   The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.119.value.rate)$Outcome[2, 2]`;
+
+-   We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
+
+-   The 95% CI for the slope term is (`r summary(jmb2.119.value.rate)$Outcome[2, 1]- 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r summary(jmb2.119.value.rate)$Outcome[2, 1] + 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
+
+\newpage
+
+## Prediction Performance
+
+### Training set
+
+#### AUC
+
+```{r}
+load("results/jmb2_119_auc_chain5_it500k_thin100_total25k.Rdata")
+
+tbl_auc_value_rate %>% knitr::kable()
+```
+
+#### Brier Scores
+
+```{r}
+load("results/jmb2_119_brier_chain5_it500k_thin100_total25k.Rdata")
+
+tbl_bs_value_rate %>% knitr::kable()
+```
+
+\newpage
+
+### Testing set
+
+#### AUC
+
+```{r}
+load("results/jmb2_119_test_auc_chain5_it500k_thin50_total50k.Rdata")
+
+tbl_auc_value_rate_test %>% knitr::kable()
+```
+
+#### Brier Scores
+
+```{r}
+load("results/jmb2_119_test_brier_chain5_it500k_thin50_total50k.Rdata")
+
+tbl_bs_value_rate_test %>% knitr::kable()
+```

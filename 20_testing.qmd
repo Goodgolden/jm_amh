@@ -108,6 +108,7 @@ test1 <- test0 %>%
                     age, amh, fmp_age, ethnic,
                     edu, alcohol, employed,
                     health, smoke, married,
+                    meno,
                     bc_pills, children, bmi,
                     phys_act, age0)) %>%
   group_by(id) %>%
@@ -123,6 +124,9 @@ test1 <- test0 %>%
                          "6" = 4, "7" = 4,
                          "8" = 4, "9" = 4,
                          "12" = 4),
+        meno = factor(meno,
+                      levels = c(0, 1, 2, 3),
+                      labels = c('Pre', 'Early Peri', 'Late Peri', 'Post')),
         ethnic = factor(ethnic, 
                         levels = c("CAUCA","BLACK", "CHINE",
                                     "HISPA", "JAPAN")),
@@ -164,7 +168,6 @@ test2 <- test1 |>
   group_by(id) |>
   summarize(tstart = min(time),
             tend = min(etime)) 
-View(test2)
 
 hist(as.numeric(test2$tstart))
 hist(as.numeric(test2$tend))
@@ -230,8 +233,16 @@ table(question2$time0)
 #| eval: false
 test1id <- test1[!duplicated(test1$id),]
 
-test_amh0 <- test1 %>% dplyr::select(id, order(colnames(test1)))
-test_amh1 <- test1id %>% dplyr::select(id, order(colnames(test1id)))
+test_amh0 <- test1 %>% dplyr::select(id, order(colnames(test1))) %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
+test_amh1 <- test1id %>% dplyr::select(id, order(colnames(test1id))) %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
 
 write_csv(test_amh0, "data-raw/test_amh0.csv")
 write_csv(test_amh1, "data-raw/test_amh1.csv")
