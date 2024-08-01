@@ -35,11 +35,10 @@ po/*~
 rsconnect/
 /.quarto/
 *_files/
-/results/
-/papers/
+
 /data/
 /data-raw/
-/figure/
+
 .DS_Store
 .Rbuildignore
 .gitignore
