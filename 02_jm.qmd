@@ -48,23 +48,23 @@ devtools::load_all()
 
 ## Goal for this chapter
 
-- [x] EDA for Longitudinal sub-model `lme` (Alcohol usage and AMH levels by EJC)
+-   [x] EDA for Longitudinal sub-model `lme` (Alcohol usage and AMH levels by EJC)
 
-- [x] EDA for survival sub-model (Kaplan-Meier plots for different variables by EJC)
+-   [x] EDA for survival sub-model (Kaplan-Meier plots for different variables by EJC)
 
-- [x] Transformation required for the AMH levels - log transformation `lamh = log(amh)`
+-   [x] Transformation required for the AMH levels - log transformation `lamh = log(amh)`
 
-- [x] Fit the longitudinal model with `lme()`, with random slope and random intercept (by EJC)
+-   [x] Fit the longitudinal model with `lme()`, with random slope and random intercept (by EJC)
 
-- [x] Fit the survival model with `coxph()` (by EJC)
+-   [x] Fit the survival model with `coxph()` (by EJC)
 
-- [x] Fit the joint model with `JM` package (by EJC)
+-   [x] Fit the joint model with `JM` package (by EJC)
 
-  - [x] swan_amh0 is the longitudinal dataset
+    -   [x] swan_amh0 is the longitudinal dataset
 
-  - [x] swan_amh1 is the id dataset
+    -   [x] swan_amh1 is the id dataset
 
-- [x] `r praise::praise()`
+-   [x] `r praise::praise()`
 
 ```{r}
 #| label: "loading data"
@@ -308,6 +308,5 @@ summary(joint.fit1)[[2]]
 
 # summary(joint.fit.wei)
 ```
-
 
 -   [x] `r praise::praise()`

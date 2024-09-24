@@ -74,7 +74,8 @@ swan_amh03 <- swan_amh03 %>%
   mutate(bmi_cat = case_when(bmi < 25 ~ 1,
                              bmi >= 25 & bmi < 30 ~ 2,
                              bmi >= 30 ~ 3),
-         bmi_cat = as.factor(bmi_cat))
+         bmi_cat = as.factor(bmi_cat)) %>%
+  filter(!is.na(amh))
 
 swan_amh13 <- swan_amh13 %>%
   full_join(swan_amh04, by = "id") %>%
@@ -90,8 +91,8 @@ swan_amh13 <- swan_amh13 %>%
 ```
 
 ```{r}
-iteration <- 700000
-burnin <- 200000
+iteration <- 80000
+burnin <- 20000
 thin <- 100
 chain <- 5
 
@@ -104,9 +105,7 @@ jmcontrol <- list(n_iter = iteration,
                   seed = 555,
                   cores = chain)
 
-total <- (iteration - burnin) / thin * chain
-
-
+(total <- (iteration - burnin) / thin * chain)
 ```
 
 ## Value + Rate model
@@ -145,18 +144,17 @@ surv19 <- coxph(Surv(etime, event) ~
                 model = TRUE)
 
 jmb2.119.value.rate <- JMbayes2::jm(Surv_object = surv19,
-                                  Mixed_objects = lme1, 
-                                  functional_forms = list("lamh" = ~value(lamh) + slope(lamh)),
-                                  time_var = "time",
-                                  control = jmcontrol) 
+                                    Mixed_objects = lme1, 
+                                    functional_forms = list("lamh" = ~value(lamh) + slope(lamh)),
+                                    time_var = "time",
+                                    control = jmcontrol) 
 
 summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
 
-filename <- paste0("results/jmb2_119_chain", chain, "_it", 
-                    iteration/1000 - burnin/1000, 
-                    "k_thin", thin, 
-                    "_total", total/1000, "k.Rdata")
-
+filename <- paste0("results/jmb2_119_chain", chain, 
+                   "_it", iteration/1000 - burnin/1000, 
+                   "k_thin", thin, 
+                   "_total", total/1000, "k.Rdata")
 
 save(jmb2.119.value.rate,
      file = filename)
@@ -166,8 +164,7 @@ save(jmb2.119.value.rate,
 ## Summarization
 
 ```{r}
-load("results/jmb2_119_chain5_it500k_thin50_total50k.Rdata")
-
+load("results/jmb2_119_chain5_it50k_thin100_total3k.Rdata")
 summary(jmb2.119.value.rate)
 ```
 
@@ -320,7 +317,7 @@ Hence, we have the final results for the variability of the slope term.
 #| label: "auc_value_rate"
 #| warning: false
 #| eval: false
-
+set.seed(6632)
 AUC2  <- map(c(1, 2, 3, 4, 5), 
                  ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
                                       swan_amh03,
@@ -372,17 +369,16 @@ tbl_auc_value_rate <- rbind(Tstart2,
 names(tbl_auc_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
 
 save(AUC2, AUC3, AUC4, AUC5, AUC6, AUC8, tbl_auc_value_rate,
-     file = paste0("results/jmb2_119_auc_chain", chain, "_it", 
+     file = paste0("results/jmb2_119_auc_train_chain_", chain, "_it", 
                     iteration/1000 - burnin/1000, 
                     "k_thin", thin, 
                     "_total", total/1000, "k.Rdata"))
-
 
 ```
 
 ```{r}
 
-load("results/jmb2_119_auc_chain5_it500k_thin100_total25k.Rdata")
+load("results/jmb2_119_auc_train_chain_5_it50k_thin100_total2.5k.Rdata")
 
 tbl_auc_value_rate %>% knitr::kable()
 ```
@@ -455,7 +451,6 @@ save(Brier2, Brier3, Brier4, Brier5, Brier6, Brier8, tbl_bs_value_rate,
 ```{r}
 #| label: "bs_value_rate"
 
-load("results/jmb2_119_brier_chain5_it500k_thin100_total25k.Rdata")
-
+load("results/jmb2_119_brier_chain5_it60k_thin100_total3k.Rdata")
 tbl_bs_value_rate %>% knitr::kable()
 ```

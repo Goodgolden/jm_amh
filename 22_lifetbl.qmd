@@ -34,7 +34,6 @@ here::set_here()
 #      Sys.Date(), ".filetype")
 ```
 
-
 ```{css, echo=FALSE}
 .scroll-100 {
   max-height: 300px;
@@ -44,18 +43,15 @@ here::set_here()
 }
 ```
 
-
 ## Goal for this chapter
 
-- [x] Life table for both training and testing datasets
+-   [x] Life table for both training and testing datasets
 
-- [x] the number of events in each stratified time intervals
+-   [x] the number of events in each stratified time intervals
 
-- [x] the number of observation in each stratified time intervals
+-   [x] the number of observation in each stratified time intervals
 
-  - [x] personally this is also need to see the proportion of events 
-  in each stratified time intervals
-
+    -   [x] personally this is also need to see the proportion of events in each stratified time intervals
 
 ## The Contingency Table for events only
 
@@ -123,12 +119,3 @@ knitr::kable(tbl_tests[3])
 knitr::kable(tbl_tests[4])
 knitr::kable(tbl_tests[5])
 ```
-
-
-
-
-
-
-
-
-

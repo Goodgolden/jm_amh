@@ -212,10 +212,10 @@ ltbl <- function(step) {
   periods <- seq(0, 22, step)
   
   data <- data.frame(sfit$time, sfit$n.event, sfit$n.risk) %>%
-    rbind(c(3, 0, max(sfit$n.risk)+min(sfit$n.risk)),
-          c(2, 0, max(sfit$n.risk)+min(sfit$n.risk)),
-          c(1, 0, max(sfit$n.risk)+min(sfit$n.risk)),
-          c(0, 0, max(sfit$n.risk)+min(sfit$n.risk))) %>%
+    rbind(c(3, 0, max(sfit$n.risk) + min(sfit$n.risk)),
+          c(2, 0, max(sfit$n.risk) + min(sfit$n.risk)),
+          c(1, 0, max(sfit$n.risk) + min(sfit$n.risk)),
+          c(0, 0, max(sfit$n.risk) + min(sfit$n.risk))) %>%
     arrange(sfit.time)
   
   tbl <- data %>%

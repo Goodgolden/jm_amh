@@ -79,8 +79,8 @@ test_amh01 <- test_amh0 %>%
   janitor::clean_names() %>%
   dplyr::select(-intercept) %>%
   dplyr::select(order(colnames(.))) %>% 
-  filter(!is.na(time))
-
+  filter(!is.na(time), 
+         !is.na(amh))
 
 ```
 
@@ -97,9 +97,32 @@ $$
 $$
 
 ```{r}
-load("results/jmb2_119_chain5_it500k_thin50_total50k.Rdata")
-
+load("results/jmb2_119_chain5_it50k_thin100_total2.5k.Rdata")
 summary(jmb2.119.value.rate)
+
+pred1 <- predict(jmb2.119.value.rate, 
+                 newdata = test_amh01,
+                 process = "longitudinal",
+                 type = "mean_subject",
+                 return_newdata = FALSE)
+# test_amh01$pred <- unlist(pred1$preds)
+margin_data <- cbind(time = test_amh01$time, 
+                     lamh = pred1$preds$lamh) %>% 
+  as.data.frame() %>% 
+  unique() %>% 
+  as.data.frame() %>%
+  arrange(time)
+
+# swan_amh03 <- na.omit(swan_amh03) %>%
+#   group_by(id) %>%
+#   arrange(time)
+pred2 <- predict(jmb2.119.value.rate,
+                 newdata = swan_amh03,
+                 process = "longitudinal",
+                 type = "mean_subject",
+                 return_newdata = FALSE)
+# swan_amh03$pred <- unlist(pred2$preds)
+# swan_amh03
 ```
 
 ## AUC
@@ -109,6 +132,7 @@ summary(jmb2.119.value.rate)
 #| warning: false
 #| eval: false
 
+set.seed(7732)
 AUC2_test  <- map(c(1, 2, 3, 4, 5), 
                  ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
                                       test_amh01,
@@ -164,15 +188,10 @@ save(AUC2_test, AUC3_test,
      AUC4_test, AUC5_test,
      AUC6_test, AUC8_test, 
      tbl_auc_value_rate_test,
-     file = paste0("results/jmb2_119_test_auc_chain5_it500k_thin50_total50k.Rdata"))
+     file = paste0("results/new_jmb2_119_test_auc_chain5_it500k_thin100_total2.5k.Rdata"))
 ```
 
-```{r}
-
-load("results/jmb2_119_test_auc_chain5_it500k_thin50_total50k.Rdata")
-
-tbl_auc_value_rate_test %>% knitr::kable()
-```
+Dt1 Dt2 Dt3 Dt4 Dt5 Tstart2 NA 0.6928 0.7645 0.7660 0.7789 Tstart3 0.4380 0.8127 0.7943 0.8066 0.7912 Tstart4 0.9473 0.8295 0.7991 0.7556 0.7735 Tstart5 0.8404 0.8096 0.8035 0.7992 0.8180 Tstart6 0.8123 0.8253 0.8104 0.8251 0.8053 Tstart8 0.7919 0.8088 0.7864 0.7799 0.8340
 
 ## Brier Scores
 
@@ -234,7 +253,7 @@ save(Brier2_test, Brier3_test,
      Brier4_test, Brier5_test,
      Brier6_test, Brier8_test,
      tbl_bs_value_rate_test,
-     file = paste0("results/jmb2_119_test_brier_chain5_it500k_thin50_total50k.Rdata"))
+     file = paste0("results/jmb2_119_test_brier_chain5_it60k_thin100_total3k.Rdata"))
 
 ```
 
@@ -242,6 +261,5 @@ save(Brier2_test, Brier3_test,
 #| label: "bs_value_rate"
 
 load("results/jmb2_119_test_brier_chain5_it500k_thin50_total50k.Rdata")
-
 tbl_bs_value_rate_test %>% knitr::kable()
 ```
