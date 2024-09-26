@@ -2,7 +2,6 @@
 title: "Checking"
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       warnings = FALSE,
@@ -29,7 +28,6 @@ library(kableExtra, quietly = TRUE)
 # here::dr_here()
 # here::set_here()
 ```
-
 
 ## Kaplan-Meire Curve
 
@@ -117,7 +115,6 @@ swan_amh03 <- swan_amh03 %>%
          bmi_cat = as.factor(bmi_cat))
 ```
 
-
 ```{r}
 train03 <- swan_amh03 %>% 
   ungroup() %>%
@@ -152,7 +149,6 @@ plot1 <- ggplot() +
 plot1
 
 ```
-
 
 ```{r}
 train03 <- swan_amh03 %>% 
@@ -216,45 +212,536 @@ plot3 + ylim(c(0, 7)) +
                                   lineheight = 0.1))
 ```
 
+## Distribution
 
 ```{r}
-# load("results/jmb2_119_test_auc_chain5_it500k_thin100_total2.5k.Rdata")
-# tbl_auc_value_rate_test %>% knitr::kable()
+load("data/swan_amh03.rda")
+load("data/swan_amh13.rda")
 
-load("results/new_jmb2_119_test_auc_chain5_it500k_thin100_total2.5k.Rdata")
-tbl_auc_value_rate_test %>% knitr::kable()
+swan_amh04 <- swan_amh03 %>%
+  group_by(id) %>%
+  arrange(time) %>%
+  slice(1L) %>%
+  dplyr::select(id, lamh0 = lamh) %>%
+  mutate(id = as.character(id))
 
-load("results/jmb2_119_auc_train_chain_5_it50k_thin100_total2.5k.Rdata")
+swan_amh03 <- swan_amh03 %>%
+  mutate(id = as.character(id)) %>%
+  full_join(swan_amh04, by = "id") %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat)) %>%
+  filter(!is.na(amh))
+
+swan_amh13 <- swan_amh13 %>%
+  full_join(swan_amh04, by = "id") %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat))
+
+load("data/test_amh0.rda")
+load("data/test_amh1.rda")
+
+test_amh01 <- test_amh0 %>%
+  mutate(site = case_when(site == "11" ~ "M",
+                          site == "12" ~ "B",
+                          site =="13" ~ "C",
+                          site =="14" ~ "UCD",
+                          site =="15" ~ "UCLA",
+                          site =="16" ~ "NJ",
+                          site =="17" ~ "P"),
+         lamh = log(amh),
+         ethnic = factor(ethnic, levels = c("CAUCA", "BLACK",
+                                            "CHINE", "HISPA",
+                                            "JAPAN")),
+         bmi_cat = as.factor(bmi_cat),
+         # site = factor(site, levels = c("B", "C", "M",
+         #                                "NJ", "P",
+         #                                "UCD", "UCLA")),
+         smoke = factor(smoke, levels = c("Never Smoked" ,
+                                          "Past Only",
+                                          "Current Smoker"))) %>% 
+  cbind(model.matrix(~ 1 + site + ethnic + smoke,
+                     data = .)) %>%
+  janitor::clean_names() %>%
+  dplyr::select(-intercept) %>%
+  dplyr::select(order(colnames(.))) %>% 
+  filter(!is.na(time), 
+         !is.na(amh))
+
+summary_test <- test_amh01 %>%
+  group_by(id) %>%
+  dplyr::summarize(visit = n(),
+                   etime = as.integer(mean(etime)), 
+                   age_min = as.integer(min(age)),
+                   age_max = as.integer(max(age)),
+                   age_gap = age_max - age_min) %>%
+  as.data.frame()
+
+summary_train <- swan_amh03 %>%
+  group_by(id) %>%
+  dplyr::summarize(visit = n(),
+                   etime = as.integer(mean(etime)),
+                   age_min = as.integer(min(age)),
+                   age_max = as.integer(max(age)),
+                   age_gap = age_max - age_min) %>%
+  as.data.frame()
+
+plot01 <- ggplot() +
+  geom_histogram(data = summary_train, aes(x = age_min), 
+                 fill = "blue", 
+                 stat = "count",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  geom_histogram(data = summary_test, aes(x = age_min),
+                 fill = "red", 
+                 stat = "count",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  labs(title = "Histogram of the number of visits",
+       x = "Age",
+       y = "Frequency") +
+  theme_minimal()
+plot02 <- ggplot() +
+  geom_histogram(data = summary_train, aes(x = age_max), 
+                 fill = "blue", 
+                 stat = "count",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  geom_histogram(data = summary_test, aes(x = age_max),
+                 fill = "red", 
+                 stat = "count",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  labs(title = "Histogram of the number of visits",
+       x = "Age",
+       y = "Frequency") +
+  theme_minimal()
+plot03 <- ggplot() +
+  geom_histogram(data = summary_train, aes(x = age_gap), 
+                 fill = "blue", 
+                 stat = "count",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  geom_histogram(data = summary_test, aes(x = age_gap),
+                 fill = "red", 
+                 stat = "count",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  labs(title = "Histogram of the number of visits",
+       x = "Age",
+       y = "Frequency") +
+  theme_minimal()
+plot04 <- ggplot() +
+  geom_histogram(data = summary_train, aes(x = etime), 
+                 fill = "blue", 
+                 binwidth = 1,
+                 alpha = 0.5,) +
+  geom_histogram(data = summary_test, aes(x = etime),
+                 fill = "red", 
+                 binwidth = 1,
+                 alpha = 0.5) +
+  labs(title = "Histogram of the number of visits",
+       x = "Age",
+       y = "Frequency") +
+  theme_minimal()
+plot01; plot02; plot03; plot04
+
+```
+
+```{r}
+plot11 <- ggplot() +
+  geom_histogram(data = summary_train, aes(x = age_min, y = ..density..), 
+                 fill = "blue", 
+                 stat = "density",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  geom_histogram(data = summary_test, aes(x = age_min, y = ..density..),
+                 fill = "red", 
+                 stat = "density",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  labs(title = "Histogram of the number of visits",
+       x = "Age",
+       y = "Frequency") +
+  theme_minimal()
+plot12 <- ggplot() +
+  geom_histogram(data = summary_train, aes(x = age_max, y = ..density..), 
+                 fill = "blue", 
+                 stat = "density",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  geom_histogram(data = summary_test, aes(x = age_max, y = ..density..),
+                 fill = "red", 
+                 stat = "density",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  labs(title = "Histogram of the number of visits",
+       x = "Age",
+       y = "Frequency") +
+  theme_minimal()
+plot13 <- ggplot() +
+  geom_histogram(data = summary_train, aes(x = age_gap, y = ..density..), 
+                 fill = "blue", 
+                 stat = "density",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  geom_histogram(data = summary_test, aes(x = age_gap, y = ..density..),
+                 fill = "red", 
+                 stat = "density",
+                 binwidth = 1,
+                 alpha = 0.5) +
+  labs(title = "Histogram of the number of visits",
+       x = "Age",
+       y = "Frequency") +
+  theme_minimal()
+plot14 <- ggplot() +
+  geom_histogram(data = summary_train, aes(x = etime, y = ..density..), 
+                 fill = "blue", 
+                 binwidth = 1,
+                 stat = "density",
+                 alpha = 0.5,) +
+  geom_histogram(data = summary_test, aes(x = etime, y = ..density..),
+                 fill = "red", 
+                 binwidth = 1,
+                 stat = "density",
+                 alpha = 0.5) +
+  labs(title = "Histogram of the number of visits",
+       x = "Age",
+       y = "Frequency") +
+  theme_minimal()
+plot11; plot12; plot13; plot14
+```
+
+## AUC
+
+```{r}
+## 10_it200k_thin100_total20k
+iteration <- 250000
+burnin <- 50000
+thin <- 100
+chain <- 10
+
+control = lmeControl(opt = "optim")
+jmcontrol <- list(n_iter = iteration, 
+                  n_burnin = burnin, 
+                  n_thin = thin,
+                  n_chains = chain,
+                  save_random_effects = TRUE,
+                  seed = 2024,
+                  cores = chain)
+
+(total <- (iteration - burnin) / thin * chain)
+
+```
+
+```{r}
+#| label: "auc_value_rate"
+#| warning: false
+#| eval: false
+
+load("results/jmb2_119_chain10_it200k_thin100_total20k.Rdata")
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(AUC2, "auc") %>% as.character()
+Tstart3 = map(AUC3, "auc") %>% as.character()
+Tstart4 = map(AUC4, "auc") %>% as.character()
+Tstart5 = map(AUC5, "auc") %>% as.character()
+Tstart6 = map(AUC6, "auc") %>% as.character()
+Tstart8 = map(AUC8, "auc") %>% as.character()
+
+tbl_auc_value_rate <- rbind(Tstart2, 
+                            Tstart3,
+                            Tstart4,
+                            Tstart5,
+                            Tstart6, 
+                            Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+save(AUC2, AUC3, 
+     AUC4, AUC5,
+     AUC6, AUC8, 
+     tbl_auc_value_rate,
+     file = paste0("results/jmb2_119_auc_train_chain_", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
+```
+
+```{r}
+#| label: "auc_value_rate"
+#| warning: false
+#| eval: false
+
+set.seed(7732)
+AUC2_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 2,
+                                      Dt = .x)))
+
+AUC3_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2_test = map(AUC2_test, "auc") %>% as.character()
+Tstart3_test = map(AUC3_test, "auc") %>% as.character()
+Tstart4_test = map(AUC4_test, "auc") %>% as.character()
+Tstart5_test = map(AUC5_test, "auc") %>% as.character()
+Tstart6_test = map(AUC6_test, "auc") %>% as.character()
+Tstart8_test = map(AUC8_test, "auc") %>% as.character()
+
+tbl_auc_value_rate_test <- rbind(Tstart2_test, 
+                            Tstart3_test,
+                            Tstart4_test,
+                            Tstart5_test,
+                            Tstart6_test, 
+                            Tstart8_test) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_value_rate_test) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+save(AUC2_test, AUC3_test, 
+     AUC4_test, AUC5_test,
+     AUC6_test, AUC8_test, 
+     tbl_auc_value_rate_test,
+     file = paste0("results/jmb2_119_auc_test_chain_", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
+```
+
+
+
+```{r}
+load("results/jmb2_119_auc_train_chain_10_it200k_thin200_total10k.Rdata")
 tbl_auc_value_rate %>% knitr::kable()
+load("results/jmb2_119_auc_test_chain_10_it200k_thin200_total10k.Rdata")
+(tbl_auc_value_rate - tbl_auc_value_rate_test) %>% knitr::kable()
 ```
 
-Testing
 
-Dt1	Dt2	Dt3	Dt4	Dt5
-Tstart2_test	NA	      NA	    0.3706	0.7649	0.8830
-Tstart3_test	NA    	  0.9845	0.9449	0.8072	0.7802
-Tstart4_test	0.9196  	0.8645	0.9076	0.8201	0.7957
-Tstart5_test	*0.9558*	0.8938	0.8584	0.8226	0.7766
-Tstart6_test	*0.8469*	0.8735	0.8284	0.7672	0.7681
-Tstart8_test	*0.8030*	0.7324	0.7708	0.7824	0.8207
 
-Training
-
-Dt1	Dt2	Dt3	Dt4	Dt5
-Tstart2_train	 NA	    0.6928	0.7645	0.7660	0.7789
-Tstart3_train	 0.4380	0.8127	0.7943	0.8066	0.7912
-Tstart4_train	 0.9473	0.8295	0.7991	0.7556	0.7735
-Tstart5_train	 0.8404	0.8096	0.8035	0.7992	0.8180
-Tstart6_train	 0.8123	0.8253	0.8104	0.8251	0.8053
-Tstart8_train	 0.7919	0.8088	0.7864	0.7899	0.8340
+## Brier Score
 
 ```{r}
-load("results/jmb2_119_brier_chain5_it60k_thin100_total3k.Rdata")
-tbl_bs_value_rate %>% knitr::kable()
-load("results/jmb2_119_test_brier_chain5_it500k_thin50_total50k.Rdata")
-tbl_bs_value_rate_test %>% knitr::kable()
+#| label: "bs_table_value_rate"
+#| warning: false
+#| eval: false
+
+Brier2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(Brier2, "Brier") %>% as.character()
+Tstart3 = map(Brier3, "Brier") %>% as.character()
+Tstart4 = map(Brier4, "Brier") %>% as.character()
+Tstart5 = map(Brier5, "Brier") %>% as.character()
+Tstart6 = map(Brier6, "Brier") %>% as.character()
+Tstart8 = map(Brier8, "Brier") %>% as.character()
+
+tbl_bs_value_rate <- rbind(Tstart2,
+                Tstart3,
+                Tstart4,
+                Tstart5,
+                Tstart6,
+                Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_value_rate) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+save(Brier2, Brier3, Brier4, Brier5, Brier6, Brier8, tbl_bs_value_rate,
+     file = paste0("results/jmb2_119_train_brier_chain", 
+                   chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
+```
+
+```{r}
+#| label: "bs_table_value_rate"
+#| warning: false
+#| eval: false
+
+Brier2_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2_test = map(Brier2_test, "Brier") %>% as.character()
+Tstart3_test = map(Brier3_test, "Brier") %>% as.character()
+Tstart4_test = map(Brier4_test, "Brier") %>% as.character()
+Tstart5_test = map(Brier5_test, "Brier") %>% as.character()
+Tstart6_test = map(Brier6_test, "Brier") %>% as.character()
+Tstart8_test = map(Brier8_test, "Brier") %>% as.character()
+
+tbl_bs_value_rate_test <- rbind(Tstart2_test,
+                Tstart3_test,
+                Tstart4_test,
+                Tstart5_test,
+                Tstart6_test,
+                Tstart8_test) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_value_rate_test) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+save(Brier2_test, Brier3_test,
+     Brier4_test, Brier5_test,
+     Brier6_test, Brier8_test,
+     tbl_bs_value_rate_test,
+     file = paste0("results/jmb2_119_test_brier_chain", 
+                   chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
 ```
 
 
-Training Brier Score
+```{r}
+load("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/jmb2_119_test_brier_chain10_it200k_thin100_total20k.Rdata")
+load("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/jmb2_119_train_brier_chain10_it200k_thin100_total20k.Rdata")
+
+(tbl_bs_value_rate - tbl_bs_value_rate_test) %>% knitr::kable()
+```
+
+it100k_thin100_total5k
+
+## AUC training - testing larger is better
+
+%%      Dt1	     Dt2	    Dt3	      Dt4	      Dt5
+Tstart2	NA.   	 NA.   	  0.2562	  0.2202	  -0.0394
+Tstart3	NA	     0.1369	  -0.2086	  -0.0205	  0.0004
+Tstart4	-0.2336	 0.0696	  -0.0956	  -0.0523	  -0.0345
+Tstart5	-0.1899	 -0.1090  -0.0844	  -0.0354	  0.0222
+Tstart6	-0.0174	 -0.0833	-0.0313	  0.0323	  0.0208
+Tstart8	0.0003	 0.0600	  0.0152	  -0.0049	  -0.0058
+
+
+## Brier Score training - testing smaller is better
+%%      Dt1	     Dt2	      Dt3	      Dt4	      Dt5
+Tstart2	NA	     NA.    	0.0220	  0.0386	  -0.0014
+Tstart3	NA	    0.0204	  0.0304	  0.0425	   0.0123
+Tstart4	0.0043	0.0060	  0.0078	  -0.0063	  -0.0058
+Tstart5	0.0070	0.0078	  -0.0023	  -0.0071	  -0.0307
+Tstart6	0.0019	-0.0010	  -0.0026	  -0.0327	  -0.0086
+Tstart8	0.0028	-0.0221	  -0.0051 	0.0094	   0.0017
+
 

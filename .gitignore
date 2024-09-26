@@ -35,10 +35,8 @@ po/*~
 rsconnect/
 /.quarto/
 *_files/
-
 /data/
 /data-raw/
-
 .DS_Store
 .Rbuildignore
 .gitignore
@@ -52,3 +50,5 @@ rsconnect/
 *.js
 *.css
 /_swan_book/
+/papers/
+/results/

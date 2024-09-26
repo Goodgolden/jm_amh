@@ -1,0 +1,514 @@
+---
+title: "Revert"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      cache = TRUE,
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+
+# ## clean the R environment
+# graphics.off()
+# rm(list = ls())
+# freshr::freshr()
+
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(plyr)
+library(JMbayes2, quietly = TRUE)
+devtools::load_all()
+
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+
+```
+
+```{css, "css-setup", echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## To-do list
+
+-   [x] Change `bmi` into categorical variable
+
+-   [x] Fit the joint model Value-Rate model
+
+-   [x] The sample range for Rate in SurvModel
+
+-   [x] AUCs and Brier Scores
+
+-   [x] AUC confidence interval
+
+-   [x] Plots for AUC by `Tstart` and `Dt`
+
+-   [x] `r praise::praise()`
+
+## Loading data and merge variables
+
+
+```{r}
+load("data/swan_amh03.rda")
+load("data/swan_amh13.rda")
+
+swan_amh04 <- swan_amh03 %>%
+  group_by(id) %>%
+  arrange(time) %>%
+  slice(1L) %>%
+  dplyr::select(id, lamh0 = lamh) %>%
+  mutate(id = as.character(id))
+
+swan_amh03 <- swan_amh03 %>%
+  mutate(id = as.character(id)) %>%
+  full_join(swan_amh04, by = "id") %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat)) %>%
+  dplyr::select(-lamh0, -alcohol) %>%
+  filter(!is.na(amh)) %>%
+  dplyr::select(bmi_cat, id, 
+                time, etime, event, 
+                lamh, amh, age,
+                train, visit,
+                ethnic_black, ethnic_chine, ethnic_hispa, ethnic_japan,
+                site_c, site_m, site_nj, site_p, site_ucd, site_ucla,
+                smoke_current_smoker, smoke_past_only,) %>%
+  dplyr::select(order(colnames(.))) 
+
+swan_amh13 <- swan_amh13 %>%
+  full_join(swan_amh04, by = "id") %>%
+  mutate(bmi_cat = case_when(bmi < 25 ~ 1,
+                             bmi >= 25 & bmi < 30 ~ 2,
+                             bmi >= 30 ~ 3),
+         bmi_cat = as.factor(bmi_cat)) 
+
+load("data/test_amh0.rda")
+load("data/test_amh1.rda")
+
+test_amh01 <- test_amh0 %>%
+  mutate(site = case_when(site == "11" ~ "M",
+                          site == "12" ~ "B",
+                          site =="13" ~ "C",
+                          site =="14" ~ "UCD",
+                          site =="15" ~ "UCLA",
+                          site =="16" ~ "NJ",
+                          site =="17" ~ "P"),
+         lamh = log(amh),
+         ethnic = factor(ethnic, levels = c("CAUCA", "BLACK",
+                                            "CHINE", "HISPA",
+                                            "JAPAN")),
+         bmi_cat = as.factor(bmi_cat),
+         # site = factor(site, levels = c("B", "C", "M",
+         #                                "NJ", "P",
+         #                                "UCD", "UCLA")),
+         smoke = factor(smoke, levels = c("Never Smoked" ,
+                                          "Past Only",
+                                          "Current Smoker"))) %>% 
+  cbind(model.matrix(~ 1 + site + ethnic + smoke,
+                     data = .)) %>%
+  janitor::clean_names() %>%
+  dplyr::select(-intercept, -meno, -alcohol) %>%
+  filter(!is.na(time), 
+         !is.na(amh)) %>%
+  dplyr::select(bmi_cat, id, 
+                time, etime, event, 
+                lamh, amh, age,
+                train, visit,
+                ethnic_black, ethnic_chine, ethnic_hispa, ethnic_japan,
+                site_c, site_m, site_nj, site_p, site_ucd, site_ucla,
+                smoke_current_smoker, smoke_past_only,) %>%
+  dplyr::select(order(colnames(.))) 
+test_amh11 <- test_amh1 %>%
+  mutate(site = case_when(site == "11" ~ "M",
+                          site == "12" ~ "B",
+                          site =="13" ~ "C",
+                          site =="14" ~ "UCD",
+                          site =="15" ~ "UCLA",
+                          site =="16" ~ "NJ",
+                          site =="17" ~ "P"),
+         lamh = log(amh),
+         ethnic = factor(ethnic, levels = c("CAUCA", "BLACK",
+                                            "CHINE", "HISPA",
+                                            "JAPAN")),
+         bmi_cat = as.factor(bmi_cat),
+         # site = factor(site, levels = c("B", "C", "M",
+         #                                "NJ", "P",
+         #                                "UCD", "UCLA")),
+         smoke = factor(smoke, levels = c("Never Smoked" ,
+                                          "Past Only",
+                                          "Current Smoker"))) %>% 
+  cbind(model.matrix(~ 1 + site + ethnic + smoke,
+                     data = .)) %>%
+  janitor::clean_names() %>%
+  dplyr::select(-intercept, alcohol) %>%
+  dplyr::select(order(colnames(.))) 
+
+names(swan_amh03)
+names(test_amh01)
+
+all_amh0 <- rbind(swan_amh03, test_amh01 )
+all_amh1 <- rbind(swan_amh13, test_amh11)
+
+
+usethis::use_data(all_amh0, all_amh1, overwrite = TRUE)
+```
+
+
+```{r}
+iteration <- 120000
+burnin <- 20000
+thin <- 100
+chain <- 5
+
+control = lmeControl(opt = "optim")
+jmcontrol <- list(n_iter = iteration, 
+                  n_burnin = burnin, 
+                  n_thin = thin,
+                  n_chains = chain,
+                  save_random_effects = TRUE,
+                  seed = 555,
+                  cores = chain)
+
+(total <- (iteration - burnin) / thin * chain)
+```
+
+
+```{r}
+#| eval: false
+lme1 <- lme(lamh ~ time,
+            data = test_amh01,
+            # data = swan_amh03,
+            control = control,
+            random = ~ time| id)
+
+surv19 <- coxph(Surv(etime, event) ~ 
+                  0 + # alcohol +
+                  as.factor(bmi_cat) + # bc_pills + 
+                  # children +
+                  # edu + 
+                  # employed +
+                  # health +
+                  # married + 
+                  # phys_act + 
+                  ethnic_black + ethnic_chine + ethnic_hispa + ethnic_japan + 
+                  site_c + site_m + site_nj + site_p + site_ucd + site_ucla + 
+                  smoke_current_smoker + smoke_past_only,
+                data = test_amh11, 
+                x = TRUE,
+                model = TRUE)
+
+jmb2.119.value.rate <- JMbayes2::jm(Surv_object = surv19,
+                                    Mixed_objects = lme1, 
+                                    functional_forms = list("lamh" = ~value(lamh) + slope(lamh)),
+                                    time_var = "time",
+                                    control = jmcontrol) 
+
+summary119.value.rate <- summary(jmb2.119.value.rate)$Survival 
+
+filename <- paste0("results/reversed_jmb2_119_chain", chain, 
+                   "_it", iteration/1000 - burnin/1000, 
+                   "k_thin", thin, 
+                   "_total", total/1000, "k.Rdata")
+
+save(jmb2.119.value.rate,
+     file = filename)
+
+```
+
+
+```{r}
+#| label: "auc_value_rate"
+#| warning: false
+#| eval: false
+load("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/reversed_jmb2_119_chain5_it100k_thin100_total5k.Rdata")
+AUC2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+AUC3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(AUC2, "auc") %>% as.character()
+Tstart3 = map(AUC3, "auc") %>% as.character()
+Tstart4 = map(AUC4, "auc") %>% as.character()
+Tstart5 = map(AUC5, "auc") %>% as.character()
+Tstart6 = map(AUC6, "auc") %>% as.character()
+Tstart8 = map(AUC8, "auc") %>% as.character()
+
+tbl_auc_value_rate_test <- rbind(Tstart2, 
+                            Tstart3,
+                            Tstart4,
+                            Tstart5,
+                            Tstart6, 
+                            Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_value_rate_test) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+save(AUC2, AUC3, 
+     AUC4, AUC5,
+     AUC6, AUC8, 
+     tbl_auc_value_rate_test,
+     file = paste0("results/reversed_jmb2_119_auc_test_chain_", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
+```
+
+```{r}
+#| label: "auc_value_rate"
+#| warning: false
+#| eval: false
+
+set.seed(7732)
+AUC2_train  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 2,
+                                      Dt = .x)))
+
+AUC3_train  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 3,
+                                      Dt = .x)))
+AUC4_train  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 4,
+                                      Dt = .x)))
+AUC5_train  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 5,
+                                      Dt = .x)))
+AUC6_train  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 6,
+                                      Dt = .x)))
+AUC8_train  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvAUC(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2_train = map(AUC2_train, "auc") %>% as.character()
+Tstart3_train = map(AUC3_train, "auc") %>% as.character()
+Tstart4_train = map(AUC4_train, "auc") %>% as.character()
+Tstart5_train = map(AUC5_train, "auc") %>% as.character()
+Tstart6_train = map(AUC6_train, "auc") %>% as.character()
+Tstart8_train = map(AUC8_train, "auc") %>% as.character()
+
+tbl_auc_value_rate_train <- rbind(Tstart2_train, 
+                            Tstart3_train,
+                            Tstart4_train,
+                            Tstart5_train,
+                            Tstart6_train, 
+                            Tstart8_train) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_auc_value_rate_train) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+
+save(AUC2_train, AUC3_train, 
+     AUC4_train, AUC5_train,
+     AUC6_train, AUC8_train, 
+     tbl_auc_value_rate_train,
+     file = paste0("results/reversed_jmb2_119_auc_train_chain_", chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
+```
+
+```{r}
+tbl_auc_value_rate_train - tbl_auc_value_rate_test
+
+```
+
+
+
+```{r}
+load("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/reversed_jmb2_119_chain5_it100k_thin100_total5k.Rdata")
+
+Brier2  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      swan_amh03,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2 = map(Brier2, "Brier") %>% as.character()
+Tstart3 = map(Brier3, "Brier") %>% as.character()
+Tstart4 = map(Brier4, "Brier") %>% as.character()
+Tstart5 = map(Brier5, "Brier") %>% as.character()
+Tstart6 = map(Brier6, "Brier") %>% as.character()
+Tstart8 = map(Brier8, "Brier") %>% as.character()
+
+tbl_bs_value_rate_test <- rbind(Tstart2,
+                Tstart3,
+                Tstart4,
+                Tstart5,
+                Tstart6,
+                Tstart8) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_value_rate_test) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+save(tbl_bs_value_rate_test,
+     file = paste0("results/reversed_jmb2_119_test_brier_chain", 
+                   chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+
+Brier2_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 2,
+                                      Dt = .x)))
+Brier3_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 3,
+                                      Dt = .x)))
+Brier4_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 4,
+                                      Dt = .x)))
+Brier5_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 5,
+                                      Dt = .x)))
+Brier6_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 6,
+                                      Dt = .x)))
+Brier8_test  <- map(c(1, 2, 3, 4, 5), 
+                 ~try(JMbayes2::tvBrier(jmb2.119.value.rate,
+                                      test_amh01,
+                                      Tstart = 8,
+                                      Dt = .x)))
+
+Tstart2_test = map(Brier2_test, "Brier") %>% as.character()
+Tstart3_test = map(Brier3_test, "Brier") %>% as.character()
+Tstart4_test = map(Brier4_test, "Brier") %>% as.character()
+Tstart5_test = map(Brier5_test, "Brier") %>% as.character()
+Tstart6_test = map(Brier6_test, "Brier") %>% as.character()
+Tstart8_test = map(Brier8_test, "Brier") %>% as.character()
+
+tbl_bs_value_rate_train <- rbind(Tstart2_test,
+                Tstart3_test,
+                Tstart4_test,
+                Tstart5_test,
+                Tstart6_test,
+                Tstart8_test) %>% 
+  as.data.frame() %>%
+  mutate_all(as.numeric) %>%
+  round(4)
+
+names(tbl_bs_value_rate_train) <- c("Dt1", "Dt2", "Dt3", "Dt4", "Dt5")
+save(tbl_bs_value_rate_train,
+     file = paste0("results/reversed_jmb2_119_train_brier_chain", 
+                   chain, "_it", 
+                    iteration/1000 - burnin/1000, 
+                    "k_thin", thin, 
+                    "_total", total/1000, "k.Rdata"))
+```
+
+```{r}
+load("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/reversed_jmb2_119_test_brier_chain10_it200k_thin200_total10k.Rdata")
+load("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/reversed_jmb2_119_train_brier_chain10_it200k_thin200_total10k.Rdata")
+(tbl_bs_value_rate_train - tbl_bs_value_rate_test) %>% knitr::kable()
+
+```
+
+
+AUC training - testing, larger is better
+
+%%             Dt1       Dt2      Dt3       Dt4       Dt5 
+Tstart2_train	 NA	       NA	      -0.4210	  0.0349	  -0.0515
+Tstart3_train	 NA	       0.3315	  0.1775	  0.0794	  -0.0160
+Tstart4_train	 -0.0050   -0.0042  0.0171	  0.0007	  -0.0181
+Tstart5_train	 0.1513	   0.0457	  0.0395	  -0.0010	  -0.0800
+Tstart6_train	 0.0116	   0.0269	  0.0146	  -0.0782	  -0.0243
+Tstart8_train	 -0.0074	 -0.0697  -0.0043 	0.0165	  0.0025
+
+Brier Score training - testing, smaller is better
+%%             Dt1	      Dt2	     Dt3	      Dt4.     	Dt5 
+Tstart2_test  	NA	      NA	      -0.0220	  -0.0386	  0.0014
+Tstart3_test	  NA	      -0.0204	  -0.0304	  -0.0425	  -0.0123
+Tstart4_test	-0.0043	    -0.0060  	-0.0078	  0.0063	  0.0058
+Tstart5_test	-0.0070	    -0.0078  	0.0023	  0.0071	  0.0307
+Tstart6_test	-0.0019	     0.0010  	0.0026	  0.0327	  0.0086
+Tstart8_test	-0.0028	     0.0221  	0.0051	  -0.0094  	-0.0017

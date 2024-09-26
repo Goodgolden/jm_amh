@@ -91,9 +91,9 @@ swan_amh13 <- swan_amh13 %>%
 ```
 
 ```{r}
-iteration <- 80000
-burnin <- 20000
-thin <- 100
+iteration <- 250000
+burnin <- 50000
+thin <- 200
 chain <- 5
 
 control = lmeControl(opt = "optim")
@@ -164,152 +164,17 @@ save(jmb2.119.value.rate,
 ## Summarization
 
 ```{r}
-load("results/jmb2_119_chain5_it50k_thin100_total3k.Rdata")
+# load("results/jmb2_119_chain5_it50k_thin100_total2.5k.Rdata")
+# summary(jmb2.119.value.rate)
+# 
+# load("results/jmb2_119_chain5_it80k_thin100_total4k.Rdata")
+# summary(jmb2.119.value.rate)
+
+load("results/jmb2_119_chain5_it100k_thin100_total5k.Rdata")
 summary(jmb2.119.value.rate)
 ```
 
-## Traceplot
-
-```{r fig.show: "hold", out.width: "100%"}
-#| layout-ncol: 2
-#| fig_cap: "Traceplot for the Value-Rate model"
-#| fig-subcap: 
-#|   - "Value"
-#|   - "Rate"
-
-# ggdensityplot(jmb2.117.value.rate,
-#               parm = "alphas", 
-#               grid = TRUE)
-# 
-# ggtraceplot(jmb2.119.value.rate,
-#             parm = "alphas",
-#             grid = TRUE)
-# 
-# JMbayes2::traceplot(jmb2.119.value.rate,
-#                     parm = "alphas")
-
-knitr::include_graphics(c("figure/jmb2_119_trace_value_chain5_it500k_thin100_total25k.png",
-                          "figure/jmb2_119_trace_rate_chain5_it500k_thin100_total25k.png"))
-
-```
-
-### SD Calculation posterior
-
-```{r}
-random_intercept <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 1, ]) 
-                          # jmb2.119.value.rate$mcmc$b[[2]][, 1, ], 
-                          # jmb2.119.value.rate$mcmc$b[[3]][, 1, ], 
-                          # jmb2.119.value.rate$mcmc$b[[4]][, 1, ])
-fixed_intercept <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 1]))
-                         # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 1]), 
-                         # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 1]), 
-                         # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 1]))
-
-# random_intercept <- random[, 1, ] 
-
-random_slope <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 2, ])
-                      # jmb2.119.value.rate$mcmc$b[[2]][, 2, ], 
-                      # jmb2.119.value.rate$mcmc$b[[3]][, 2, ], 
-                      # jmb2.119.value.rate$mcmc$b[[4]][, 2, ])
-fixed_slope <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 2]))
-                     # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 2]), 
-                     # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 2]), 
-                     # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 2]))
-
-# View(fixed_slope)
-# dim(random_slope)
-# dim(fixed_slope)
-
-both_intercept <- random_intercept + as.vector(fixed_intercept)
-both_slope <- random_slope + as.vector(fixed_slope)
-
-# dim(both_slope)
-# dim(both_intercept)
-```
-
-```{r}
-both_int_sd <- apply(both_intercept, 1, sd)
-both_slope_sd <- apply(both_slope, 1, sd)
-
-both_int_mu <- apply(both_intercept, 1, mean)
-both_slope_mu <- apply(both_slope, 1, mean)
-
-# cat("The mean of mu(both_int)", 
-#     mean(both_int_mu), ";\n")
-# 
-# cat("The mean of SD(both_int)", 
-#     mean(both_int_sd), 
-#     ";\n the median of SD(both_int)",
-#     median(both_int_sd), "\n")
-# 
-# 
-# cat("The mean of mu(both_slope)",
-#     mean(both_slope_mu), ";\n")
-# 
-# cat("The mean of SD(both_slope)",
-#     mean(both_slope_sd), 
-#     ";\n the median of SD(both_slope)",
-#     median(both_slope_sd), "\n")
-# 
-# quantile(both_slope, c(0.025,0.5, 0.975))
-# 
-# mean(both_slope_mu) - 1.96 * mean(both_slope_sd)
-# mean(both_slope_mu) + 1.96 * mean(both_slope_sd)
-```
-
--   The 95% CI for the slope term is (`r mean(both_slope_mu) - 1.96 * mean(both_slope_sd)`, `r mean(both_slope_mu) + 1.96 * mean(both_slope_sd)`)
-
-```{r fig.show="hold", out.width="100%"}
-#| layout-ncol: 2
-hist(both_int_mu)
-hist(both_slope_mu)
-```
-
-### SD Calculation with summation
-
-```{r}
-random_int_sd <- apply(random_intercept, 1, sd)
-random_slope_sd <- apply(random_slope, 1, sd)
-
-random_int_mu <- apply(random_intercept, 1, mean)
-random_slope_mu <- apply(random_slope, 1, mean)
-
-# cat("The mean of mu(random_int)", 
-#     mean(random_int_mu), ";\n")
-# 
-# cat("The mean of mu(random_slope)",
-#     mean(random_slope_mu), ";\n")
-# 
-# 
-# cat("The mean of SD(random_int)", 
-#     mean(random_int_sd), 
-#     ";\n the median of SD(random_int)",
-#     median(random_int_sd), "\n")
-# 
-# cat("The mean of SD(random_slope)",
-#     mean(random_slope_sd), 
-#     ";\n the median of SD(random_slope)",
-#     median(random_slope_sd), "\n")
-
-```
-
-```{r fig.show="hold", out.width="100%"}
-#| layout-ncol: 2
-hist(random_int_sd)
-hist(random_slope_sd)
-```
-
-Hence, we have the final results for the variability of the slope term.
-
--   The random effect slope term based on MCMC is $\sigma_{\beta_1}$ = `r mean(random_slope_sd)`;
-
--   The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.119.value.rate)$Outcome[2, 2]`;
-
--   We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
-
--   The 95% CI for the slope term is (`r summary(jmb2.119.value.rate)$Outcome[2, 1]- 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r summary(jmb2.119.value.rate)$Outcome[2, 1] + 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
-
--   [x] `r praise::praise()`
+DIC WAIC LPML marginal 22053.64 50997392.09 -677054.237 conditional 12902.19 12698.05 -7073.389
 
 ## AUC
 
@@ -454,3 +319,145 @@ save(Brier2, Brier3, Brier4, Brier5, Brier6, Brier8, tbl_bs_value_rate,
 load("results/jmb2_119_brier_chain5_it60k_thin100_total3k.Rdata")
 tbl_bs_value_rate %>% knitr::kable()
 ```
+
+## Traceplot
+
+```{r fig.show: "hold", out.width: "100%"}
+#| layout-ncol: 2
+#| fig_cap: "Traceplot for the Value-Rate model"
+#| fig-subcap: 
+#|   - "Value"
+#|   - "Rate"
+
+# ggdensityplot(jmb2.117.value.rate,
+#               parm = "alphas", 
+#               grid = TRUE)
+# 
+# ggtraceplot(jmb2.119.value.rate,
+#             parm = "alphas",
+#             grid = TRUE)
+# 
+# JMbayes2::traceplot(jmb2.119.value.rate,
+#                     parm = "alphas")
+
+# knitr::include_graphics(c("figure/jmb2_119_trace_value_chain5_it500k_thin100_total25k.png", "figure/jmb2_119_trace_rate_chain5_it500k_thin100_total25k.png"))
+
+```
+
+### SD Calculation posterior
+
+```{r}
+random_intercept <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 1, ]) 
+                          # jmb2.119.value.rate$mcmc$b[[2]][, 1, ], 
+                          # jmb2.119.value.rate$mcmc$b[[3]][, 1, ], 
+                          # jmb2.119.value.rate$mcmc$b[[4]][, 1, ])
+fixed_intercept <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 1]))
+                         # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 1]), 
+                         # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 1]), 
+                         # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 1]))
+
+# random_intercept <- random[, 1, ] 
+
+random_slope <- cbind(jmb2.119.value.rate$mcmc$b[[1]][, 2, ])
+                      # jmb2.119.value.rate$mcmc$b[[2]][, 2, ], 
+                      # jmb2.119.value.rate$mcmc$b[[3]][, 2, ], 
+                      # jmb2.119.value.rate$mcmc$b[[4]][, 2, ])
+fixed_slope <- cbind(t(jmb2.119.value.rate$mcmc$betas1[[1]][, 2]))
+                     # t(jmb2.119.value.rate$mcmc$betas1[[2]][, 2]), 
+                     # t(jmb2.119.value.rate$mcmc$betas1[[3]][, 2]), 
+                     # t(jmb2.119.value.rate$mcmc$betas1[[4]][, 2]))
+
+# View(fixed_slope)
+# dim(random_slope)
+# dim(fixed_slope)
+
+both_intercept <- random_intercept + as.vector(fixed_intercept)
+both_slope <- random_slope + as.vector(fixed_slope)
+
+# dim(both_slope)
+# dim(both_intercept)
+```
+
+```{r}
+both_int_sd <- apply(both_intercept, 1, sd)
+both_slope_sd <- apply(both_slope, 1, sd)
+
+both_int_mu <- apply(both_intercept, 1, mean)
+both_slope_mu <- apply(both_slope, 1, mean)
+
+# cat("The mean of mu(both_int)", 
+#     mean(both_int_mu), ";\n")
+# 
+# cat("The mean of SD(both_int)", 
+#     mean(both_int_sd), 
+#     ";\n the median of SD(both_int)",
+#     median(both_int_sd), "\n")
+# 
+# 
+# cat("The mean of mu(both_slope)",
+#     mean(both_slope_mu), ";\n")
+# 
+# cat("The mean of SD(both_slope)",
+#     mean(both_slope_sd), 
+#     ";\n the median of SD(both_slope)",
+#     median(both_slope_sd), "\n")
+# 
+# quantile(both_slope, c(0.025,0.5, 0.975))
+# 
+# mean(both_slope_mu) - 1.96 * mean(both_slope_sd)
+# mean(both_slope_mu) + 1.96 * mean(both_slope_sd)
+```
+
+-   The 95% CI for the slope term is (`r mean(both_slope_mu) - 1.96 * mean(both_slope_sd)`, `r mean(both_slope_mu) + 1.96 * mean(both_slope_sd)`)
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+hist(both_int_mu)
+hist(both_slope_mu)
+```
+
+### SD Calculation with summation
+
+```{r}
+random_int_sd <- apply(random_intercept, 1, sd)
+random_slope_sd <- apply(random_slope, 1, sd)
+
+random_int_mu <- apply(random_intercept, 1, mean)
+random_slope_mu <- apply(random_slope, 1, mean)
+
+# cat("The mean of mu(random_int)", 
+#     mean(random_int_mu), ";\n")
+# 
+# cat("The mean of mu(random_slope)",
+#     mean(random_slope_mu), ";\n")
+# 
+# 
+# cat("The mean of SD(random_int)", 
+#     mean(random_int_sd), 
+#     ";\n the median of SD(random_int)",
+#     median(random_int_sd), "\n")
+# 
+# cat("The mean of SD(random_slope)",
+#     mean(random_slope_sd), 
+#     ";\n the median of SD(random_slope)",
+#     median(random_slope_sd), "\n")
+
+```
+
+```{r fig.show="hold", out.width="100%"}
+#| layout-ncol: 2
+hist(random_int_sd)
+hist(random_slope_sd)
+```
+
+Hence, we have the final results for the variability of the slope term.
+
+-   The random effect slope term based on MCMC is $\sigma_{\beta_1}$ = `r mean(random_slope_sd)`;
+
+-   The fixed effect slope term $\sigma_{b_1}$ = `r summary(jmb2.119.value.rate)$Outcome[2, 2]`;
+
+-   We have the pooled $\sigma_{b1 + \beta1}$ = `r sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`.
+
+-   The 95% CI for the slope term is (`r summary(jmb2.119.value.rate)$Outcome[2, 1]- 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`, `r summary(jmb2.119.value.rate)$Outcome[2, 1] + 1.96 * sqrt(summary(jmb2.119.value.rate)$Outcome[2, 2]^2 + mean(random_slope_sd)^2)`)
+
+-   [x] `r praise::praise()`
