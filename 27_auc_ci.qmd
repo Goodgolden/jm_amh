@@ -1,0 +1,116 @@
+---
+title: "AUC CI"
+format: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+## clean the R environment
+graphics.off()
+rm(list = ls())
+freshr::freshr()
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+```{r}
+load("results/joint_model_amh_auc_bs_results_seed10.Rdata")
+
+train_auc <- map(map_amh_permu, "auc_train") %>% map(as.matrix)
+test_auc <- map(map_amh_permu, "auc_test") %>% map(as.matrix)
+train_bs <- map(map_amh_permu, "auc_train") %>% map(as.matrix)
+test_bs <- map(map_amh_permu, "auc_test") %>% map(as.matrix)
+
+models <- map(map_amh_permu, "model") %>% map(summary) 
+models
+
+# Reduce("+", train_auc) / 9 - Reduce("+", test_auc) / 9
+# Reduce("+", train_auc) / 9 - Reduce("+", test_auc) / 9
+
+auc_train_mean <- apply(simplify2array(train_auc), 1:2, mean)
+auc_train_sd <- apply(simplify2array(train_auc), 1:2, sd)
+
+auc_test_mean <- apply(simplify2array(test_auc), 1:2, mean)
+auc_test_sd <- apply(simplify2array(test_auc), 1:2, sd)
+
+auc_train_ci95 <- apply(simplify2array(train_auc), 1:2, 
+                       function(x) try(c(quantile(x, c(0.025, 0.975), na.rm = T))))
+auc_test_ci95 <- apply(simplify2array(test_auc), 1:2, 
+                       function(x) try(c(quantile(x, c(0.025, 0.975), na.rm = T))))
+
+# apply(simplify2array(train_auc), 1:2, function(x) try(quantile(x, 0.975, na.rm = T)))
+```
+
+## AUC
+
+Average of 10 cross-validation AUCs for training data
+
+### Mean training
+
+```{r}
+auc_train_mean %>% round(4)%>% knitr::kable()
+```
+
+### Mean testing
+
+```{r}
+auc_test_mean %>% round(4) %>% knitr::kable()
+```
+
+Here is a comparison for Training AUC - Testing AUC, where the positive value means the Training AUC is better than the Testing.
+
+It is expected that the Training AUC is better in most of the cases.
+
+```{r}
+(auc_train_mean - auc_test_mean) %>% round(4) %>% knitr::kable()
+```
+
+## SD
+
+### SD training
+
+```{r}
+auc_train_sd %>% round(4) %>% knitr::kable()
+```
+
+### SD testing
+
+```{r}
+auc_test_sd %>% round(4) %>% knitr::kable()
+```
+
+### CI training
+
+```{r}
+auc_train_ci95 %>% round(4)
+```
+
+### CI testing
+
+```{r}
+auc_test_ci95 %>% round(4) 
+```

@@ -93,8 +93,8 @@ swan_amh13 <- swan_amh13 %>%
 ```{r}
 iteration <- 250000
 burnin <- 50000
-thin <- 200
-chain <- 5
+thin <- 50
+chain <- 1
 
 control = lmeControl(opt = "optim")
 jmcontrol <- list(n_iter = iteration, 

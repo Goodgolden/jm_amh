@@ -1,0 +1,132 @@
+---
+title: "AUC CI plots"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      comment = "#>",
+                      #results = "hide",
+                      digits = 4,
+                      error = FALSE)
+## clean the R environment
+graphics.off()
+rm(list = ls())
+freshr::freshr()
+## load packages
+library(here, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(gtsummary, quietly = TRUE)
+library(flextable, quietly = TRUE)
+## check the directory for the file
+# here::dr_here()
+here::set_here()
+## the figure or results should be saved 
+# paste0("foldername/Sfilename_workingresult_", 
+#      Sys.Date(), ".filetype")
+```
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  max-width: 1000px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+## Goal for this chapter
+
+- [x] Redo the tables for AUC CI
+
+- [x] Adding plots for the AUC CI
+
+- [x] Redo the BierS tables
+
+- [x] Adding plots for BierS CI
+
+- [x] You are first-class!
+
+## Pulling out the results
+
+```{r}
+#| eval: false
+folder1 <- "results"
+folder2 <- "auc"
+file_location <- paste0(folder1, "/", folder2, "/")
+files <- list.files(path = file_location, pattern = ".Rdata")
+
+pullout <- function(file_location, file1, term){
+  load(paste0(file_location, file1))
+  term <- match.arg(term)
+  M <- map(map_amh, term) %>% as.matrix()
+    mutate(file = file)
+  return(M = M)
+}
+
+readRDS("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/auc/joint_model_amh_auc_bs_results_seed_579.Rdata")
+
+pullout(file_location, files[1], "auc_train")
+
+save(sim_ss, file = paste0("results/04_single_simulation_n50_", Sys.Date(), ".Rdata"))
+```
+
+```{r}
+# map_amh_permu <- map(101:200, ~permutation(seed = .,
+#                          all_amh0 = all_amh0,
+#                          all_amh1 = all_amh1,
+#                          iteration = 100000,
+#                          burnin = 50000,
+#                          thin = 100,
+#                          chain = 1),
+#                      .progress = list(type = "iterator",
+#                                       format = "Calculating {cli::pb_bar} {cli::pb_percent}",
+#                                       clear = TRUE))
+# 
+# save(map_amh_permu, file = "results/joint_model_amh_auc_bs_results_seed100.Rdata")
+
+train_auc <- map(map_amh_permu, "auc_train") %>% map(as.matrix)
+test_auc  <- map(map_amh_permu, "auc_test")  %>% map(as.matrix)
+# train_bs  <- map(map_amh_permu, "auc_train") %>% map(as.matrix)
+# test_bs   <- map(map_amh_permu, "auc_test")  %>% map(as.matrix)
+
+Reduce("+", train_auc) / 5 
+Reduce("+", test_auc) / 5
+
+train_q.50  <- apply(simplify2array(train_auc), 1:2, mean)
+train_q.025 <- apply(simplify2array(train_auc), 1:2,
+               function(x) try(quantile(x, 0.025, na.rm = T)))
+train_q.975 <- apply(simplify2array(train_auc), 1:2, 
+               function(x) try(quantile(x, 0.975, na.rm = T)))
+train_q.05  <- apply(simplify2array(train_auc), 1:2, 
+              function(x) try(quantile(x, 0.05, na.rm = T)))
+train_q.95  <- apply(simplify2array(train_auc), 1:2, 
+              function(x) try(quantile(x, 0.95, na.rm = T)))
+train_q.25  <- apply(simplify2array(train_auc), 1:2,
+              function(x) try(quantile(x, 0.25, na.rm = T)))
+train_q.75  <- apply(simplify2array(train_auc), 1:2, 
+              function(x) try(quantile(x, 0.75, na.rm = T)))
+
+test_q.50  <- apply(simplify2array(test_auc), 1:2, mean)
+test_q.025 <- apply(simplify2array(test_auc), 1:2,
+               function(x) try(quantile(x, 0.025, na.rm = T)))
+test_q.975 <- apply(simplify2array(test_auc), 1:2, 
+               function(x) try(quantile(x, 0.975, na.rm = T)))
+test_q.05  <- apply(simplify2array(test_auc), 1:2, 
+              function(x) try(quantile(x, 0.05, na.rm = T)))
+test_q.95  <- apply(simplify2array(test_auc), 1:2, 
+              function(x) try(quantile(x, 0.95, na.rm = T)))
+test_q.25  <- apply(simplify2array(test_auc), 1:2,
+              function(x) try(quantile(x, 0.25, na.rm = T)))
+test_q.75  <- apply(simplify2array(test_auc), 1:2, 
+              function(x) try(quantile(x, 0.75, na.rm = T)))
+
+test_q.50; train_q.50
+```
+```
+
+
+```{r, class.output="scroll-100"}
+
+```

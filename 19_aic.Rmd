@@ -100,8 +100,6 @@ argument `iter` is the number of iterations to calculate the AUC.
 
 Then we can calculate the quantiles of the re-sampling AUCs to get the confidence interval.
 
-
-
 ```{r}
 #| eval: false
 #| include: true
@@ -209,8 +207,7 @@ load("results/jmb2_119_auc_chain5_it500k_thin100_total25k.Rdata")
 tbl_auc_value_rate %>% knitr::kable()
 ```
 
-For the final table each column is different `Dt` time window for predicting in $1, 2, 3, 4, 5$ years;
-each row is the `Tstart` time window for starting from the $2, 3, 4, 5, 6, 8$-th years. 
+For the final table each column is different `Dt` time window for predicting in $1, 2, 3, 4, 5$ years; each row is the `Tstart` time window for starting from the $2, 3, 4, 5, 6, 8$-th years.
 
 Each cell is the AUC with 95% CI in the parenthesis `median (95% CI)`.
 

@@ -112,7 +112,7 @@ margin_data <- cbind(time = test_amh01$time,
   unique() %>% 
   as.data.frame() %>%
   arrange(time)
-
+save(margin_data, file = "results/margin_data_longitudinal_mean.Rdata")
 # swan_amh03 <- na.omit(swan_amh03) %>%
 #   group_by(id) %>%
 #   arrange(time)
