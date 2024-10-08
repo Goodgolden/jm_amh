@@ -1,5 +1,5 @@
 ---
-title: "AUC CI plots"
+title: "Brier Score CI"
 format: pdf
 ---
 
@@ -43,11 +43,12 @@ here::set_here()
 
 - [x] Adding plots for the AUC CI
 
-- [x] Redo the BierS tables
+- [x] Redo the Brier S tables
 
-- [x] Adding plots for BierS CI
+- [x] Adding plots for Brier S CI
 
 - [x] You are first-class!
+
 
 ## Load the data
 
@@ -81,73 +82,65 @@ pull_bs_test <- function(file_location, file1){
 
 train_auc <- map(files, ~pull_auc_train(file_location, .))
 test_auc <- map(files, ~pull_auc_test(file_location, .))
+train_bs <- map(files, ~pull_bs_train(file_location, .))
+test_bs <- map(files, ~pull_bs_test(file_location, .))
 
 ```
+
+Calculating all the quantiles and the mean and median for the Brier Score
+Here we need to pull out each single cell in the matrix and then calculate the
+quantiles based on each cell. This is a bit tricky but it is the only way to finish 
+is to use the `apply()` with setting MARGIN = 1:2, for a matrix 1 indicates rows, 
+2 indicates columns, c(1, 2) indicates rows and columns. 
 
 ```{r}
-# map_amh_permu <- map(101:200, ~permutation(seed = .,
-#                          all_amh0 = all_amh0,
-#                          all_amh1 = all_amh1,
-#                          iteration = 100000,
-#                          burnin = 50000,
-#                          thin = 100,
-#                          chain = 1),
-#                      .progress = list(type = "iterator",
-#                                       format = "Calculating {cli::pb_bar} {cli::pb_percent}",
-#                                       clear = TRUE))
-train_mean  <- apply(simplify2array(train_auc), 1:2, mean, na.rm = T)
-# train_sd  <- apply(simplify2array(train_auc), 1:2, sd, na.rm = T)
-train_q.025 <- apply(simplify2array(train_auc), 1:2,
+train_mean  <- apply(simplify2array(train_bs), 1:2, mean, na.rm = T)
+train_sd  <- apply(simplify2array(train_bs), 1:2, sd, na.rm = T)
+train_q.025 <- apply(simplify2array(train_bs), 1:2,
                function(x) try(quantile(x, 0.025, na.rm = T)))
-train_q.975 <- apply(simplify2array(train_auc), 1:2, 
+train_q.975 <- apply(simplify2array(train_bs), 1:2, 
                function(x) try(quantile(x, 0.975, na.rm = T)))
-train_q.05  <- apply(simplify2array(train_auc), 1:2, 
+train_q.05  <- apply(simplify2array(train_bs), 1:2, 
               function(x) try(quantile(x, 0.05, na.rm = T)))
-train_q.95  <- apply(simplify2array(train_auc), 1:2, 
+train_q.95  <- apply(simplify2array(train_bs), 1:2, 
               function(x) try(quantile(x, 0.95, na.rm = T)))
-train_q.10  <- apply(simplify2array(train_auc), 1:2, 
+train_q.10  <- apply(simplify2array(train_bs), 1:2, 
               function(x) try(quantile(x, 0.10, na.rm = T)))
-train_q.90  <- apply(simplify2array(train_auc), 1:2, 
+train_q.90  <- apply(simplify2array(train_bs), 1:2, 
               function(x) try(quantile(x, 0.90, na.rm = T)))
-train_q.25  <- apply(simplify2array(train_auc), 1:2,
+train_q.25  <- apply(simplify2array(train_bs), 1:2,
               function(x) try(quantile(x, 0.25, na.rm = T)))
-train_q.75  <- apply(simplify2array(train_auc), 1:2, 
+train_q.75  <- apply(simplify2array(train_bs), 1:2, 
               function(x) try(quantile(x, 0.75, na.rm = T)))
+train_q.50  <- apply(simplify2array(train_bs), 1:2, 
+              function(x) try(quantile(x, 0.50, na.rm = T)))
 
-test_mean  <- apply(simplify2array(test_auc), 1:2, mean, na.rm = T)
-# test_sd  <- apply(simplify2array(test_auc), 1:2, sd, na.rm = T)
-test_q.025 <- apply(simplify2array(test_auc), 1:2,
+test_mean  <- apply(simplify2array(test_bs), 1:2, mean, na.rm = T)
+test_sd  <- apply(simplify2array(test_bs), 1:2, sd, na.rm = T)
+test_q.025 <- apply(simplify2array(test_bs), 1:2,
                function(x) try(quantile(x, 0.025, na.rm = T)))
-test_q.975 <- apply(simplify2array(test_auc), 1:2, 
+test_q.975 <- apply(simplify2array(test_bs), 1:2, 
                function(x) try(quantile(x, 0.975, na.rm = T)))
-test_q.05  <- apply(simplify2array(test_auc), 1:2, 
+test_q.05  <- apply(simplify2array(test_bs), 1:2, 
               function(x) try(quantile(x, 0.05, na.rm = T)))
-test_q.95  <- apply(simplify2array(test_auc), 1:2, 
+test_q.95  <- apply(simplify2array(test_bs), 1:2, 
               function(x) try(quantile(x, 0.95, na.rm = T)))
-test_q.10  <- apply(simplify2array(test_auc), 1:2, 
+test_q.10  <- apply(simplify2array(test_bs), 1:2, 
               function(x) try(quantile(x, 0.10, na.rm = T)))
-test_q.90  <- apply(simplify2array(test_auc), 1:2, 
+test_q.90  <- apply(simplify2array(test_bs), 1:2, 
               function(x) try(quantile(x, 0.90, na.rm = T)))
-test_q.25  <- apply(simplify2array(test_auc), 1:2,
+test_q.25  <- apply(simplify2array(test_bs), 1:2,
               function(x) try(quantile(x, 0.25, na.rm = T)))
-test_q.75  <- apply(simplify2array(test_auc), 1:2, 
+test_q.75  <- apply(simplify2array(test_bs), 1:2, 
               function(x) try(quantile(x, 0.75, na.rm = T)))
+test_q.50  <- apply(simplify2array(test_bs), 1:2, 
+              function(x) try(quantile(x, 0.5, na.rm = T)))
 
 ```
 
-## AUC CI summary Table
+## BS CI summary Table
 
-### Train
-
-```{r, class.output="scroll-100"}
-train_mean %>% knitr::kable()
-```
-
-### Test
-
-```{r, class.output="scroll-100"}
-test_mean %>% knitr::kable()
-```
+### Merge Dataset
 
 For the plots with different start time and duration.
 
@@ -160,7 +153,7 @@ pull_ci <- function(data, type, group) {
          group = group) %>%
   pivot_longer(cols = -c(Tstart, type, group),
                names_to = "Dt",
-               values_to = "AUC")
+               values_to = "bs")
 }
 
 train_mean1 <- train_mean %>% pull_ci("mean", "train")
@@ -182,94 +175,92 @@ test_q.90 <- test_q.90 %>% pull_ci("q.90", "test")
 test_q.95 <- test_q.95 %>% pull_ci("q.95", "test")
 test_q.975 <- test_q.975 %>% pull_ci("q.975", "test")
 
-train_auc_data <- cbind(train_mean1, 
-                        `2.5%` = unlist(train_q.025$AUC), 
-                        `5%` = unlist(train_q.05$AUC),
-                        `10%` = unlist(train_q.10$AUC),
-                        `25%` = unlist(train_q.25$AUC), 
-                        `75%` = unlist(train_q.75$AUC), 
-                        `90%` = unlist(train_q.90$AUC),
-                        `95%` = unlist(train_q.95$AUC),
-                        `97.5%` = unlist(train_q.975$AUC)) %>%
+train_bs_data <- cbind(train_mean1, 
+                        `2.5%` = unlist(train_q.025$bs), 
+                        `5%` = unlist(train_q.05$bs),
+                        `10%` = unlist(train_q.10$bs),
+                        `25%` = unlist(train_q.25$bs), 
+                        `75%` = unlist(train_q.75$bs), 
+                        `90%` = unlist(train_q.90$bs),
+                        `95%` = unlist(train_q.95$bs),
+                        `97.5%` = unlist(train_q.975$bs)) %>%
   as.data.frame() %>%
-  mutate(`50%` = AUC) 
+  mutate(`50%` = bs) 
 
-test_auc_data <- cbind(test_mean1, 
-                        `2.5%` = unlist(test_q.025$AUC), 
-                        `5%` = unlist(test_q.05$AUC),
-                        `10%` = unlist(test_q.10$AUC),
-                        `25%` = unlist(test_q.25$AUC), 
-                        `75%` = unlist(test_q.75$AUC), 
-                        `90%` = unlist(test_q.90$AUC),
-                        `95%` = unlist(test_q.95$AUC),
-                        `97.5%` = unlist(test_q.975$AUC)) %>%
+test_bs_data <- cbind(test_mean1, 
+                        `2.5%` = unlist(test_q.025$bs), 
+                        `5%` = unlist(test_q.05$bs),
+                        `10%` = unlist(test_q.10$bs),
+                        `25%` = unlist(test_q.25$bs), 
+                        `75%` = unlist(test_q.75$bs), 
+                        `90%` = unlist(test_q.90$bs),
+                        `95%` = unlist(test_q.95$bs),
+                        `97.5%` = unlist(test_q.975$bs)) %>%
   as.data.frame() %>%
-  mutate(`50%` = AUC) 
+  mutate(`50%` = bs) 
 ```
 
-### AUC Plots 
+### Brier Score Plots 
 
 The interval is very wide at the beginning, because we have very few events at the beginning. 
 The sample size is very small, ending up with very wide confidence intervals.
 but it is still good to have the interval to show how the AUC changed over time.
 The comparison makes sense when we have a even larger sample size.
 
-This is interesting that it could be plotted a long figures. Seems contineous. 
-
 ```{r}
-plot1 <- train_auc_data %>%
+plot1 <- train_bs_data %>%
   ggplot() +
   geom_line(aes(x = Dt, y = `2.5%`, group = Tstart),
-            color = "#90e0ef", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
-            color = "#90e0ef", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `2.5%`, 
-                  ymax = `97.5%`,
-                  group = Tstart),
-              fill = "#90e0ef",
+              color = "#90e0ef", linetype = "dashed",
               alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Tstart),
+                fill = "#90e0ef",
+                alpha = 0.5) +
   geom_line(aes(x = Dt, y = `5%`, group = Tstart),
-            color = "#00b4d8", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `95%`, group = Tstart),
-            color = "#00b4d8", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `5%`, 
-                  ymax = `95%`,
-                  group = Tstart),
-              fill = "#00b4d8",
+              color = "#00b4d8", linetype = "dashed",
               alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `10%`, group = Tstart),
-            color = "#0077b6", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `90%`, group = Tstart),
-            color = "#0077b6", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `10%`, 
-                  ymax = `90%`,
-                  group = Tstart),
-              fill = "#0077b6",
+    geom_line(aes(x = Dt, y = `95%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
               alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `25%`, group = Tstart),
-            color = "#03045e", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `75%`, group = Tstart),
-            color = "#03045e", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `25%`, 
-                  ymax = `75%`,
-                  group = Tstart),
-              fill = "#03045e",
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Tstart),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `10%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
               alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `90%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Tstart),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `25%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `75%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Tstart),
+                fill = "#03045e",
+                alpha = 0.5) +
   geom_line(aes(x = Dt, y = `50%`, group = Tstart),
-            color = "#fdc500", 
-            linewidth = 0.5) +
+              color = "#fdc500", 
+              linewidth = 0.5) +
   facet_wrap(~Tstart,
              labeller = labeller(
                Tstart = c("2" = "Starting Time 2nd year",
@@ -282,59 +273,59 @@ plot1 <- train_auc_data %>%
 
 
 ```{r}
-plot2 <- test_auc_data %>%
+plot2 <- test_bs_data %>%
   ggplot() +
   geom_line(aes(x = Dt, y = `2.5%`, group = Tstart),
-            color = "#90e0ef", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
-            color = "#90e0ef", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `2.5%`, 
-                  ymax = `97.5%`,
-                  group = Tstart),
-              fill = "#90e0ef",
+              color = "#90e0ef", linetype = "dashed",
               alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Tstart),
+                fill = "#90e0ef",
+                alpha = 0.5) +
   geom_line(aes(x = Dt, y = `5%`, group = Tstart),
-            color = "#00b4d8", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `95%`, group = Tstart),
-            color = "#00b4d8", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `5%`, 
-                  ymax = `95%`,
-                  group = Tstart),
-              fill = "#00b4d8",
+              color = "#00b4d8", linetype = "dashed",
               alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `10%`, group = Tstart),
-            color = "#0077b6", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `90%`, group = Tstart),
-            color = "#0077b6", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `10%`, 
-                  ymax = `90%`,
-                  group = Tstart),
-              fill = "#0077b6",
+    geom_line(aes(x = Dt, y = `95%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
               alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `25%`, group = Tstart),
-            color = "#03045e", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `75%`, group = Tstart),
-            color = "#03045e", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `25%`, 
-                  ymax = `75%`,
-                  group = Tstart),
-              fill = "#03045e",
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Tstart),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `10%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
               alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `90%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Tstart),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `25%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `75%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Tstart),
+                fill = "#03045e",
+                alpha = 0.5) +
   geom_line(aes(x = Dt, y = `50%`, group = Tstart),
-            color = "#fdc500", 
-            linewidth = 0.5) +
+              color = "#fdc500", 
+              linewidth = 0.5) +
   facet_wrap(~Tstart,
              labeller = labeller(
                Tstart = c("2" = "Starting Time 2nd year",
@@ -348,7 +339,7 @@ plot2 <- test_auc_data %>%
 ```{r}
 #| warning: false
 plot1 +
-  labs(title = "SWAN-AMH AUC and CIs (wrap by starting time) Training") +
+  labs(title = "SWAN-AMH Brier Score and CIs (wrap by starting time) Training") +
   theme_minimal() +
   xlab("Length of Time Interval (years)") +
   ylab("AUC") +
@@ -361,7 +352,7 @@ plot1 +
                                   lineheight = 0.1))
 
 plot2 +
-  labs(title = "SWAN-AMH AUC and CIs (wrap by starting time) Testing") +
+  labs(title = "SWAN-AMH Brier Score and CIs (wrap by starting time) Testing") +
   theme_minimal() +
   xlab("Length of Time Interval (years)") +
   ylab("AUC") +
@@ -375,14 +366,14 @@ plot2 +
 ```
 
 
-### AUC only
+### Brier Score only
 
 ```{r}
-#| label: auc_plot
+#| label: bs_plot
 #| warning: false
-#| fig-cap: "AUC plot for SWAN-AMH Tstart"
+#| fig-cap: "bs plot for SWAN-AMH Tstart"
 
-auc_tstart <- test_auc_data %>% 
+bs_tstart <- test_bs_data %>% 
   mutate(Tstart = rep(c(paste0("Year", c(2, 3, 4, 5 ,6, 8))), each = 5)) %>%
   ggplot() +
   geom_line(aes(x = Dt, y = `50%`,
@@ -402,12 +393,12 @@ auc_tstart <- test_auc_data %>%
 ```
 
 ```{r}
-#| label: auc_plot2
+#| label: bs_plot2
 #| warning: false
-#| fig-cap: "AUC plot for SWAN-AMH Dt"
+#| fig-cap: "bs plot for SWAN-AMH Dt"
 
 
-auc_dt <- test_auc_data %>%
+bs_dt <- test_bs_data %>%
   mutate(Tstart = rep(c(paste0("Year", c(2, 3, 4, 5 ,6, 8))), each = 5)) %>%
   mutate(Dt = as.character(Dt)) %>%
   ggplot() +
@@ -430,13 +421,13 @@ auc_dt <- test_auc_data %>%
 ```{r fig.show="hold", out.width="100%"}
 #| layout-ncol: 2
 #| warning: false
-auc_tstart +
-  labs(title = "SWAN-AMH AUC") +
+bs_tstart +
+  labs(title = "SWAN-AMH Brier Score") +
   theme_minimal() +
   xlab("Length of Time Interval") +
-  ylab("AUC") +
+  ylab("bs") +
   ggthemes::scale_colour_tableau("Jewel Bright") +
-  theme(legend.position = c(0.77, 0.3),
+  theme(legend.position = c(0.93, 0.3),
         # legend.background = element_rect(fill = "#C9C9C9", 
         #                           size = 0.5,
         #                           color = "#C9C9C9"),
@@ -448,13 +439,13 @@ auc_tstart +
         # axis.title = element_blank(),
         strip.text = element_text(hjust = 0.5,
                                   lineheight = 0.1))
-auc_dt +
-  labs(title = "SWAN-AMH AUC") +
+bs_dt +
+  labs(title = "SWAN-AMH Brier Score") +
   theme_minimal() +
   xlab("Start Time") +
-  ylab("AUC") +
+  ylab("bs") +
   ggthemes::scale_colour_tableau("Jewel Bright") +
-  theme(legend.position = c(0.8, 0.30),
+  theme(legend.position = c(0.93, 0.30),
         # legend.background = element_rect(fill = "#C9C9C9", 
         #                           size = 0.5,
         #                           color = "#C9C9C9"),

@@ -1,11 +1,5 @@
 ---
 title: "Final Report"
-author: "randy"
-date: "`r Sys.Date()`"
-output:
-  word_document:
-    toc: yes
-    number_sections: true
 ---
 
 ```{r setup, include=FALSE}

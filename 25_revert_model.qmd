@@ -2,7 +2,6 @@
 title: "Revert"
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       warnings = FALSE,
@@ -57,7 +56,6 @@ here::set_here()
 -   [x] `r praise::praise()`
 
 ## Loading data and merge variables
-
 
 ```{r}
 load("data/swan_amh03.rda")
@@ -166,7 +164,6 @@ all_amh1 <- rbind(swan_amh13, test_amh11)
 usethis::use_data(all_amh0, all_amh1, overwrite = TRUE)
 ```
 
-
 ```{r}
 iteration <- 120000
 burnin <- 20000
@@ -184,7 +181,6 @@ jmcontrol <- list(n_iter = iteration,
 
 (total <- (iteration - burnin) / thin * chain)
 ```
-
 
 ```{r}
 #| eval: false
@@ -227,7 +223,6 @@ save(jmb2.119.value.rate,
      file = filename)
 
 ```
-
 
 ```{r}
 #| label: "auc_value_rate"
@@ -368,8 +363,6 @@ tbl_auc_value_rate_train - tbl_auc_value_rate_test
 
 ```
 
-
-
 ```{r}
 load("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/reversed_jmb2_119_chain5_it100k_thin100_total5k.Rdata")
 
@@ -493,22 +486,10 @@ load("~/Library/CloudStorage/OneDrive-TheUniversityofColoradoDenver/amh/results/
 
 ```
 
-
 AUC training - testing, larger is better
 
-%%             Dt1       Dt2      Dt3       Dt4       Dt5 
-Tstart2_train	 NA	       NA	      -0.4210	  0.0349	  -0.0515
-Tstart3_train	 NA	       0.3315	  0.1775	  0.0794	  -0.0160
-Tstart4_train	 -0.0050   -0.0042  0.0171	  0.0007	  -0.0181
-Tstart5_train	 0.1513	   0.0457	  0.0395	  -0.0010	  -0.0800
-Tstart6_train	 0.0116	   0.0269	  0.0146	  -0.0782	  -0.0243
-Tstart8_train	 -0.0074	 -0.0697  -0.0043 	0.0165	  0.0025
+%% Dt1 Dt2 Dt3 Dt4 Dt5 Tstart2_train NA NA -0.4210 0.0349 -0.0515 Tstart3_train NA 0.3315 0.1775 0.0794 -0.0160 Tstart4_train -0.0050 -0.0042 0.0171 0.0007 -0.0181 Tstart5_train 0.1513 0.0457 0.0395 -0.0010 -0.0800 Tstart6_train 0.0116 0.0269 0.0146 -0.0782 -0.0243 Tstart8_train -0.0074 -0.0697 -0.0043 0.0165 0.0025
 
-Brier Score training - testing, smaller is better
-%%             Dt1	      Dt2	     Dt3	      Dt4.     	Dt5 
-Tstart2_test  	NA	      NA	      -0.0220	  -0.0386	  0.0014
-Tstart3_test	  NA	      -0.0204	  -0.0304	  -0.0425	  -0.0123
-Tstart4_test	-0.0043	    -0.0060  	-0.0078	  0.0063	  0.0058
-Tstart5_test	-0.0070	    -0.0078  	0.0023	  0.0071	  0.0307
-Tstart6_test	-0.0019	     0.0010  	0.0026	  0.0327	  0.0086
-Tstart8_test	-0.0028	     0.0221  	0.0051	  -0.0094  	-0.0017
+Brier Score training - testing, smaller is better %% Dt1 Dt2 Dt3 Dt4. Dt5 Tstart2_test NA NA -0.0220 -0.0386 0.0014 Tstart3_test NA -0.0204 -0.0304 -0.0425 -0.0123 Tstart4_test -0.0043 -0.0060 -0.0078 0.0063 0.0058 Tstart5_test -0.0070 -0.0078 0.0023 0.0071 0.0307 Tstart6_test -0.0019 0.0010 0.0026 0.0327 0.0086 Tstart8_test -0.0028 0.0221 0.0051 -0.0094 -0.0017
+
+It is a problem of how we split the dataset.

@@ -1,6 +1,5 @@
 ---
 title: "Checking"
-format: pdf
 ---
 
 ```{r setup, echo = FALSE, include = FALSE}
@@ -159,8 +158,7 @@ plot2
 #| fig.height: 4
 #| warning: false
 #| message: false
-load("results/margin_data_longitudinal_mean.Rdata")
-
+load("results/jmb2_119_margin_data_longitudinal_mean.Rdata")
 
 plot3 <- ggplot() +
   geom_line(data = test_amh01,
@@ -752,7 +750,6 @@ tbl_bs_value_rate %>% knitr::kable()
 ```{r}
 tbl_bs_value_rate_test %>% knitr::kable()
 ```
-
 
 ## Joint model random intercept SD
 

@@ -34,6 +34,8 @@ library(JMbayes2, quietly = TRUE)
 
 ```
 
+
+
 ## To-do list
 
 -   [x] re-split the data into training and testing 10 times
@@ -41,6 +43,8 @@ library(JMbayes2, quietly = TRUE)
 -   [x] fit the model and calculate the AUC
 
 ## Cross-validation
+
+
 
 ```{r}
 ## Install necessary packages if you don't have them
@@ -329,3 +333,4 @@ map_amh_permu <-
 
 
 ```
+

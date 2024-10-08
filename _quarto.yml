@@ -48,6 +48,13 @@ book:
     - 20_testing.qmd
     - 21_final_table1.qmd
     - 22_lifetbl.qmd
+    # - 23_final_report.amd
+    - 24_checking.qmd
+    # - 25_revert_model.qmd
+    # - 26_permutation.qmd
+    # - 27_auc_ci
+    # - 28_auc_ci_plots.qmd
+    # - 29_bs_ci.qmd
     # - 05_review.qmd
     - references.qmd
 

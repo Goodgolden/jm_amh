@@ -46,6 +46,10 @@ devtools::load_all()
 }
 ```
 
+
+
+
+
 ## Goal for this chapter
 
 -   [x] EDA for Longitudinal sub-model `lme` (Alcohol usage and AMH levels by EJC)
@@ -66,11 +70,19 @@ devtools::load_all()
 
 -   [x] `r praise::praise()`
 
+
+
+
+
 ```{r}
 #| label: "loading data"
 load("data/swan_amh0.rda")
 load("data/swan_amh1.rda")
 ```
+
+
+
+
 
 ## Longitudinal EDA
 
@@ -81,6 +93,10 @@ The longitudinal model will only include time.
 -   swan_amh0 is the longitudinal dataset
 
 -   swan_amh1 is the id dataset
+
+
+
+
 
 ```{r}
 #| label: "alcohol_amh"
@@ -115,7 +131,15 @@ plot1
 plot1 + facet_wrap(~alcohol)
 ```
 
+
+
+
+
 ## Survival EDA
+
+
+
+
 
 ```{r}
 #| label: "survival km"
@@ -176,9 +200,17 @@ km.plot(var = "bmi_cat", vard = swan_amh1$bmi_cat)
 # table(swan_amh1$children) ## maybe use 0, 1, 2, 3, 4, 5+
 ```
 
+
+
+
+
 ## Longitudinal submodel on log(AMH)
 
 The linear mixed model will only include the time variable, with random slope and random intercept.
+
+
+
+
 
 ```{r}
 #| label: "linear model"
@@ -193,10 +225,18 @@ lme.fit1 <- lme(lamh ~ time,
                 random = ~ time|id)
 ```
 
+
+
+
+
 Comparison between the two models. The first model has a random intercept, 
 while the second model has a random slope.
 
 The fixed effects are almost the same.
+
+
+
+
 
 ```{r class.output="scroll-100"}
 #| label: "lmm_summary"
@@ -210,15 +250,31 @@ rbind(fit0 = glance(lme.fit0),
       fit1 = glance(lme.fit1))
 ```
 
+
+
+
+
 There is a significant difference between the two models. 
 We will use the second model for the joint model.
+
+
+
+
 
 ```{r}
 #| label: "lmm_anova"
 anova(lme.fit0, lme.fit1)
 ```
 
+
+
+
+
 ## Survivial submodel
+
+
+
+
 
 ```{r}
 #| label: "survival_model"
@@ -259,7 +315,15 @@ surv.fit2 <- coxph(Surv(etime, event) ~ married + bc_pills +
                   model = TRUE)
 ```
 
+
+
+
+
 Here are the summary statistics for the three models.
+
+
+
+
 
 ```{r class.output="scroll-100"}
 #| label: "survival_summary"
@@ -274,16 +338,32 @@ rbind(fit0 = glance(surv.fit0),
                 r.squared, concordance) 
 ```
 
+
+
+
+
 This is the final survival model that we will use for the joint model.
+
+
+
+
 
 ```{r}
 #| label: "survival_fit1"
 tidy(surv.fit1)
 ```
 
+
+
+
+
 ## Joint model
 
 Here is the simplest joint model with the exploratory analysis.
+
+
+
+
 
 ```{r}
 #| label: "joint_model"
@@ -301,7 +381,15 @@ joint.fit1 <- jointModel(lme.fit1,
 
 ```
 
+
+
+
+
 The summaries of the joint model.
+
+
+
+
 
 ```{r class.output="scroll-100"}
 #| label: "joint_summary"
@@ -311,4 +399,9 @@ summary(joint.fit1)[[2]]
 # summary(joint.fit.wei)
 ```
 
+
+
+
+
 -   [x] `r praise::praise()`
+

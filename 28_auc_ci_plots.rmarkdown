@@ -1,10 +1,9 @@
 ---
 title: "AUC CI plots"
-format: pdf
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,
+knitr::opts_chunk$set(echo = TRUE,
                       warnings = FALSE,
                       message = FALSE,
                       comment = "#>",
@@ -37,6 +36,9 @@ here::set_here()
 }
 ```
 
+
+
+
 ## Goal for this chapter
 
 - [x] Redo the tables for AUC CI
@@ -49,12 +51,10 @@ here::set_here()
 
 - [x] You are first-class!
 
-## Load the data
+## Pulling out the results
 
-I save each permutation separately, so I need to load all the separated files and 
-then combine them into one dataset. This is not the best way of working but when 
-the parallel processing does not work properly. This is the only way to make everything 
-works.
+
+
 
 ```{r}
 folder1 <- "auc"
@@ -81,6 +81,8 @@ pull_bs_test <- function(file_location, file1){
 
 train_auc <- map(files, ~pull_auc_train(file_location, .))
 test_auc <- map(files, ~pull_auc_test(file_location, .))
+train_bs <- map(files, ~pull_bs_train(file_location, .))
+test_bs <- map(files, ~pull_bs_test(file_location, .))
 
 ```
 
@@ -95,8 +97,11 @@ test_auc <- map(files, ~pull_auc_test(file_location, .))
 #                      .progress = list(type = "iterator",
 #                                       format = "Calculating {cli::pb_bar} {cli::pb_percent}",
 #                                       clear = TRUE))
+train_auc <- Reduce("+", train_auc) / 52
+test_auc <- Reduce("+", test_auc) / 52
+
 train_mean  <- apply(simplify2array(train_auc), 1:2, mean, na.rm = T)
-# train_sd  <- apply(simplify2array(train_auc), 1:2, sd, na.rm = T)
+train_sd  <- apply(simplify2array(train_auc), 1:2, sd, na.rm = T)
 train_q.025 <- apply(simplify2array(train_auc), 1:2,
                function(x) try(quantile(x, 0.025, na.rm = T)))
 train_q.975 <- apply(simplify2array(train_auc), 1:2, 
@@ -115,7 +120,7 @@ train_q.75  <- apply(simplify2array(train_auc), 1:2,
               function(x) try(quantile(x, 0.75, na.rm = T)))
 
 test_mean  <- apply(simplify2array(test_auc), 1:2, mean, na.rm = T)
-# test_sd  <- apply(simplify2array(test_auc), 1:2, sd, na.rm = T)
+test_sd  <- apply(simplify2array(test_auc), 1:2, sd, na.rm = T)
 test_q.025 <- apply(simplify2array(test_auc), 1:2,
                function(x) try(quantile(x, 0.025, na.rm = T)))
 test_q.975 <- apply(simplify2array(test_auc), 1:2, 
@@ -135,21 +140,51 @@ test_q.75  <- apply(simplify2array(test_auc), 1:2,
 
 ```
 
+
+
+
 ## AUC CI summary Table
 
 ### Train
 
+
+
+
 ```{r, class.output="scroll-100"}
-train_mean %>% knitr::kable()
+train_auc; train_mean
 ```
+
+
+
 
 ### Test
 
+
+
+
 ```{r, class.output="scroll-100"}
-test_mean %>% knitr::kable()
+test_auc; test_mean
 ```
 
-For the plots with different start time and duration.
+
+
+
+### SD
+
+
+
+```{r, class.output="scroll-100"}
+train_sd; test_sd
+```
+
+
+
+
+
+### Merge Dataset
+
+
+
 
 ```{r}
 pull_ci <- function(data, type, group) {
@@ -207,69 +242,68 @@ test_auc_data <- cbind(test_mean1,
   mutate(`50%` = AUC) 
 ```
 
+
+
+
 ### AUC Plots 
 
-The interval is very wide at the beginning, because we have very few events at the beginning. 
-The sample size is very small, ending up with very wide confidence intervals.
-but it is still good to have the interval to show how the AUC changed over time.
-The comparison makes sense when we have a even larger sample size.
 
-This is interesting that it could be plotted a long figures. Seems contineous. 
+
 
 ```{r}
 plot1 <- train_auc_data %>%
   ggplot() +
   geom_line(aes(x = Dt, y = `2.5%`, group = Tstart),
-            color = "#90e0ef", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
-            color = "#90e0ef", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `2.5%`, 
-                  ymax = `97.5%`,
-                  group = Tstart),
-              fill = "#90e0ef",
+              color = "#90e0ef", linetype = "dashed",
               alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Tstart),
+                fill = "#90e0ef",
+                alpha = 0.5) +
   geom_line(aes(x = Dt, y = `5%`, group = Tstart),
-            color = "#00b4d8", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `95%`, group = Tstart),
-            color = "#00b4d8", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `5%`, 
-                  ymax = `95%`,
-                  group = Tstart),
-              fill = "#00b4d8",
+              color = "#00b4d8", linetype = "dashed",
               alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `10%`, group = Tstart),
-            color = "#0077b6", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `90%`, group = Tstart),
-            color = "#0077b6", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `10%`, 
-                  ymax = `90%`,
-                  group = Tstart),
-              fill = "#0077b6",
+    geom_line(aes(x = Dt, y = `95%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
               alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `25%`, group = Tstart),
-            color = "#03045e", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `75%`, group = Tstart),
-            color = "#03045e", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `25%`, 
-                  ymax = `75%`,
-                  group = Tstart),
-              fill = "#03045e",
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Tstart),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `10%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
               alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `90%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Tstart),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `25%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `75%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Tstart),
+                fill = "#03045e",
+                alpha = 0.5) +
   geom_line(aes(x = Dt, y = `50%`, group = Tstart),
-            color = "#fdc500", 
-            linewidth = 0.5) +
+              color = "#fdc500", 
+              linewidth = 0.5) +
   facet_wrap(~Tstart,
              labeller = labeller(
                Tstart = c("2" = "Starting Time 2nd year",
@@ -280,61 +314,60 @@ plot1 <- train_auc_data %>%
                           "8" = "Starting Time 8th year"))) 
 ```
 
-
 ```{r}
 plot2 <- test_auc_data %>%
   ggplot() +
   geom_line(aes(x = Dt, y = `2.5%`, group = Tstart),
-            color = "#90e0ef", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
-            color = "#90e0ef", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `2.5%`, 
-                  ymax = `97.5%`,
-                  group = Tstart),
-              fill = "#90e0ef",
+              color = "#90e0ef", linetype = "dashed",
               alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `97.5%`, group = Tstart),
+              color = "#90e0ef", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `2.5%`, 
+                    ymax = `97.5%`,
+                    group = Tstart),
+                fill = "#90e0ef",
+                alpha = 0.5) +
   geom_line(aes(x = Dt, y = `5%`, group = Tstart),
-            color = "#00b4d8", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `95%`, group = Tstart),
-            color = "#00b4d8", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `5%`, 
-                  ymax = `95%`,
-                  group = Tstart),
-              fill = "#00b4d8",
+              color = "#00b4d8", linetype = "dashed",
               alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `10%`, group = Tstart),
-            color = "#0077b6", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `90%`, group = Tstart),
-            color = "#0077b6", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `10%`, 
-                  ymax = `90%`,
-                  group = Tstart),
-              fill = "#0077b6",
+    geom_line(aes(x = Dt, y = `95%`, group = Tstart),
+              color = "#00b4d8", linetype = "dashed",
               alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `25%`, group = Tstart),
-            color = "#03045e", linetype = "dashed",
-            alpha = 0.5) +
-  geom_line(aes(x = Dt, y = `75%`, group = Tstart),
-            color = "#03045e", linetype = "dashed",
-            alpha = 0.5) +
-  geom_ribbon(aes(x = Dt, 
-                  ymin = `25%`, 
-                  ymax = `75%`,
-                  group = Tstart),
-              fill = "#03045e",
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `5%`, 
+                    ymax = `95%`,
+                    group = Tstart),
+                fill = "#00b4d8",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `10%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
               alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `90%`, group = Tstart),
+              color = "#0077b6", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `10%`, 
+                    ymax = `90%`,
+                    group = Tstart),
+                fill = "#0077b6",
+                alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `25%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_line(aes(x = Dt, y = `75%`, group = Tstart),
+              color = "#03045e", linetype = "dashed",
+              alpha = 0.5) +
+    geom_ribbon(aes(x = Dt, 
+                    ymin = `25%`, 
+                    ymax = `75%`,
+                    group = Tstart),
+                fill = "#03045e",
+                alpha = 0.5) +
   geom_line(aes(x = Dt, y = `50%`, group = Tstart),
-            color = "#fdc500", 
-            linewidth = 0.5) +
+              color = "#fdc500", 
+              linewidth = 0.5) +
   facet_wrap(~Tstart,
              labeller = labeller(
                Tstart = c("2" = "Starting Time 2nd year",
@@ -375,7 +408,13 @@ plot2 +
 ```
 
 
+
+
+
 ### AUC only
+
+
+
 
 ```{r}
 #| label: auc_plot
