@@ -21,5 +21,25 @@ Here are the chapters for this project:
 - 13_model_selection_2.qmd
 - 14_rate_value_baseline.qmd
 - 15_auc_ci.qmd
-- 05_review.qmd
-- references.qmd
+% - 05_review.qmd
+- 16_auc_plot.qmd
+- 17_rate_estimate.qmd
+- 18_model19.qmd
+- 19_aic.pdf
+- 19_testing19.qmd (this is the first version of the final model)
+- 20_testing.qmd
+-------------------
+- 21_final_table1.qmd
+- 22_lifetbl.qmd (the life table probably useful for the supp)
+- 23_final_report.Rmd  (this is the first version of the final report)
+- 23_final_report.docx / 23_final_report.pdf
+- 24_checking.Rmd (findind the problem of splitting the dataset)
+- 24_checking.docx / 24_checking.pdf
+- 25_revert_model.qmd
+- 26_2_permutation.qmd (this is the final version)
+- X 26_permutation.qmd not repeatable
+- 27_auc_ci.qmd (also add the confidence interval in the table)
+- 28_2_auc_ci_plots.qmd (this is the final report)
+- 28_auc_ci_plots.qmd
+- 29_bs_ci.qmd
+
